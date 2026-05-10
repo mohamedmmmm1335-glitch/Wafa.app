@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة الوفاء | مستر أحمد ذكي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<!-- Font Awesome for real icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --teal:     #0ea5a0;
+  --teal-lt:  #2dd4bf;
+  --teal-dim: rgba(14,165,160,0.15);
+  --amber:    #f59e0b;
+  --amber-lt: #fcd34d;
+  --bg:       #050d0d;
+  --bg2:      #0a1a1a;
+  --bg3:      #0f2222;
+  --card:     #0d1f1f;
+  --border:   rgba(14,165,160,0.18);
+  --text:     #e8f4f4;
+  --muted:    #5a8a8a;
+  --radius:   16px;
+  --whatsapp: #25D366;
+  --facebook: #1877F2;
+}
+body.light {
+  --bg:    #f0fafa;
+  --bg2:   #ffffff;
+  --bg3:   #e0f5f5;
+  --card:  #ffffff;
+  --border:rgba(14,165,160,0.2);
+  --text:  #0a1a1a;
+  --muted: #4a7a7a;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  direction:rtl;
+  transition:background .3s,color .3s;
+}
+
+/* ─── NOISE TEXTURE ─── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.5;
+}
+
+/* ─── GLOW BLOBS ─── */
+.blob{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;animation:blobMove 12s ease-in-out infinite alternate;}
+.blob1{width:500px;height:500px;background:rgba(14,165,160,0.12);top:-100px;right:-150px;}
+.blob2{width:400px;height:400px;background:rgba(245,158,11,0.08);bottom:100px;left:-100px;animation-delay:-6s;}
+@keyframes blobMove{0%{transform:translate(0,0) scale(1);}100%{transform:translate(30px,40px) scale(1.1);}}
+
+/* ─── FLOATING WHATSAPP BUTTON ─── */
+.float-wa{
+  position:fixed;bottom:90px;left:20px;z-index:999;
+  width:56px;height:56px;border-radius:50%;
+  background:var(--whatsapp);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(37,211,102,0.5);
+  text-decoration:none;color:#fff;font-size:1.6rem;
+  animation:pulse-wa 2.5s ease-in-out infinite;
+  transition:transform .2s;
+}
+.float-wa:hover{transform:scale(1.1);}
+@keyframes pulse-wa{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.5);}50%{box-shadow:0 4px 30px rgba(37,211,102,0.8);}}
+@media(min-width:641px){.float-wa{bottom:30px;}}
+
+/* ─── HEADER ─── */
+header{
+  position:sticky;top:0;z-index:900;
+  background:rgba(5,13,13,0.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+body.light header{background:rgba(240,250,250,0.9);}
+
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-icon{
+  width:46px;height:46px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),var(--teal-lt));
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+}
+.logo-text{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1.3rem;color:var(--teal-lt);line-height:1.1;}
+.logo-sub{font-size:0.65rem;color:var(--muted);font-weight:400;}
+
+nav{display:flex;align-items:center;gap:8px;}
+.nav-link{
+  padding:8px 16px;border-radius:10px;text-decoration:none;
+  color:var(--muted);font-size:0.85rem;font-weight:700;
+  transition:all .2s;white-space:nowrap;
+}
+.nav-link:hover{color:var(--teal-lt);background:var(--teal-dim);}
+
+.theme-btn{
+  width:40px;height:40px;border-radius:10px;
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--text);font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.theme-btn:hover{border-color:var(--teal);background:var(--teal-dim);}
+
+.cta-header{
+  padding:9px 20px;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--teal-lt));
+  color:#fff;font-family:'Cairo';font-size:0.85rem;font-weight:800;
+  border:none;cursor:pointer;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+}
+.cta-header:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(14,165,160,0.4);}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;z-index:1;
+  padding:80px 24px 60px;text-align:center;
+  max-width:800px;margin:0 auto;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 18px;border-radius:50px;
+  background:var(--teal-dim);border:1px solid var(--border);
+  font-size:0.8rem;color:var(--teal-lt);font-weight:700;
+  margin-bottom:28px;animation:fadeDown .6s ease both;
+}
+.hero h1{
+  font-family:'Tajawal',sans-serif;
+  font-size:clamp(2rem,6vw,3.5rem);font-weight:900;line-height:1.25;
+  margin-bottom:20px;animation:fadeDown .6s .1s ease both;
+}
+.grad{
+  background:linear-gradient(135deg,var(--teal-lt),var(--amber-lt));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-desc{font-size:1.05rem;color:var(--muted);line-height:1.8;margin-bottom:36px;animation:fadeDown .6s .2s ease both;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeDown .6s .3s ease both;}
+.btn-primary{
+  padding:14px 32px;border-radius:12px;
+  background:linear-gradient(135deg,var(--teal),var(--teal-lt));
+  color:#fff;font-family:'Cairo';font-size:1rem;font-weight:800;
+  border:none;cursor:pointer;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;display:inline-block;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(14,165,160,0.45);}
+.btn-secondary{
+  padding:14px 32px;border-radius:12px;
+  border:2px solid var(--border);background:transparent;
+  color:var(--text);font-family:'Cairo';font-size:1rem;font-weight:700;
+  cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;
+}
+.btn-secondary:hover{border-color:var(--teal);color:var(--teal-lt);background:var(--teal-dim);}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── STATS ─── */
+.stats{
+  position:relative;z-index:1;
+  display:flex;justify-content:center;flex-wrap:wrap;
+  max-width:700px;margin:0 auto 80px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  animation:fadeUp .6s .4s ease both;
+}
+.stat{flex:1;min-width:140px;padding:28px 20px;text-align:center;border-left:1px solid var(--border);}
+.stat:last-child{border-left:none;}
+.stat-n{
+  font-family:'Tajawal',sans-serif;font-size:2.2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--teal-lt),var(--amber-lt));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-l{font-size:0.78rem;color:var(--muted);margin-top:4px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SECTION ─── */
+section{position:relative;z-index:1;padding:60px 24px;}
+.sec-title{text-align:center;margin-bottom:48px;}
+.sec-title h2{font-family:'Tajawal',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:10px;}
+.sec-title p{color:var(--muted);font-size:0.95rem;}
+.sec-tag{
+  display:inline-block;padding:4px 14px;border-radius:50px;
+  background:var(--teal-dim);color:var(--teal-lt);
+  font-size:0.75rem;font-weight:800;margin-bottom:14px;
+}
+
+/* ─── GRADES ─── */
+.grades{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.grade-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:32px 28px;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  cursor:pointer;text-decoration:none;color:var(--text);
+  display:block;position:relative;overflow:hidden;
+}
+.grade-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--teal-dim),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.grade-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 0 1px rgba(14,165,160,.25);border-color:var(--teal);}
+.grade-card:hover::before{opacity:1;}
+.grade-icon{font-size:2.8rem;margin-bottom:16px;}
+.grade-name{font-family:'Tajawal',sans-serif;font-size:1.4rem;font-weight:900;margin-bottom:6px;}
+.grade-subject{
+  display:inline-block;padding:4px 12px;border-radius:8px;
+  background:var(--teal-dim);color:var(--teal-lt);
+  font-size:0.78rem;font-weight:700;margin-bottom:14px;
+}
+.grade-desc{font-size:0.88rem;color:var(--muted);line-height:1.7;}
+.grade-arrow{
+  margin-top:20px;display:flex;align-items:center;gap:6px;
+  color:var(--teal-lt);font-size:0.85rem;font-weight:700;
+}
+
+/* ─── FEATURES ─── */
+.features{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
+.feat{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:28px 22px;
+  transition:transform .2s,border-color .2s;
+}
+.feat:hover{transform:translateY(-4px);border-color:var(--teal);}
+.feat-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,var(--teal-dim),rgba(245,158,11,.1));
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;color:var(--teal-lt);margin-bottom:16px;
+}
+.feat h3{font-family:'Tajawal',sans-serif;font-size:1.05rem;font-weight:800;margin-bottom:8px;}
+.feat p{font-size:0.83rem;color:var(--muted);line-height:1.7;}
+
+/* ─── TEACHER ─── */
+.teacher-wrap{
+  max-width:800px;margin:0 auto;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:24px;padding:48px 40px;
+  display:flex;gap:40px;align-items:center;flex-wrap:wrap;
+}
+.teacher-avatar{
+  width:130px;height:130px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),var(--amber));
+  display:flex;align-items:center;justify-content:center;
+  font-size:3.5rem;border:3px solid var(--teal);
+  box-shadow:0 0 40px rgba(14,165,160,0.3);
+}
+.teacher-info{flex:1;min-width:200px;}
+.teacher-info h2{font-family:'Tajawal',sans-serif;font-size:1.8rem;font-weight:900;margin-bottom:6px;}
+.teacher-title{color:var(--teal-lt);font-weight:700;font-size:0.95rem;margin-bottom:14px;}
+.teacher-info p{color:var(--muted);font-size:0.9rem;line-height:1.8;margin-bottom:20px;}
+.teacher-badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.t-badge{
+  padding:6px 14px;border-radius:8px;
+  background:var(--teal-dim);border:1px solid var(--border);
+  color:var(--teal-lt);font-size:0.78rem;font-weight:700;
+}
+
+/* ─── SOCIAL CONTACT BUTTONS ─── */
+.contact-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.contact-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:12px;
+  font-family:'Cairo';font-size:0.88rem;font-weight:700;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+}
+.contact-btn:hover{transform:translateY(-2px);}
+.btn-wa{
+  background:var(--whatsapp);color:#fff;
+  box-shadow:0 4px 16px rgba(37,211,102,0.3);
+}
+.btn-wa:hover{box-shadow:0 8px 24px rgba(37,211,102,0.5);}
+.btn-fb{
+  background:var(--facebook);color:#fff;
+  box-shadow:0 4px 16px rgba(24,119,242,0.3);
+}
+.btn-fb:hover{box-shadow:0 8px 24px rgba(24,119,242,0.5);}
+.btn-call{
+  background:var(--teal-dim);color:var(--teal-lt);
+  border:1.5px solid var(--border);
+}
+.btn-call:hover{background:var(--teal);color:#fff;}
+
+/* ─── TIMELINE / HOW IT WORKS ─── */
+.timeline{max-width:700px;margin:0 auto;position:relative;}
+.timeline::before{
+  content:'';position:absolute;
+  right:28px;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,var(--teal),var(--amber));
+  opacity:.3;
+}
+.tl-item{
+  display:flex;gap:24px;align-items:flex-start;
+  margin-bottom:36px;padding-right:16px;
+  position:relative;
+}
+.tl-num{
+  width:56px;height:56px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),var(--teal-lt));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Tajawal';font-size:1.3rem;font-weight:900;color:#fff;
+  position:relative;z-index:1;
+  box-shadow:0 0 20px rgba(14,165,160,0.4);
+}
+.tl-content{flex:1;padding:20px 24px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);}
+.tl-content h3{font-family:'Tajawal';font-size:1.1rem;font-weight:800;margin-bottom:6px;}
+.tl-content p{font-size:0.85rem;color:var(--muted);line-height:1.7;}
+
+/* ─── FAQ ─── */
+.faq{max-width:750px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+.faq-item{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
+.faq-q{
+  width:100%;padding:20px 24px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  background:none;border:none;color:var(--text);
+  font-family:'Cairo';font-size:0.95rem;font-weight:700;
+  cursor:pointer;text-align:right;transition:background .2s;
+}
+.faq-q:hover{background:var(--teal-dim);}
+.faq-q .faq-icon{color:var(--teal-lt);font-size:1.1rem;transition:transform .3s;flex-shrink:0;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-a{
+  max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s;
+  padding:0 24px;font-size:0.88rem;color:var(--muted);line-height:1.8;
+}
+.faq-item.open .faq-a{max-height:200px;padding:0 24px 20px;}
+
+/* ─── CTA SECTION ─── */
+.cta-section{
+  max-width:700px;margin:0 auto;
+  background:linear-gradient(135deg,var(--bg3),var(--bg2));
+  border:1px solid var(--border);border-radius:24px;
+  padding:60px 40px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;
+  width:300px;height:300px;border-radius:50%;
+  background:rgba(14,165,160,0.1);
+  top:-100px;right:-100px;filter:blur(60px);
+}
+.cta-section h2{font-family:'Tajawal';font-size:2rem;font-weight:900;margin-bottom:14px;}
+.cta-section p{color:var(--muted);margin-bottom:30px;font-size:0.95rem;}
+
+/* ─── FOOTER ─── */
+footer{
+  position:relative;z-index:1;
+  border-top:1px solid var(--border);
+  padding:30px 24px;text-align:center;
+  color:var(--muted);font-size:0.82rem;
+}
+footer span{color:var(--teal-lt);}
+.footer-social{display:flex;justify-content:center;gap:16px;margin-bottom:16px;}
+.footer-social a{
+  width:40px;height:40px;border-radius:10px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;text-decoration:none;color:var(--muted);
+  transition:all .2s;
+}
+.footer-social a:hover{border-color:var(--teal);color:var(--teal-lt);background:var(--teal-dim);}
+.footer-social a.wa-icon:hover{border-color:var(--whatsapp);color:var(--whatsapp);background:rgba(37,211,102,0.1);}
+.footer-social a.fb-icon:hover{border-color:var(--facebook);color:var(--facebook);background:rgba(24,119,242,0.1);}
+
+/* ─── MOBILE NAV ─── */
+.mob-nav{display:none;}
+@media(max-width:640px){
+  nav .nav-link{display:none;}
+  .mob-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:900;
+    background:rgba(5,13,13,0.95);backdrop-filter:blur(16px);
+    border-top:1px solid var(--border);
+    padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+    justify-content:space-around;
+  }
+  body.light .mob-nav{background:rgba(240,250,250,0.95);}
+  .mob-nav a{
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    text-decoration:none;color:var(--muted);font-size:0.65rem;font-weight:700;
+    transition:color .2s;
+  }
+  .mob-nav a:hover,.mob-nav a.active{color:var(--teal-lt);}
+  .mob-nav-icon{font-size:1.3rem;}
+  body{padding-bottom:70px;}
+  .teacher-wrap{padding:30px 20px;}
+  .cta-section{padding:40px 20px;}
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s;}
+.reveal.on{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+
+<!-- FLOATING WHATSAPP -->
+<a class="float-wa" href="https://wa.me/201287490245" target="_blank" title="تواصل عبر واتساب">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">⚗️</div>
+    <div>
+      <div class="logo-text">منصة الوفاء</div>
+      <div class="logo-sub">مستر أحمد ذكي للعلوم المتكاملة والكيمياء</div>
+    </div>
+  </a>
+  <nav>
+    <a class="nav-link" href="#grades">الصفوف الدراسية</a>
+    <a class="nav-link" href="#howto">كيف تبدأ</a>
+    <a class="nav-link" href="#features">مميزات المنصة</a>
+    <a class="nav-link" href="#teacher">عن المدرس</a>
+    <button class="theme-btn" onclick="toggleTheme()" title="تغيير الوضع">🌙</button>
+    <a class="cta-header" href="login.html">اشترك الآن</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⚗️ منصة الوفاء للعلوم المتكاملة والكيمياء</div>
+  <h1>تعلّم <span class="grad">العلوم والكيمياء</span><br>بأسلوب مختلف</h1>
+  <p class="hero-desc">
+    مع مستر أحمد ذكي — دروس مباشرة، شرح مبسّط، وامتحانات تفاعلية<br>
+    لطلاب أولى وتانية وتالتة ثانوي
+  </p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="#grades">ابدأ رحلتك دلوقتي 🚀</a>
+    <a class="btn-secondary" href="#teacher">تعرّف على المدرس</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats reveal">
+  <div class="stat">
+    <div class="stat-n">+500</div>
+    <div class="stat-l">طالب مشترك</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n">3</div>
+    <div class="stat-l">صفوف دراسية</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n">+100</div>
+    <div class="stat-l">درس وامتحان</div>
+  </div>
+  <div class="stat">
+    <div class="stat-n">98%</div>
+    <div class="stat-l">رضا الطلاب</div>
+  </div>
+</div>
+
+<!-- GRADES -->
+<section id="grades">
+  <div class="sec-title reveal">
+    <div class="sec-tag">📚 الصفوف الدراسية</div>
+    <h2>اختار صفّك الدراسي</h2>
+    <p>محتوى متخصص لكل صف — شرح مفصّل وامتحانات على المنهج</p>
+  </div>
+  <div class="grades">
+    <a class="grade-card reveal" href="https://wa.me/201287490245?text=أريد الاشتراك في أولى ثانوي" target="_blank" style="animation-delay:.1s">
+      <div class="grade-icon">🔬</div>
+      <div class="grade-name">أولى ثانوي</div>
+      <div class="grade-subject">العلوم المتكاملة</div>
+      <p class="grade-desc">شرح كامل لمنهج العلوم المتكاملة — أحياء وكيمياء وفيزياء بأسلوب مبسّط وشيّق.</p>
+      <div class="grade-arrow">اشترك دلوقتي <i class="fas fa-arrow-left"></i></div>
+    </a>
+    <a class="grade-card reveal" href="https://wa.me/201287490245?text=أريد الاشتراك في تانية ثانوي" target="_blank" style="animation-delay:.2s">
+      <div class="grade-icon">⚛️</div>
+      <div class="grade-name">تانية ثانوي</div>
+      <div class="grade-subject">العلوم المتكاملة</div>
+      <p class="grade-desc">تعمّق أكتر في العلوم المتكاملة مع تمارين وامتحانات على المنهج الجديد.</p>
+      <div class="grade-arrow">اشترك دلوقتي <i class="fas fa-arrow-left"></i></div>
+    </a>
+    <a class="grade-card reveal" href="https://wa.me/201287490245?text=أريد الاشتراك في تالتة ثانوي كيمياء" target="_blank" style="animation-delay:.3s">
+      <div class="grade-icon">🧪</div>
+      <div class="grade-name">تالتة ثانوي</div>
+      <div class="grade-subject">كيمياء</div>
+      <p class="grade-desc">كيمياء ثانوية عامة — شرح النظريات، المعادلات، والتدريب على امتحانات الثانوية.</p>
+      <div class="grade-arrow">اشترك دلوقتي <i class="fas fa-arrow-left"></i></div>
+    </a>
+  </div>
+</section>
+
+<!-- HOW TO START -->
+<section id="howto" style="background:var(--bg2);">
+  <div class="sec-title reveal">
+    <div class="sec-tag">🚀 خطوات بسيطة</div>
+    <h2>إزّاي تبدأ مع المنصة؟</h2>
+    <p>٤ خطوات بس وهتبقى مشترك وشغّال</p>
+  </div>
+  <div class="timeline">
+    <div class="tl-item reveal">
+      <div class="tl-num">١</div>
+      <div class="tl-content">
+        <h3>تواصل مع المدرس</h3>
+        <p>ابعت واتساب أو تليفون على الرقم <strong>01287490245</strong> واختار صفّك الدراسي.</p>
+      </div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-num">٢</div>
+      <div class="tl-content">
+        <h3>اشترك في المنصة</h3>
+        <p>هيبعتلك رابط الاشتراك الخاص بيك بعد تأكيد التسجيل.</p>
+      </div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-num">٣</div>
+      <div class="tl-content">
+        <h3>ادخل على الدروس</h3>
+        <p>فتح الدروس والفيديوهات والامتحانات المخصصة لصفّك في أي وقت.</p>
+      </div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-num">٤</div>
+      <div class="tl-content">
+        <h3>ذاكر وتفوّق 🎯</h3>
+        <p>تابع تقدّمك، اعمل الامتحانات، وسأل المدرس على طول لو فيه حاجة مش فاهمها.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="sec-title reveal">
+    <div class="sec-tag">✨ مميزات المنصة</div>
+    <h2>ليه منصة الوفاء؟</h2>
+    <p>كل اللي محتاجه عشان تتفوق في العلوم</p>
+  </div>
+  <div class="features">
+    <div class="feat reveal">
+      <div class="feat-icon"><i class="fas fa-video"></i></div>
+      <h3>فيديوهات عالية الجودة</h3>
+      <p>دروس مسجّلة بشرح واضح تقدر تتفرّج عليها في أي وقت ومن أي مكان.</p>
+    </div>
+    <div class="feat reveal" style="animation-delay:.1s">
+      <div class="feat-icon"><i class="fas fa-pen-to-square"></i></div>
+      <h3>امتحانات تفاعلية</h3>
+      <p>اختبر نفسك بعد كل درس بامتحانات أونلاين على نفس أسلوب الثانوية.</p>
+    </div>
+    <div class="feat reveal" style="animation-delay:.2s">
+      <div class="feat-icon"><i class="fas fa-mobile-screen"></i></div>
+      <h3>متاح على كل الأجهزة</h3>
+      <p>موبايل أو تابلت أو كمبيوتر — المنصة شغّالة على كل حاجة.</p>
+    </div>
+    <div class="feat reveal" style="animation-delay:.3s">
+      <div class="feat-icon"><i class="fab fa-whatsapp"></i></div>
+      <h3>تواصل مباشر</h3>
+      <p>قدر تسأل وتتواصل مع المدرس مباشرة عبر واتساب في أي وقت.</p>
+    </div>
+    <div class="feat reveal" style="animation-delay:.4s">
+      <div class="feat-icon"><i class="fas fa-chart-line"></i></div>
+      <h3>متابعة التقدم</h3>
+      <p>تابع مستواك وشوف نتايج امتحاناتك واللي خلصته من المنهج.</p>
+    </div>
+    <div class="feat reveal" style="animation-delay:.5s">
+      <div class="feat-icon"><i class="fas fa-lock"></i></div>
+      <h3>محتوى حصري</h3>
+      <p>الدروس متاحة بس للمشتركين — محتوى محمي وحصري.</p>
+    </div>
+    <div class="feat reveal" style="animation-delay:.6s">
+      <div class="feat-icon"><i class="fas fa-file-pdf"></i></div>
+      <h3>ملخصات PDF</h3>
+      <p>مع كل درس ملخص جاهز للطباعة تقدر تذاكر منه في أي وقت.</p>
+    </div>
+    <div class="feat reveal" style="animation-delay:.7s">
+      <div class="feat-icon"><i class="fas fa-trophy"></i></div>
+      <h3>نتائج مضمونة</h3>
+      <p>طلاب المنصة حققوا نتائج مميزة في امتحانات الثانوية العامة.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEACHER -->
+<section id="teacher" style="background:var(--bg2);">
+  <div class="sec-title reveal">
+    <div class="sec-tag">👨‍🏫 عن المدرس</div>
+    <h2>مستر أحمد ذكي</h2>
+  </div>
+  <div class="teacher-wrap reveal">
+    <div class="teacher-avatar">👨‍🔬</div>
+    <div class="teacher-info">
+      <h2>مستر أحمد ذكي</h2>
+      <div class="teacher-title">⚗️ مدرس العلوم والكيمياء — المرحلة الثانوية</div>
+      <p>
+        مدرس متخصص في تدريس العلوم المتكاملة والكيمياء للمرحلة الثانوية.
+        أسلوب شرح مبسّط وممتع يخلّي الطالب يفهم ويستمتع في نفس الوقت.
+        الهدف مش بس المذاكرة — الهدف الفهم الحقيقي.
+      </p>
+      <div class="teacher-badges">
+        <span class="t-badge">🎓 خبرة تدريسية</span>
+        <span class="t-badge">📚 منهج متكامل</span>
+        <span class="t-badge">✅ نتائج مضمونة</span>
+      </div>
+      <div class="contact-btns">
+        <a class="contact-btn btn-wa" href="https://wa.me/201287490245" target="_blank">
+          <i class="fab fa-whatsapp"></i> واتساب
+        </a>
+        <a class="contact-btn btn-fb" href="https://www.facebook.com/share/1GKrUWzQMD/" target="_blank">
+          <i class="fab fa-facebook"></i> فيسبوك
+        </a>
+        <a class="contact-btn btn-call" href="tel:+201287490245">
+          <i class="fas fa-phone"></i> 01287490245
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="sec-title reveal">
+    <div class="sec-tag">❓ أسئلة شائعة</div>
+    <h2>عندك سؤال؟</h2>
+    <p>إجابات على أكتر الأسئلة اللي بتتسأل</p>
+  </div>
+  <div class="faq reveal">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        إزّاي بشترك في المنصة؟
+        <i class="fas fa-plus faq-icon"></i>
+      </button>
+      <div class="faq-a">تواصل مع مستر أحمد على واتساب 01287490245 أو من خلال صفحة الفيسبوك، وهيبعتلك تفاصيل الاشتراك والرابط الخاص بيك.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        المنصة بتشتغل على الموبايل؟
+        <i class="fas fa-plus faq-icon"></i>
+      </button>
+      <div class="faq-a">أيوه، المنصة شغّالة على كل الأجهزة — موبايل، تابلت، وكمبيوتر — من خلال المتصفح مباشرة بدون تحميل أي تطبيق.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        أقدر أشوف الدروس في أي وقت؟
+        <i class="fas fa-plus faq-icon"></i>
+      </button>
+      <div class="faq-a">طبعاً، الدروس المسجّلة متاحة ٢٤ ساعة في اليوم ٧ أيام في الأسبوع، تقدر تذاكر على راحتك.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        فيه امتحانات تجريبية زي الثانوية؟
+        <i class="fas fa-plus faq-icon"></i>
+      </button>
+      <div class="faq-a">أيوه، فيه امتحانات تفاعلية بعد كل درس، وامتحانات على المنهج الكامل بنفس أسلوب الثانوية العامة عشان تتعوّد على الأسئلة.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        أقدر أسأل المدرس لو مش فاهم حاجة؟
+        <i class="fas fa-plus faq-icon"></i>
+      </button>
+      <div class="faq-a">أيوه بالطبع، تقدر تتواصل مع مستر أحمد مباشرة على واتساب في أي وقت ويرد عليك.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--bg2);">
+  <div class="cta-section reveal">
+    <div class="sec-tag">🚀 ابدأ دلوقتي</div>
+    <h2>مستنى إيه؟ 🎯</h2>
+    <p>انضم لمئات الطلاب اللي بيتفوقوا مع منصة الوفاء</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a class="contact-btn btn-wa" href="https://wa.me/201287490245" target="_blank" style="font-size:1rem;padding:14px 28px;">
+        <i class="fab fa-whatsapp"></i> اشترك عبر واتساب
+      </a>
+      <a class="contact-btn btn-fb" href="https://www.facebook.com/share/1GKrUWzQMD/" target="_blank" style="font-size:1rem;padding:14px 28px;">
+        <i class="fab fa-facebook"></i> صفحة الفيسبوك
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-social">
+    <a href="https://wa.me/201287490245" target="_blank" class="wa-icon" title="واتساب"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://www.facebook.com/share/1GKrUWzQMD/" target="_blank" class="fb-icon" title="فيسبوك"><i class="fab fa-facebook-f"></i></a>
+    <a href="tel:+201287490245" title="اتصل بنا"><i class="fas fa-phone"></i></a>
+  </div>
+  <p>© 2025 <span>منصة الوفاء</span> | مستر أحمد ذكي — جميع الحقوق محفوظة</p>
+  <p style="margin-top:6px;">📞 <a href="tel:+201287490245" style="color:var(--teal-lt);text-decoration:none;">01287490245</a></p>
+</footer>
+
+<!-- MOBILE NAV -->
+<nav class="mob-nav">
+  <a href="#" class="active"><span class="mob-nav-icon">🏠</span>الرئيسية</a>
+  <a href="#grades"><span class="mob-nav-icon">📚</span>الصفوف</a>
+  <a href="#howto"><span class="mob-nav-icon">🚀</span>البداية</a>
+  <a href="#faq"><span class="mob-nav-icon">❓</span>أسئلة</a>
+  <a href="#teacher"><span class="mob-nav-icon">👨‍🏫</span>المدرس</a>
+</nav>
+
+<script>
+// Theme toggle
+const THEME_KEY = 'wafa-theme';
+const saved = localStorage.getItem(THEME_KEY);
+if(saved === 'light') applyLight();
+
+function toggleTheme(){
+  if(document.body.classList.contains('light')){
+    document.body.classList.remove('light');
+    document.querySelector('.theme-btn').textContent = '🌙';
+    localStorage.setItem(THEME_KEY,'dark');
+  } else {
+    applyLight();
+    localStorage.setItem(THEME_KEY,'light');
+  }
+}
+function applyLight(){
+  document.body.classList.add('light');
+  const btn = document.querySelector('.theme-btn');
+  if(btn) btn.textContent = '☀️';
+}
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('on'); });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// FAQ accordion
+function toggleFaq(btn){
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+// Animate stats counter
+function animateCounter(el, target, suffix=''){
+  let start = 0;
+  const duration = 1500;
+  const step = target / (duration / 16);
+  const timer = setInterval(()=>{
+    start += step;
+    if(start >= target){
+      el.textContent = (target >= 100 ? '+' : '') + target + suffix;
+      clearInterval(timer);
+    } else {
+      el.textContent = (target >= 100 ? '+' : '') + Math.floor(start) + suffix;
+    }
+  }, 16);
+}
+
+// Trigger counter animation when stats become visible
+const statsObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const nums = e.target.querySelectorAll('.stat-n');
+      const targets = [500, 3, 100, 98];
+      const suffixes = ['', '', '', '%'];
+      nums.forEach((el, i) => animateCounter(el, targets[i], suffixes[i]));
+      statsObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.3});
+const statsEl = document.querySelector('.stats');
+if(statsEl) statsObs.observe(statsEl);
+</script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCYnK9x6dwnRzxJQ0bIsvzvJC-DUkRhNR4",
+    authDomain: "wafa-platform.firebaseapp.com",
+    databaseURL: "https://wafa-platform-default-rtdb.firebaseio.com",
+    projectId: "wafa-platform",
+    storageBucket: "wafa-platform.firebasestorage.app",
+    messagingSenderId: "1048094327886",
+    appId: "1:1048094327886:web:a70ec2627048d0630f6f1f",
+    measurementId: "G-TMH13X4Q9V"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const analytics = getAnalytics(app);
+
+  // تحقق من حالة تسجيل الدخول
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        if (data.role === 'admin') {
+          console.log("✅ أدمن مسجل دخول:", data.name);
+          // هنا ممكن نظهر لوحة التحكم
+        }
+      }
+    }
+  });
+
+  // تصدير للاستخدام في باقي الكود
+  window.firebaseAuth = auth;
+  window.firebaseDB = db;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.signOut = signOut;
+</script>
+</body>
+</html>
