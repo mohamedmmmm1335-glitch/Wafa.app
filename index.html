@@ -257,7 +257,98 @@ select.form-input option{background:var(--bg2);}
 /* ── ID CARD viewer in admin ── */
 .id-img-thumb{width:60px;height:40px;object-fit:cover;border-radius:6px;cursor:pointer;border:1px solid var(--border);}
 
-/* ── 404 ── */
+
+/* ══════════════ DASHBOARD APP STYLE ══════════════ */
+/* TOP BAR */
+.db-topbar{position:sticky;top:0;z-index:900;background:rgba(5,13,13,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 18px;}
+.db-topbar-inner{display:flex;align-items:center;justify-content:space-between;}
+.db-logo-wrap{display:flex;align-items:center;gap:10px;}
+.db-logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--teal-lt));display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.db-logo-name{font-family:'Tajawal',sans-serif;font-weight:900;font-size:1rem;color:var(--teal-lt);}
+.db-logo-sub{font-size:.6rem;color:var(--muted);}
+.db-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-lt));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.95rem;color:#fff;flex-shrink:0;}
+.db-icon-btn{background:var(--teal-dim);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* BOTTOM NAV */
+.db-bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(5,13,13,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding:8px 0 12px;}
+.db-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:var(--muted);font-family:'Cairo';font-size:.65rem;font-weight:700;cursor:pointer;padding:6px 4px;border-radius:10px;transition:color .2s;}
+.db-nav-btn i{font-size:1.15rem;transition:transform .2s;}
+.db-nav-btn.active{color:var(--teal-lt);}
+.db-nav-btn.active i{transform:translateY(-2px);}
+
+/* TAB CONTENT */
+.db-tab-content{padding:16px 16px 0;}
+
+/* BANNER */
+.db-banner{background:linear-gradient(135deg,var(--teal) 0%,#0a6b68 60%,#064040 100%);border-radius:20px;padding:22px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;position:relative;overflow:hidden;}
+.db-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='160' cy='40' r='80' fill='rgba(255,255,255,0.05)'/%3E%3Ccircle cx='20' cy='160' r='60' fill='rgba(255,255,255,0.04)'/%3E%3C/svg%3E");pointer-events:none;}
+.db-banner-text{position:relative;z-index:1;}
+.db-banner-greeting{font-size:.78rem;color:rgba(255,255,255,.75);margin-bottom:4px;}
+.db-banner-name{font-family:'Tajawal',sans-serif;font-size:1.4rem;font-weight:900;color:#fff;line-height:1.2;}
+.db-banner-sub{font-size:.75rem;color:rgba(255,255,255,.7);margin-top:4px;}
+.db-banner-icon{font-size:3rem;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));}
+
+/* STATS */
+.db-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;}
+.db-stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;transition:border-color .2s;}
+.db-stat-card:hover{border-color:var(--teal);}
+.db-stat-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;}
+.db-stat-num{font-family:'Tajawal',sans-serif;font-size:1.6rem;font-weight:900;color:var(--text);}
+.db-stat-lbl{font-size:.72rem;color:var(--muted);font-weight:700;}
+
+/* SECTION TITLE */
+.db-section-title{font-family:'Tajawal',sans-serif;font-size:1.05rem;font-weight:900;color:var(--text);margin-bottom:12px;}
+
+/* QUICK ACTIONS */
+.db-quick-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.db-quick-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s,transform .15s;}
+.db-quick-card:hover{border-color:var(--teal);transform:translateX(-2px);}
+.db-quick-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;flex-shrink:0;}
+.db-quick-txt{flex:1;}
+.db-quick-title{font-weight:700;font-size:.9rem;}
+.db-quick-sub{font-size:.73rem;color:var(--muted);margin-top:2px;}
+.db-quick-arr{color:var(--muted);font-size:.8rem;}
+
+/* GRADE CARDS */
+.db-grade-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;transition:border-color .2s;}
+.db-grade-card:hover{border-color:var(--teal);}
+.db-grade-card-inner{display:flex;align-items:center;gap:14px;cursor:pointer;}
+.db-grade-num-badge{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--teal-lt));display:flex;align-items:center;justify-content:center;font-family:'Tajawal',sans-serif;font-size:1.4rem;font-weight:900;color:#fff;flex-shrink:0;}
+.db-grade-info{flex:1;}
+.db-grade-name{font-weight:700;font-size:.92rem;}
+.db-grade-sub{font-size:.73rem;color:var(--muted);margin-top:2px;}
+.db-grade-chev{color:var(--muted);font-size:.8rem;transition:transform .3s;}
+.db-grade-chev.open{transform:rotate(180deg);}
+
+/* CHAPTER ITEMS inside grade */
+.db-chapter-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.db-chapter-row:last-child{border-bottom:none;padding-bottom:0;}
+.db-ch-dot{width:10px;height:10px;border-radius:50%;background:var(--teal);flex-shrink:0;}
+.db-ch-dot.watched{background:#22c55e;}
+.db-ch-body{flex:1;}
+.db-ch-name{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:6px;}
+.db-ch-desc{font-size:.73rem;color:var(--muted);margin-top:2px;}
+.db-ch-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.db-ch-btn{padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:'Cairo';font-size:.73rem;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:4px;}
+.db-ch-btn:hover{border-color:var(--teal);color:var(--teal-lt);background:var(--teal-dim);}
+.db-ch-btn.vid{background:var(--teal);border-color:var(--teal);color:#fff;}
+.db-ch-btn.vid.watched{background:rgba(34,197,94,.15);border-color:#22c55e;color:#22c55e;}
+.db-ch-btn.quiz{background:rgba(245,158,11,.12);border-color:var(--amber);color:var(--amber);}
+
+/* EMPTY STATE */
+.db-empty-state{text-align:center;padding:48px 20px;}
+.db-empty-icon{width:72px;height:72px;border-radius:50%;background:var(--teal-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.8rem;color:var(--teal-lt);}
+.db-empty-title{font-family:'Tajawal',sans-serif;font-size:1.2rem;font-weight:900;margin-bottom:8px;}
+.db-empty-sub{color:var(--muted);font-size:.85rem;margin-bottom:20px;line-height:1.7;}
+.db-empty-btn{padding:11px 28px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--teal-lt));color:#fff;font-family:'Cairo';font-size:.9rem;font-weight:800;border:none;cursor:pointer;}
+
+/* QUIZ RESULT CARD */
+.db-quiz-result-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;}
+.db-qr-score{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-lt));display:flex;align-items:center;justify-content:center;font-family:'Tajawal';font-size:1rem;font-weight:900;color:#fff;flex-shrink:0;}
+.db-qr-info{flex:1;}
+.db-qr-name{font-weight:700;font-size:.88rem;}
+.db-qr-meta{font-size:.73rem;color:var(--muted);margin-top:3px;}
+
 .not-found-wrap{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;}
 .not-found-num{font-family:'Tajawal';font-size:8rem;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--teal-lt),var(--amber-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
@@ -605,67 +696,165 @@ select.form-input option{background:var(--bg2);}
 </div>
 
 <!-- ═══════════════════════════ DASHBOARD PAGE ═══════════════════════════ -->
-<div id="pg-dash" class="page">
-  <header>
-    <div class="logo" onclick="showPage('pg-home')">
-      <div class="logo-mark">⚗️</div>
-      <div><div class="logo-txt">الوفاء</div><div class="logo-sub">منصة تعليمية</div></div>
-    </div>
-    <div class="hdr-btns">
-      <button class="hdr-btn" id="adminDashBtn" onclick="showPage('pg-admin')" style="display:none;">🛡 الإدارة</button>
-      <button class="logout-btn" onclick="doLogout()">خروج</button>
-    </div>
-  </header>
-  <div class="dash-wrap">
-    <div class="dash-welcome">
-      <div>
-        <h2>أهلاً، <span id="dashName" class="grad">طالب</span> 👋</h2>
-        <p id="dashGrade" style="color:var(--muted);font-size:.88rem;margin-top:4px;"></p>
-      </div>
-      <div><span class="badge-grade" id="dashBadge">🎓 طالب</span></div>
-    </div>
+<div id="pg-dash" class="page" style="background:var(--bg);min-height:100vh;">
 
-    <div class="sec-head" style="text-align:right;margin-bottom:20px;">
-      <div class="sec-tag">📚 الكورسات</div>
-      <h2 style="font-family:'Tajawal',sans-serif;font-size:1.4rem;font-weight:900;">اختار صفك وابدأ المذاكرة</h2>
-    </div>
-
-    <div class="grade-section" id="gs-1">
-      <div class="grade-section-hdr" onclick="toggleGradeSection('g1')">
-        <h3><span style="font-size:1.8rem;">١</span> الصف الأول الثانوي — علوم متكاملة</h3>
-        <i class="fas fa-chevron-down" id="chev-g1"></i>
-      </div>
-      <div class="grade-section-body" id="g1">
-        <div class="chapter-list" id="chapters-g1">
-          <p style="color:var(--muted);padding:10px;font-size:.85rem;">لا توجد شابترات حتى الآن</p>
+  <!-- TOP BAR -->
+  <div class="db-topbar">
+    <div class="db-topbar-inner">
+      <div class="db-logo-wrap">
+        <div class="db-logo-icon">⚗️</div>
+        <div>
+          <div class="db-logo-name">منصة الوفاء</div>
+          <div class="db-logo-sub">مستر أحمد ذكي — الكيمياء</div>
         </div>
       </div>
-    </div>
-
-    <div class="grade-section" id="gs-2">
-      <div class="grade-section-hdr" onclick="toggleGradeSection('g2')">
-        <h3><span style="font-size:1.8rem;">٢</span> الصف الثاني الثانوي — علوم متكاملة</h3>
-        <i class="fas fa-chevron-down" id="chev-g2"></i>
-      </div>
-      <div class="grade-section-body" id="g2">
-        <div class="chapter-list" id="chapters-g2">
-          <p style="color:var(--muted);padding:10px;font-size:.85rem;">لا توجد شابترات حتى الآن</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="grade-section" id="gs-3">
-      <div class="grade-section-hdr" onclick="toggleGradeSection('g3')">
-        <h3><span style="font-size:1.8rem;">٣</span> الصف الثالث الثانوي — كيمياء</h3>
-        <i class="fas fa-chevron-down" id="chev-g3"></i>
-      </div>
-      <div class="grade-section-body" id="g3">
-        <div class="chapter-list" id="chapters-g3">
-          <p style="color:var(--muted);padding:10px;font-size:.85rem;">لا توجد شابترات حتى الآن</p>
-        </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="db-icon-btn" id="adminDashBtn" onclick="showPage('pg-admin')" style="display:none;" title="لوحة الإدارة">🛡</button>
+        <div class="db-avatar" id="dbAvatarLetter">أ</div>
       </div>
     </div>
   </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="db-bottom-nav">
+    <button class="db-nav-btn active" id="dbn-home" onclick="dbTab('home')">
+      <i class="fas fa-home"></i><span>الرئيسية</span>
+    </button>
+    <button class="db-nav-btn" id="dbn-courses" onclick="dbTab('courses')">
+      <i class="fas fa-book-open"></i><span>كورساتي</span>
+    </button>
+    <button class="db-nav-btn" id="dbn-quizzes" onclick="dbTab('quizzes')">
+      <i class="fas fa-clipboard-check"></i><span>امتحاناتي</span>
+    </button>
+  </div>
+
+  <!-- TAB: HOME -->
+  <div class="db-tab-content" id="dbt-home">
+    <div class="db-banner">
+      <div class="db-banner-text">
+        <div class="db-banner-greeting">أهلاً بك 👋</div>
+        <div class="db-banner-name" id="dashName">طالب</div>
+        <div class="db-banner-sub" id="dashGrade">الصف الثالث الثانوي</div>
+      </div>
+      <div class="db-banner-icon">⚗️</div>
+    </div>
+
+    <div class="db-stats-grid">
+      <div class="db-stat-card">
+        <div class="db-stat-icon" style="background:linear-gradient(135deg,#0ea5a0,#2dd4bf);"><i class="fas fa-play-circle"></i></div>
+        <div class="db-stat-num" id="statWatched">0</div>
+        <div class="db-stat-lbl">فيديو شاهدته</div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon" style="background:linear-gradient(135deg,#f59e0b,#fcd34d);"><i class="fas fa-trophy"></i></div>
+        <div class="db-stat-num" id="statBestScore">0%</div>
+        <div class="db-stat-lbl">أفضل نتيجة</div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon" style="background:linear-gradient(135deg,#6366f1,#a5b4fc);"><i class="fas fa-clipboard-check"></i></div>
+        <div class="db-stat-num" id="statQuizDone">0</div>
+        <div class="db-stat-lbl">امتحان اكتمل</div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon" style="background:linear-gradient(135deg,#22c55e,#86efac);"><i class="fas fa-chart-line"></i></div>
+        <div class="db-stat-num" id="statAvg">0%</div>
+        <div class="db-stat-lbl">متوسط الدرجات</div>
+      </div>
+    </div>
+
+    <div class="db-section-title">⚡ إجراءات سريعة</div>
+    <div class="db-quick-wrap">
+      <div class="db-quick-card" onclick="dbTab('courses')">
+        <div class="db-quick-icon" style="background:linear-gradient(135deg,#0ea5a0,#2dd4bf);"><i class="fas fa-book-open"></i></div>
+        <div class="db-quick-txt">
+          <div class="db-quick-title">تصفح الكورسات</div>
+          <div class="db-quick-sub">اكتشف دروسك الجديدة</div>
+        </div>
+        <i class="fas fa-chevron-left db-quick-arr"></i>
+      </div>
+      <div class="db-quick-card" onclick="dbTab('quizzes')">
+        <div class="db-quick-icon" style="background:linear-gradient(135deg,#6366f1,#a5b4fc);"><i class="fas fa-pencil-alt"></i></div>
+        <div class="db-quick-txt">
+          <div class="db-quick-title">امتحاناتي</div>
+          <div class="db-quick-sub">اعرض نتائجك السابقة</div>
+        </div>
+        <i class="fas fa-chevron-left db-quick-arr"></i>
+      </div>
+      <div class="db-quick-card" onclick="doLogout()">
+        <div class="db-quick-icon" style="background:linear-gradient(135deg,#ef4444,#fca5a5);"><i class="fas fa-sign-out-alt"></i></div>
+        <div class="db-quick-txt">
+          <div class="db-quick-title">تسجيل الخروج</div>
+          <div class="db-quick-sub">إلى اللقاء 👋</div>
+        </div>
+        <i class="fas fa-chevron-left db-quick-arr"></i>
+      </div>
+    </div>
+    <div style="height:90px;"></div>
+  </div>
+
+  <!-- TAB: COURSES -->
+  <div class="db-tab-content" id="dbt-courses" style="display:none;">
+    <div class="db-section-title">📚 كورساتي</div>
+
+    <div class="db-grade-card">
+      <div class="db-grade-card-inner" onclick="toggleGradeSection('g1')">
+        <div class="db-grade-num-badge">١</div>
+        <div class="db-grade-info">
+          <div class="db-grade-name">الصف الأول الثانوي</div>
+          <div class="db-grade-sub">علوم متكاملة</div>
+        </div>
+        <i class="fas fa-chevron-down db-grade-chev" id="chev-g1"></i>
+      </div>
+      <div id="g1" style="display:none;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
+        <div id="chapters-g1"><p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p></div>
+      </div>
+    </div>
+
+    <div class="db-grade-card">
+      <div class="db-grade-card-inner" onclick="toggleGradeSection('g2')">
+        <div class="db-grade-num-badge" style="background:linear-gradient(135deg,#f59e0b,#fcd34d);">٢</div>
+        <div class="db-grade-info">
+          <div class="db-grade-name">الصف الثاني الثانوي</div>
+          <div class="db-grade-sub">علوم متكاملة</div>
+        </div>
+        <i class="fas fa-chevron-down db-grade-chev" id="chev-g2"></i>
+      </div>
+      <div id="g2" style="display:none;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
+        <div id="chapters-g2"><p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p></div>
+      </div>
+    </div>
+
+    <div class="db-grade-card">
+      <div class="db-grade-card-inner" onclick="toggleGradeSection('g3')">
+        <div class="db-grade-num-badge" style="background:linear-gradient(135deg,#6366f1,#a5b4fc);">٣</div>
+        <div class="db-grade-info">
+          <div class="db-grade-name">الصف الثالث الثانوي</div>
+          <div class="db-grade-sub">كيمياء — ثانوية عامة</div>
+        </div>
+        <i class="fas fa-chevron-down db-grade-chev" id="chev-g3"></i>
+      </div>
+      <div id="g3" style="display:none;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
+        <div id="chapters-g3"><p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p></div>
+      </div>
+    </div>
+
+    <div style="height:90px;"></div>
+  </div>
+
+  <!-- TAB: QUIZZES -->
+  <div class="db-tab-content" id="dbt-quizzes" style="display:none;">
+    <div class="db-section-title">📝 امتحاناتي السابقة</div>
+    <div id="myQuizResults">
+      <div class="db-empty-state">
+        <div class="db-empty-icon"><i class="fas fa-clipboard-list"></i></div>
+        <div class="db-empty-title">لا توجد امتحانات بعد</div>
+        <div class="db-empty-sub">حل امتحاناتك من الكورسات وهتظهر هنا</div>
+        <button class="db-empty-btn" onclick="dbTab('courses')">📚 ابدأ من الكورسات</button>
+      </div>
+    </div>
+    <div style="height:90px;"></div>
+  </div>
+
 </div>
 
 <!-- ═══════════════════════════ ADMIN PAGE ═══════════════════════════ -->
@@ -872,15 +1061,18 @@ function updateHeaderUI(loggedIn, data) {
     loggedHdr.style.display = 'flex';
     if (data && data.role === 'admin') {
       if(adminTabBtn) adminTabBtn.style.display = 'inline-block';
-      if(adminDashBtn) adminDashBtn.style.display = 'inline-block';
+      if(adminDashBtn) adminDashBtn.style.display = 'flex';
     }
     if (data) {
-      document.getElementById('dashName').textContent = (data.firstName||'') + ' ' + (data.secondName||'');
+      const fullName = (data.firstName||'') + ' ' + (data.secondName||'');
+      document.getElementById('dashName').textContent = fullName;
+      // avatar letter
+      const av = document.getElementById('dbAvatarLetter');
+      if(av) av.textContent = data.firstName?data.firstName[0]:'ط';
       const gradeLabels = {g1:'الصف الأول الثانوي',g2:'الصف الثاني الثانوي',g3:'الصف الثالث الثانوي'};
       document.getElementById('dashGrade').textContent = gradeLabels[data.grade] || '';
-      document.getElementById('dashBadge').textContent = data.role === 'admin' ? '🛡 مدرس/أدمن' : '🎓 طالب';
       // watermark
-      document.getElementById('videoWatermark').textContent = data.firstName + ' ' + data.secondName;
+      document.getElementById('videoWatermark').textContent = fullName;
     }
   } else {
     homeHdr.style.display = 'flex';
@@ -899,6 +1091,7 @@ window.doLogin = async function() {
 
   try {
     let email = identifier;
+    // لو مش إيميل، ابحث بالرقم (الـ Rules دلوقتي بتسمح بالـ read للكل)
     if (!identifier.includes('@')) {
       const q = query(collection(db,'users'), where('studentPhone','==',identifier));
       const snap = await getDocs(q);
@@ -909,8 +1102,11 @@ window.doLogin = async function() {
     const userSnap = await getDoc(doc(db,'users', cred.user.uid));
     if (!userSnap.exists()) { showAuthMsg('error','حصل خطأ في بيانات حسابك'); setAuthLoading(false,'li'); return; }
     const data = userSnap.data();
+    currentUserData = data;
+    window._currentUserData = data;
     showAuthMsg('success','تم تسجيل الدخول! 🎉');
     setTimeout(() => {
+      updateHeaderUI(true, data);
       if (data.role === 'admin') { showPage('pg-admin'); loadAdminData(); }
       else if (data.status === 'active') { showPage('pg-dash'); loadChapters(); }
       else { showPage('pg-pending'); }
@@ -918,7 +1114,12 @@ window.doLogin = async function() {
     }, 800);
   } catch(e) {
     setAuthLoading(false,'li');
-    const msgs = {'auth/user-not-found':'الإيميل مش موجود','auth/wrong-password':'كلمة المرور غلط','auth/invalid-credential':'رقم الطالب أو كلمة المرور غلط','auth/too-many-requests':'كتير أوي، استنى شوية'};
+    const msgs = {
+      'auth/user-not-found':'الإيميل مش موجود',
+      'auth/wrong-password':'كلمة المرور غلط',
+      'auth/invalid-credential':'رقم الطالب أو كلمة المرور غلط',
+      'auth/too-many-requests':'كتير أوي، استنى شوية'
+    };
     showAuthMsg('error', msgs[e.code] || 'حصل خطأ، حاول تاني');
   }
 };
@@ -1009,44 +1210,90 @@ window.resetPass = async function() {
 // ── CHAPTERS (Student View) ──
 async function loadChapters() {
   const watched = await getUserWatched();
+  // update watched stat
+  document.getElementById('statWatched').textContent = watched.length;
+
   ['g1','g2','g3'].forEach(async (gid) => {
     const el = document.getElementById('chapters-'+gid);
     const snap = await getDocs(collection(db,'chapters_'+gid));
-    if (snap.empty) { el.innerHTML='<p style="color:var(--muted);padding:10px;font-size:.85rem;">لا توجد شابترات حتى الآن</p>'; return; }
+    if (snap.empty) { el.innerHTML='<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p>'; return; }
     el.innerHTML = '';
     for (const d of snap.docs) {
       const ch = d.data();
       const isWatched = watched.includes(gid+'_'+d.id);
-      // Check if quiz exists for this chapter
-      const quizSnap = await getDocs(query(collection(db,'quizzes'), where('chapterId','==',d.id), where('grade','==',gid)));
+      const quizSnap = await getDocs(query(collection(db,'quizzes'), where('grade','==',gid)));
       const hasQuiz = !quizSnap.empty;
       const quizId = hasQuiz ? quizSnap.docs[0].id : null;
 
       el.insertAdjacentHTML('beforeend', `
-        <div class="chapter-item">
-          <div class="ch-info">
-            <h4>
-              ${isWatched ? '<span title="تمت المشاهدة" style="color:#22c55e;">✅</span>' : ''}
+        <div class="db-chapter-row">
+          <div class="db-ch-dot ${isWatched?'watched':''}"></div>
+          <div class="db-ch-body">
+            <div class="db-ch-name">
+              ${isWatched?'<span style="color:#22c55e;font-size:.8rem;">✅</span>':''}
               ${ch.name}
-            </h4>
-            <p>${ch.desc||''}</p>
-          </div>
-          <div class="ch-actions">
-            ${ch.video ? `<button class="ch-btn primary ${isWatched?'watched':''}" onclick="openVideo('${ch.video}','${ch.name}','${gid}','${d.id}')">
-              <i class="fas fa-play"></i> ${isWatched?'إعادة':'فيديو'}
-            </button>` : ''}
-            ${ch.file ? `<button class="ch-btn" onclick="openPDF('${ch.file}','${ch.name}')">
-              <i class="fas fa-file-pdf"></i> ملف
-            </button>` : ''}
-            ${hasQuiz ? `<button class="ch-btn" style="border-color:var(--amber);color:var(--amber);" onclick="openQuiz('${quizId}','${ch.name}')">
-              <i class="fas fa-pencil-alt"></i> امتحان
-            </button>` : ''}
+            </div>
+            ${ch.desc?`<div class="db-ch-desc">${ch.desc}</div>`:''}
+            <div class="db-ch-btns">
+              ${ch.video?`<button class="db-ch-btn vid ${isWatched?'watched':''}" onclick="openVideo('${ch.video}','${ch.name}','${gid}','${d.id}')">
+                <i class="fas fa-play"></i> ${isWatched?'إعادة':'فيديو'}
+              </button>`:''}
+              ${ch.file?`<button class="db-ch-btn" onclick="openPDF('${ch.file}','${ch.name}')">
+                <i class="fas fa-file-pdf"></i> ملف
+              </button>`:''}
+              ${hasQuiz?`<button class="db-ch-btn quiz" onclick="openQuiz('${quizId}','${ch.name}')">
+                <i class="fas fa-pencil-alt"></i> امتحان
+              </button>`:''}
+            </div>
           </div>
         </div>`);
     }
   });
+
+  // load quiz results for stats
+  loadMyQuizResults();
 }
 window.loadChapters = loadChapters;
+
+// ── MY QUIZ RESULTS ──
+async function loadMyQuizResults() {
+  if (!currentUser) return;
+  try {
+    const snap = await getDocs(query(collection(db,'quiz_results'), where('userId','==',currentUser.uid)));
+    const el = document.getElementById('myQuizResults');
+    if (snap.empty) {
+      el.innerHTML = `<div class="db-empty-state">
+        <div class="db-empty-icon"><i class="fas fa-clipboard-list"></i></div>
+        <div class="db-empty-title">لا توجد امتحانات بعد</div>
+        <div class="db-empty-sub">حل امتحاناتك من الكورسات وهتظهر هنا</div>
+        <button class="db-empty-btn" onclick="dbTab('courses')">📚 ابدأ من الكورسات</button>
+      </div>`;
+      return;
+    }
+    let total = 0, best = 0, scores = [];
+    el.innerHTML = '';
+    snap.docs.forEach(d => {
+      const r = d.data();
+      const pct = Math.round(r.score/r.total*100);
+      scores.push(pct);
+      if(pct > best) best = pct;
+      total++;
+      el.insertAdjacentHTML('beforeend',`
+        <div class="db-quiz-result-card">
+          <div class="db-qr-score" style="background:linear-gradient(135deg,${pct>=50?'var(--teal),var(--teal-lt)':'#ef4444,#fca5a5'});">${pct}%</div>
+          <div class="db-qr-info">
+            <div class="db-qr-name">${r.quizName||'امتحان'}</div>
+            <div class="db-qr-meta">${r.score} من ${r.total} سؤال</div>
+          </div>
+        </div>`);
+    });
+    const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+    document.getElementById('statQuizDone').textContent = total;
+    document.getElementById('statBestScore').textContent = best+'%';
+    document.getElementById('statAvg').textContent = avg+'%';
+  } catch(e) { console.error(e); }
+}
+
 
 // ── WATCHED SYSTEM ──
 async function getUserWatched() {
@@ -1495,14 +1742,25 @@ function showNotif(msg, type) {
 }
 window.showNotif = showNotif;
 
-// ── GRADE SECTION TOGGLE ──
+// ── DASHBOARD TABS ──
+function dbTab(name) {
+  ['home','courses','quizzes'].forEach(t => {
+    document.getElementById('dbt-'+t).style.display = t===name?'block':'none';
+    const btn = document.getElementById('dbn-'+t);
+    if(btn) btn.classList.toggle('active', t===name);
+  });
+  if (name==='quizzes') loadMyQuizResults();
+}
+window.dbTab = dbTab;
+
+// ── GRADE SECTION TOGGLE (new dashboard) ──
 function toggleGradeSection(id) {
   const body = document.getElementById(id);
   const chev = document.getElementById('chev-'+id);
-  body.classList.toggle('open');
-  chev.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if(chev) chev.classList.toggle('open', !isOpen);
 }
-window.toggleGradeSection = toggleGradeSection;
 
 // ── ADMIN TABS ──
 function adminTab(name) {
