@@ -352,6 +352,82 @@ select.form-input option{background:var(--bg2);}
 .not-found-wrap{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;}
 .not-found-num{font-family:'Tajawal';font-size:8rem;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--teal-lt),var(--amber-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
+/* ── PROGRESS BAR ── */
+.progress-wrap{margin:6px 0 4px;}
+.progress-bar-track{width:100%;height:7px;background:var(--bg);border-radius:50px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--teal),var(--teal-lt));transition:width .6s ease;}
+.progress-label{font-size:.7rem;color:var(--muted);margin-top:4px;}
+
+/* ── LEADERBOARD ── */
+.leader-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);margin-bottom:8px;transition:border-color .2s;}
+.leader-row:hover{border-color:var(--teal);}
+.leader-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Tajawal';font-size:.9rem;font-weight:900;flex-shrink:0;}
+.leader-rank.gold{background:linear-gradient(135deg,#f59e0b,#fcd34d);color:#fff;}
+.leader-rank.silver{background:linear-gradient(135deg,#9ca3af,#d1d5db);color:#fff;}
+.leader-rank.bronze{background:linear-gradient(135deg,#d97706,#fbbf24);color:#fff;}
+.leader-rank.other{background:var(--card);border:1px solid var(--border);color:var(--muted);}
+.leader-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-lt));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:.9rem;flex-shrink:0;}
+.leader-name{flex:1;font-weight:700;font-size:.88rem;}
+.leader-score{font-family:'Tajawal';font-size:1rem;font-weight:900;color:var(--teal-lt);}
+.leader-me{border-color:var(--teal);background:var(--teal-dim);}
+
+/* ── ANNOUNCEMENTS ── */
+.announce-card{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden;}
+.announce-card::before{content:'';position:absolute;right:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--teal),var(--teal-lt));}
+.announce-card.urgent::before{background:linear-gradient(180deg,#ef4444,#fca5a5);}
+.announce-card.info::before{background:linear-gradient(180deg,#6366f1,#a5b4fc);}
+.announce-tag{font-size:.68rem;font-weight:800;padding:2px 10px;border-radius:50px;display:inline-block;margin-bottom:8px;}
+.announce-tag.urgent{background:rgba(239,68,68,.15);color:#ef4444;}
+.announce-tag.info{background:rgba(99,102,241,.15);color:#a5b4fc;}
+.announce-tag.normal{background:var(--teal-dim);color:var(--teal-lt);}
+.announce-title{font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.announce-body{font-size:.8rem;color:var(--muted);line-height:1.7;}
+.announce-date{font-size:.7rem;color:var(--muted);margin-top:8px;}
+
+/* ── SCHEDULE ── */
+.sched-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
+.sched-item:last-child{border-bottom:none;}
+.sched-date-box{width:46px;text-align:center;flex-shrink:0;}
+.sched-day{font-family:'Tajawal';font-size:1.4rem;font-weight:900;color:var(--teal-lt);line-height:1;}
+.sched-month{font-size:.65rem;color:var(--muted);font-weight:700;}
+.sched-info{flex:1;}
+.sched-title{font-weight:700;font-size:.88rem;}
+.sched-meta{font-size:.75rem;color:var(--muted);margin-top:3px;}
+.sched-badge{font-size:.68rem;font-weight:800;padding:2px 8px;border-radius:50px;margin-top:5px;display:inline-block;}
+.sched-badge.exam{background:rgba(239,68,68,.12);color:#ef4444;}
+.sched-badge.revision{background:rgba(245,158,11,.12);color:var(--amber);}
+.sched-badge.lecture{background:var(--teal-dim);color:var(--teal-lt);}
+
+/* ── WHATSAPP SHARE BTN ── */
+.wa-share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;background:#25d366;color:#fff;font-family:'Cairo';font-size:.8rem;font-weight:700;border:none;cursor:pointer;margin-top:10px;text-decoration:none;transition:transform .2s,box-shadow .2s;}
+.wa-share-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(37,211,102,.4);}
+
+/* ── ADMIN ANNOUNCE/SCHED FORMS ── */
+.announce-type-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.type-chip{padding:6px 14px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'Cairo';font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.type-chip.active{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+/* ── NOTIFICATION BELL ── */
+.notif-bell{position:relative;}
+.notif-dot{position:absolute;top:2px;left:2px;width:9px;height:9px;border-radius:50%;background:#ef4444;border:2px solid var(--bg);display:none;}
+.notif-dot.show{display:block;}
+
+/* ── BACK BTN (mobile) ── */
+.db-back-btn{background:var(--teal-dim);border:1px solid var(--border);border-radius:8px;color:var(--teal-lt);font-size:1rem;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* ── ADMIN STATS ROW ── */
+.admin-stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px;}
+.admin-stat-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 14px;text-align:center;}
+.admin-stat-num{font-family:'Tajawal';font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--teal-lt),var(--amber-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.admin-stat-lbl{font-size:.72rem;color:var(--muted);font-weight:700;}
+
+/* ── PERFORMANCE REPORT (Admin) ── */
+.perf-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);margin-bottom:8px;}
+.perf-name{flex:1;font-weight:700;font-size:.85rem;}
+.perf-bar-wrap{flex:2;}
+.perf-bar{height:6px;border-radius:50px;background:linear-gradient(90deg,var(--teal),var(--teal-lt));}
+.perf-pct{font-size:.8rem;font-weight:700;color:var(--teal-lt);white-space:nowrap;}
+
 @media(max-width:560px){
   .auth-card{padding:26px 18px;}
   .form-grid{grid-template-columns:1fr;}
@@ -709,6 +785,10 @@ select.form-input option{background:var(--bg2);}
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
+        <button class="db-icon-btn notif-bell" id="bellBtn" onclick="dbTab('announcements')" title="الإشعارات" style="position:relative;">
+          <i class="fas fa-bell"></i>
+          <span class="notif-dot" id="notifDot"></span>
+        </button>
         <button class="db-icon-btn" id="adminDashBtn" onclick="showPage('pg-admin')" style="display:none;" title="لوحة الإدارة">🛡</button>
         <div class="db-avatar" id="dbAvatarLetter">أ</div>
       </div>
@@ -725,6 +805,15 @@ select.form-input option{background:var(--bg2);}
     </button>
     <button class="db-nav-btn" id="dbn-quizzes" onclick="dbTab('quizzes')">
       <i class="fas fa-clipboard-check"></i><span>امتحاناتي</span>
+    </button>
+    <button class="db-nav-btn" id="dbn-leaderboard" onclick="dbTab('leaderboard')">
+      <i class="fas fa-trophy"></i><span>المتصدرين</span>
+    </button>
+    <button class="db-nav-btn" id="dbn-announcements" onclick="dbTab('announcements')">
+      <i class="fas fa-bell"></i><span>الإشعارات</span>
+    </button>
+    <button class="db-nav-btn" id="dbn-schedule" onclick="dbTab('schedule')" style="display:none;">
+      <i class="fas fa-calendar-alt"></i><span>الجدول</span>
     </button>
   </div>
 
@@ -780,6 +869,22 @@ select.form-input option{background:var(--bg2);}
         </div>
         <i class="fas fa-chevron-left db-quick-arr"></i>
       </div>
+      <div class="db-quick-card" onclick="dbTab('leaderboard')">
+        <div class="db-quick-icon" style="background:linear-gradient(135deg,#f59e0b,#fcd34d);"><i class="fas fa-trophy"></i></div>
+        <div class="db-quick-txt">
+          <div class="db-quick-title">لوحة المتصدرين</div>
+          <div class="db-quick-sub">شوف مكانك بين زمايلك</div>
+        </div>
+        <i class="fas fa-chevron-left db-quick-arr"></i>
+      </div>
+      <div class="db-quick-card" onclick="dbTab('schedule')">
+        <div class="db-quick-icon" style="background:linear-gradient(135deg,#22c55e,#86efac);"><i class="fas fa-calendar-alt"></i></div>
+        <div class="db-quick-txt">
+          <div class="db-quick-title">جدول المراجعات</div>
+          <div class="db-quick-sub">مواعيد الامتحانات والمراجعات</div>
+        </div>
+        <i class="fas fa-chevron-left db-quick-arr"></i>
+      </div>
       <div class="db-quick-card" onclick="doLogout()">
         <div class="db-quick-icon" style="background:linear-gradient(135deg,#ef4444,#fca5a5);"><i class="fas fa-sign-out-alt"></i></div>
         <div class="db-quick-txt">
@@ -789,52 +894,36 @@ select.form-input option{background:var(--bg2);}
         <i class="fas fa-chevron-left db-quick-arr"></i>
       </div>
     </div>
+
+    <!-- LATEST ANNOUNCEMENTS PREVIEW on Home -->
+    <div class="db-section-title">📢 آخر الإشعارات</div>
+    <div id="homeAnnouncePrev"><p style="color:var(--muted);font-size:.83rem;">لا توجد إشعارات بعد</p></div>
+
     <div style="height:90px;"></div>
   </div>
 
   <!-- TAB: COURSES -->
   <div class="db-tab-content" id="dbt-courses" style="display:none;">
     <div class="db-section-title">📚 كورساتي</div>
-
-    <div class="db-grade-card">
-      <div class="db-grade-card-inner" onclick="toggleGradeSection('g1')">
-        <div class="db-grade-num-badge">١</div>
+    <!-- Only the student's grade card shows, others hidden by JS -->
+    <div id="myGradeCard" class="db-grade-card">
+      <div class="db-grade-card-inner" onclick="toggleGradeSection('myGrade')">
+        <div class="db-grade-num-badge" id="myGradeBadge">١</div>
         <div class="db-grade-info">
-          <div class="db-grade-name">الصف الأول الثانوي</div>
-          <div class="db-grade-sub">علوم متكاملة</div>
+          <div class="db-grade-name" id="myGradeName">الصف الأول الثانوي</div>
+          <div class="db-grade-sub" id="myGradeSub">علوم متكاملة</div>
         </div>
-        <i class="fas fa-chevron-down db-grade-chev" id="chev-g1"></i>
+        <i class="fas fa-chevron-down db-grade-chev" id="chev-myGrade"></i>
       </div>
-      <div id="g1" style="display:none;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
-        <div id="chapters-g1"><p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p></div>
-      </div>
-    </div>
-
-    <div class="db-grade-card">
-      <div class="db-grade-card-inner" onclick="toggleGradeSection('g2')">
-        <div class="db-grade-num-badge" style="background:linear-gradient(135deg,#f59e0b,#fcd34d);">٢</div>
-        <div class="db-grade-info">
-          <div class="db-grade-name">الصف الثاني الثانوي</div>
-          <div class="db-grade-sub">علوم متكاملة</div>
+      <!-- Progress bar -->
+      <div id="myGradeProgress" style="padding:0 16px 10px;display:none;">
+        <div class="progress-wrap">
+          <div class="progress-bar-track"><div class="progress-bar-fill" id="myProgressFill" style="width:0%"></div></div>
+          <div class="progress-label" id="myProgressLabel">0 من 0 درس شاهدتهم</div>
         </div>
-        <i class="fas fa-chevron-down db-grade-chev" id="chev-g2"></i>
       </div>
-      <div id="g2" style="display:none;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
-        <div id="chapters-g2"><p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p></div>
-      </div>
-    </div>
-
-    <div class="db-grade-card">
-      <div class="db-grade-card-inner" onclick="toggleGradeSection('g3')">
-        <div class="db-grade-num-badge" style="background:linear-gradient(135deg,#6366f1,#a5b4fc);">٣</div>
-        <div class="db-grade-info">
-          <div class="db-grade-name">الصف الثالث الثانوي</div>
-          <div class="db-grade-sub">كيمياء — ثانوية عامة</div>
-        </div>
-        <i class="fas fa-chevron-down db-grade-chev" id="chev-g3"></i>
-      </div>
-      <div id="g3" style="display:none;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;">
-        <div id="chapters-g3"><p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p></div>
+      <div id="myGrade" style="display:none;border-top:1px solid var(--border);margin-top:4px;padding-top:4px;">
+        <div id="chapters-myGrade"><p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">جاري التحميل...</p></div>
       </div>
     </div>
 
@@ -850,6 +939,46 @@ select.form-input option{background:var(--bg2);}
         <div class="db-empty-title">لا توجد امتحانات بعد</div>
         <div class="db-empty-sub">حل امتحاناتك من الكورسات وهتظهر هنا</div>
         <button class="db-empty-btn" onclick="dbTab('courses')">📚 ابدأ من الكورسات</button>
+      </div>
+    </div>
+    <div style="height:90px;"></div>
+  </div>
+
+  <!-- TAB: LEADERBOARD -->
+  <div class="db-tab-content" id="dbt-leaderboard" style="display:none;">
+    <div class="db-section-title">🏆 لوحة المتصدرين</div>
+    <p style="color:var(--muted);font-size:.82rem;margin-bottom:16px;">ترتيب الطلاب حسب متوسط درجاتهم في الامتحانات</p>
+    <div id="leaderboardList">
+      <div class="db-empty-state">
+        <div class="db-empty-icon"><i class="fas fa-trophy"></i></div>
+        <div class="db-empty-title">لا توجد بيانات بعد</div>
+        <div class="db-empty-sub">حل امتحانات عشان تظهر في الترتيب</div>
+      </div>
+    </div>
+    <div style="height:90px;"></div>
+  </div>
+
+  <!-- TAB: ANNOUNCEMENTS -->
+  <div class="db-tab-content" id="dbt-announcements" style="display:none;">
+    <div class="db-section-title">📢 الإشعارات والإعلانات</div>
+    <div id="announcementsList">
+      <div class="db-empty-state">
+        <div class="db-empty-icon"><i class="fas fa-bell"></i></div>
+        <div class="db-empty-title">لا توجد إشعارات</div>
+        <div class="db-empty-sub">هتظهر هنا إعلانات مستر أحمد ذكي</div>
+      </div>
+    </div>
+    <div style="height:90px;"></div>
+  </div>
+
+  <!-- TAB: SCHEDULE -->
+  <div class="db-tab-content" id="dbt-schedule" style="display:none;">
+    <div class="db-section-title">📅 جدول المراجعات والامتحانات</div>
+    <div id="scheduleList">
+      <div class="db-empty-state">
+        <div class="db-empty-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div class="db-empty-title">لا يوجد جدول بعد</div>
+        <div class="db-empty-sub">هيضيف مستر أحمد جدول المراجعات والامتحانات هنا</div>
       </div>
     </div>
     <div style="height:90px;"></div>
@@ -871,11 +1000,23 @@ select.form-input option{background:var(--bg2);}
   </header>
 
   <div class="admin-wrap">
-    <h2 style="font-family:'Tajawal',sans-serif;font-size:1.5rem;font-weight:900;margin-bottom:20px;">🛡 لوحة تحكم المدرس</h2>
+    <h2 style="font-family:'Tajawal',sans-serif;font-size:1.5rem;font-weight:900;margin-bottom:16px;">🛡 لوحة تحكم المدرس</h2>
+
+    <!-- Admin Stats -->
+    <div class="admin-stat-row" id="adminStatsRow">
+      <div class="admin-stat-box"><div class="admin-stat-num" id="aStatTotal">0</div><div class="admin-stat-lbl">إجمالي الطلاب</div></div>
+      <div class="admin-stat-box"><div class="admin-stat-num" id="aStatActive">0</div><div class="admin-stat-lbl">طلاب مفعّلين</div></div>
+      <div class="admin-stat-box"><div class="admin-stat-num" id="aStatPending">0</div><div class="admin-stat-lbl">قيد المراجعة</div></div>
+      <div class="admin-stat-box"><div class="admin-stat-num" id="aStatQuizzes">0</div><div class="admin-stat-lbl">امتحانات</div></div>
+    </div>
+
     <div class="admin-tabs">
-      <button class="admin-tab active" onclick="adminTab('students')">👥 الطلاب</button>
-      <button class="admin-tab" onclick="adminTab('chapters')">📖 الشابترات</button>
-      <button class="admin-tab" onclick="adminTab('quizzes')">📝 الامتحانات</button>
+      <button class="admin-tab active" onclick="adminTab('students',event)">👥 الطلاب</button>
+      <button class="admin-tab" onclick="adminTab('chapters',event)">📖 الشابترات</button>
+      <button class="admin-tab" onclick="adminTab('quizzes',event)">📝 الامتحانات</button>
+      <button class="admin-tab" onclick="adminTab('announcements',event)">📢 الإشعارات</button>
+      <button class="admin-tab" onclick="adminTab('schedule',event)">📅 الجدول</button>
+      <button class="admin-tab" onclick="adminTab('performance',event)">📊 الأداء</button>
     </div>
 
     <!-- STUDENTS -->
@@ -980,6 +1121,93 @@ select.form-input option{background:var(--bg2);}
         <div id="quizzesAdmin"><p style="color:var(--muted);font-size:.85rem;">لا توجد امتحانات حتى الآن</p></div>
       </div>
     </div>
+
+    <!-- ANNOUNCEMENTS (Admin) -->
+    <div id="at-announcements" class="admin-section">
+      <div class="admin-card">
+        <h3>إضافة إشعار / إعلان جديد</h3>
+        <div class="add-form">
+          <div>
+            <label class="form-label">نوع الإشعار</label>
+            <div class="announce-type-row">
+              <button class="type-chip active" onclick="selectAnnounceType('normal',this)">📢 عادي</button>
+              <button class="type-chip" onclick="selectAnnounceType('urgent',this)">🔴 عاجل</button>
+              <button class="type-chip" onclick="selectAnnounceType('info',this)">💡 معلومة</button>
+            </div>
+            <input type="hidden" id="aType" value="normal">
+          </div>
+          <div>
+            <label class="form-label">عنوان الإشعار</label>
+            <input class="form-input" type="text" id="aTitle" placeholder="مثل: مراجعة غداً الساعة 4 عصراً">
+          </div>
+          <div>
+            <label class="form-label">التفاصيل</label>
+            <textarea class="form-input" id="aBody" rows="3" placeholder="اكتب التفاصيل هنا..." style="resize:vertical;line-height:1.6;"></textarea>
+          </div>
+          <button class="add-btn" onclick="addAnnouncement()"><i class="fas fa-paper-plane"></i> نشر الإشعار</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>الإشعارات المنشورة</h3>
+        <div id="announcementsAdmin"><p style="color:var(--muted);font-size:.85rem;">لا توجد إشعارات بعد</p></div>
+      </div>
+    </div>
+
+    <!-- SCHEDULE (Admin) -->
+    <div id="at-schedule" class="admin-section">
+      <div class="admin-card">
+        <h3>إضافة موعد جديد</h3>
+        <div class="add-form">
+          <div class="row2">
+            <div>
+              <label class="form-label">العنوان</label>
+              <input class="form-input" type="text" id="sTitle" placeholder="مثل: مراجعة الوحدة الثالثة">
+            </div>
+            <div>
+              <label class="form-label">النوع</label>
+              <select class="form-input" id="sType">
+                <option value="lecture">محاضرة</option>
+                <option value="revision">مراجعة</option>
+                <option value="exam">امتحان</option>
+              </select>
+            </div>
+          </div>
+          <div class="row2">
+            <div>
+              <label class="form-label">التاريخ</label>
+              <input class="form-input" type="date" id="sDate">
+            </div>
+            <div>
+              <label class="form-label">الوقت</label>
+              <input class="form-input" type="time" id="sTime">
+            </div>
+          </div>
+          <div>
+            <label class="form-label">تفاصيل إضافية (اختياري)</label>
+            <input class="form-input" type="text" id="sDesc" placeholder="مثل: أونلاين على زووم / في المركز">
+          </div>
+          <button class="add-btn" onclick="addScheduleItem()"><i class="fas fa-calendar-plus"></i> إضافة للجدول</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>الجدول الحالي</h3>
+        <div id="scheduleAdmin"><p style="color:var(--muted);font-size:.85rem;">لا يوجد جدول بعد</p></div>
+      </div>
+    </div>
+
+    <!-- PERFORMANCE (Admin) -->
+    <div id="at-performance" class="admin-section">
+      <div class="admin-card">
+        <h3>تقرير أداء الطلاب</h3>
+        <p style="color:var(--muted);font-size:.82rem;margin-bottom:16px;">ترتيب الطلاب حسب متوسط درجاتهم في الامتحانات</p>
+        <div id="performanceReport"><p style="color:var(--muted);font-size:.85rem;">لا توجد بيانات بعد</p></div>
+      </div>
+      <div class="admin-card">
+        <h3>الطلاب الذين لم يحلوا أي امتحان</h3>
+        <div id="noQuizStudents"><p style="color:var(--muted);font-size:.85rem;">لا توجد بيانات</p></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1207,50 +1435,79 @@ window.resetPass = async function() {
   } catch(e) { showAuthMsg('error','حصل خطأ في إرسال الرابط'); }
 };
 
-// ── CHAPTERS (Student View) ──
+// ── CHAPTERS (Student View — own grade only) ──
 async function loadChapters() {
+  if (!currentUserData) return;
+  const grade = currentUserData.grade; // e.g. 'g1', 'g2', 'g3'
+  if (!grade) return;
+
+  const gradeNums = {g1:'١',g2:'٢',g3:'٣'};
+  const gradeNames = {g1:'الصف الأول الثانوي',g2:'الصف الثاني الثانوي',g3:'الصف الثالث الثانوي'};
+  const gradeSubs = {g1:'علوم متكاملة',g2:'علوم متكاملة',g3:'كيمياء — ثانوية عامة'};
+  const gradeColors = {g1:'linear-gradient(135deg,#0ea5a0,#2dd4bf)',g2:'linear-gradient(135deg,#f59e0b,#fcd34d)',g3:'linear-gradient(135deg,#6366f1,#a5b4fc)'};
+
+  // Set grade card UI
+  document.getElementById('myGradeBadge').textContent = gradeNums[grade]||'١';
+  document.getElementById('myGradeBadge').style.background = gradeColors[grade];
+  document.getElementById('myGradeName').textContent = gradeNames[grade]||'الصف';
+  document.getElementById('myGradeSub').textContent = gradeSubs[grade]||'';
+
   const watched = await getUserWatched();
-  // update watched stat
   document.getElementById('statWatched').textContent = watched.length;
 
-  ['g1','g2','g3'].forEach(async (gid) => {
-    const el = document.getElementById('chapters-'+gid);
-    const snap = await getDocs(collection(db,'chapters_'+gid));
-    if (snap.empty) { el.innerHTML='<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p>'; return; }
-    el.innerHTML = '';
-    for (const d of snap.docs) {
-      const ch = d.data();
-      const isWatched = watched.includes(gid+'_'+d.id);
-      const quizSnap = await getDocs(query(collection(db,'quizzes'), where('grade','==',gid)));
-      const hasQuiz = !quizSnap.empty;
-      const quizId = hasQuiz ? quizSnap.docs[0].id : null;
+  const el = document.getElementById('chapters-myGrade');
+  const snap = await getDocs(collection(db,'chapters_'+grade));
 
-      el.insertAdjacentHTML('beforeend', `
-        <div class="db-chapter-row">
-          <div class="db-ch-dot ${isWatched?'watched':''}"></div>
-          <div class="db-ch-body">
-            <div class="db-ch-name">
-              ${isWatched?'<span style="color:#22c55e;font-size:.8rem;">✅</span>':''}
-              ${ch.name}
-            </div>
-            ${ch.desc?`<div class="db-ch-desc">${ch.desc}</div>`:''}
-            <div class="db-ch-btns">
-              ${ch.video?`<button class="db-ch-btn vid ${isWatched?'watched':''}" onclick="openVideo('${ch.video}','${ch.name}','${gid}','${d.id}')">
-                <i class="fas fa-play"></i> ${isWatched?'إعادة':'فيديو'}
-              </button>`:''}
-              ${ch.file?`<button class="db-ch-btn" onclick="openPDF('${ch.file}','${ch.name}')">
-                <i class="fas fa-file-pdf"></i> ملف
-              </button>`:''}
-              ${hasQuiz?`<button class="db-ch-btn quiz" onclick="openQuiz('${quizId}','${ch.name}')">
-                <i class="fas fa-pencil-alt"></i> امتحان
-              </button>`:''}
-            </div>
+  if (snap.empty) {
+    el.innerHTML='<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p>';
+    document.getElementById('myGradeProgress').style.display='none';
+    return;
+  }
+
+  const totalChapters = snap.docs.length;
+  const watchedCount = snap.docs.filter(d => watched.includes(grade+'_'+d.id)).length;
+
+  // Show progress bar
+  const progressEl = document.getElementById('myGradeProgress');
+  progressEl.style.display='block';
+  const pct = totalChapters > 0 ? Math.round(watchedCount/totalChapters*100) : 0;
+  document.getElementById('myProgressFill').style.width = pct+'%';
+  document.getElementById('myProgressLabel').textContent = `${watchedCount} من ${totalChapters} درس شاهدتهم (${pct}%)`;
+
+  el.innerHTML = '';
+  for (const d of snap.docs) {
+    const ch = d.data();
+    const isWatched = watched.includes(grade+'_'+d.id);
+    // Get quizzes for this specific chapter
+    const quizSnap = await getDocs(query(collection(db,'quizzes'), where('grade','==',grade)));
+    const chapterQuizzes = quizSnap.docs.filter(qd => !qd.data().chapterId || qd.data().chapterId === d.id);
+    const hasQuiz = chapterQuizzes.length > 0;
+    const quizId = hasQuiz ? chapterQuizzes[0].id : null;
+
+    el.insertAdjacentHTML('beforeend', `
+      <div class="db-chapter-row">
+        <div class="db-ch-dot ${isWatched?'watched':''}"></div>
+        <div class="db-ch-body">
+          <div class="db-ch-name">
+            ${isWatched?'<span style="color:#22c55e;font-size:.8rem;">✅</span>':''}
+            ${ch.name}
           </div>
-        </div>`);
-    }
-  });
+          ${ch.desc?`<div class="db-ch-desc">${ch.desc}</div>`:''}
+          <div class="db-ch-btns">
+            ${ch.video?`<button class="db-ch-btn vid ${isWatched?'watched':''}" onclick="openVideo('${ch.video}','${ch.name}','${grade}','${d.id}')">
+              <i class="fas fa-play"></i> ${isWatched?'إعادة':'فيديو'}
+            </button>`:''}
+            ${ch.file?`<button class="db-ch-btn" onclick="openPDF('${ch.file}','${ch.name}')">
+              <i class="fas fa-file-pdf"></i> ملف
+            </button>`:''}
+            ${hasQuiz?`<button class="db-ch-btn quiz" onclick="openQuiz('${quizId}','${ch.name}')">
+              <i class="fas fa-pencil-alt"></i> امتحان
+            </button>`:''}
+          </div>
+        </div>
+      </div>`);
+  }
 
-  // load quiz results for stats
   loadMyQuizResults();
 }
 window.loadChapters = loadChapters;
@@ -1389,47 +1646,7 @@ window.selectAnswer = function(qi, oi, btn) {
   btn.classList.add('selected');
 };
 
-window.submitQuiz = async function() {
-  if (!_activeQuizData) return;
-  const total = _activeQuizData.questions.length;
-  const answered = Object.keys(_userAnswers).length;
-  if (answered < total) { showNotif('من فضلك أجب على كل الأسئلة','e'); return; }
-
-  let score = 0;
-  _activeQuizData.questions.forEach((q,qi) => {
-    if (_userAnswers[qi] === q.correct) score++;
-  });
-
-  // Show results with colors
-  _activeQuizData.questions.forEach((q,qi) => {
-    const opts = document.querySelectorAll(`.quiz-question:nth-child(${qi+1}) .quiz-opt`);
-    opts.forEach((btn,oi) => {
-      if (oi === q.correct) btn.classList.add('correct');
-      else if (oi === _userAnswers[qi]) btn.classList.add('wrong');
-    });
-  });
-  document.getElementById('quizSubmitBtn').style.display = 'none';
-
-  // Append result
-  document.getElementById('quizBody').insertAdjacentHTML('beforeend',`
-    <div class="quiz-result">
-      <p style="color:var(--muted);margin-bottom:8px;">نتيجتك</p>
-      <div class="quiz-score">${score}/${total}</div>
-      <p style="margin-top:8px;color:${score/total>=0.5?'#22c55e':'var(--error)'};">${Math.round(score/total*100)}%</p>
-    </div>`);
-
-  // Save result to Firestore
-  if (currentUser) {
-    await setDoc(doc(db,'quiz_results', currentUser.uid+'_'+_activeQuizData.id), {
-      userId: currentUser.uid,
-      quizId: _activeQuizData.id,
-      quizName: _activeQuizData.name,
-      score, total,
-      answers: _userAnswers,
-      submittedAt: new Date().toISOString()
-    });
-  }
-};
+// submitQuiz is defined later with WhatsApp share
 
 // ── ADMIN: QUIZ BUILDER ──
 window.addQuestionField = function() {
@@ -1523,6 +1740,7 @@ window._deleteQuiz = async function(id) {
 
 // ── ADMIN LOAD ──
 async function loadAdminData() {
+  updateAdminStats();
   const snap = await getDocs(collection(db,'users'));
   const tbody = document.getElementById('usersTbody');
   tbody.innerHTML = '';
@@ -1561,12 +1779,348 @@ window._setStatus = async function(uid, status) {
   showNotif(status==='active'?'تم تفعيل الطالب ✅':'تم حظر الطالب','s');
   loadAdminData();
 };
-window._deleteUser = async function(uid) {
-  if (!confirm('هل أنت متأكد من حذف هذا الطالب؟')) return;
-  await deleteDoc(doc(db,'users',uid));
-  showNotif('تم حذف الطالب','s');
-  loadAdminData();
+// ── QUIZ SUBMIT — with WhatsApp share ──
+window.submitQuiz = async function() {
+  if (!_activeQuizData) return;
+  const total = _activeQuizData.questions.length;
+  const answered = Object.keys(_userAnswers).length;
+  if (answered < total) { showNotif('من فضلك أجب على كل الأسئلة','e'); return; }
+
+  let score = 0;
+  _activeQuizData.questions.forEach((q,qi) => {
+    if (_userAnswers[qi] === q.correct) score++;
+  });
+
+  _activeQuizData.questions.forEach((q,qi) => {
+    const opts = document.querySelectorAll(`.quiz-question:nth-child(${qi+1}) .quiz-opt`);
+    opts.forEach((btn,oi) => {
+      if (oi === q.correct) btn.classList.add('correct');
+      else if (oi === _userAnswers[qi]) btn.classList.add('wrong');
+    });
+  });
+  document.getElementById('quizSubmitBtn').style.display = 'none';
+
+  const pct = Math.round(score/total*100);
+  const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '✅' : '📚';
+  const studentName = currentUserData ? (currentUserData.firstName+' '+currentUserData.secondName) : 'الطالب';
+  const waText = encodeURIComponent(`${emoji} نتيجتي في امتحان "${_activeQuizData.name}"\n\n🎯 ${score} من ${total} سؤال (${pct}%)\n\n📚 منصة الوفاء — مستر أحمد ذكي`);
+
+  document.getElementById('quizBody').insertAdjacentHTML('beforeend',`
+    <div class="quiz-result">
+      <p style="color:var(--muted);margin-bottom:8px;">نتيجتك</p>
+      <div class="quiz-score">${score}/${total}</div>
+      <p style="margin-top:8px;color:${pct>=50?'#22c55e':'var(--error)'};">${pct}%</p>
+      <a class="wa-share-btn" href="https://wa.me/?text=${waText}" target="_blank">
+        <i class="fab fa-whatsapp"></i> شارك نتيجتك على واتساب
+      </a>
+    </div>`);
+
+  if (currentUser) {
+    await setDoc(doc(db,'quiz_results', currentUser.uid+'_'+_activeQuizData.id), {
+      userId: currentUser.uid,
+      userName: studentName,
+      quizId: _activeQuizData.id,
+      quizName: _activeQuizData.name,
+      grade: currentUserData?.grade || '',
+      score, total, pct,
+      answers: _userAnswers,
+      submittedAt: new Date().toISOString()
+    });
+  }
 };
+
+// ── LEADERBOARD ──
+async function loadLeaderboard() {
+  const el = document.getElementById('leaderboardList');
+  el.innerHTML = '<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:20px;">جاري التحميل...</p>';
+  try {
+    const snap = await getDocs(collection(db,'quiz_results'));
+    if (snap.empty) { el.innerHTML='<div class="db-empty-state"><div class="db-empty-icon"><i class="fas fa-trophy"></i></div><div class="db-empty-title">لا توجد بيانات بعد</div><div class="db-empty-sub">حل امتحانات عشان تظهر في الترتيب</div></div>'; return; }
+
+    // Aggregate by user: best avg
+    const userMap = {};
+    snap.docs.forEach(d => {
+      const r = d.data();
+      if (!userMap[r.userId]) userMap[r.userId] = { name: r.userName||'طالب', scores: [], grade: r.grade };
+      userMap[r.userId].scores.push(r.pct||Math.round(r.score/r.total*100));
+    });
+
+    const sorted = Object.entries(userMap).map(([uid, data]) => ({
+      uid,
+      name: data.name,
+      grade: data.grade,
+      avg: Math.round(data.scores.reduce((a,b)=>a+b,0)/data.scores.length),
+      count: data.scores.length
+    })).sort((a,b) => b.avg - a.avg);
+
+    const gradeLabels = {g1:'الأول',g2:'الثاني',g3:'الثالث'};
+    const rankClasses = ['gold','silver','bronze'];
+    const rankEmojis = ['🥇','🥈','🥉'];
+    el.innerHTML = '';
+    sorted.forEach((s, i) => {
+      const isMe = currentUser && s.uid === currentUser.uid;
+      const rankClass = i < 3 ? rankClasses[i] : 'other';
+      const rankLabel = i < 3 ? rankEmojis[i] : (i+1);
+      el.insertAdjacentHTML('beforeend',`
+        <div class="leader-row ${isMe?'leader-me':''}">
+          <div class="leader-rank ${rankClass}">${rankLabel}</div>
+          <div class="leader-avatar">${s.name[0]||'ط'}</div>
+          <div class="leader-name">
+            ${s.name} ${isMe?'<span style="font-size:.7rem;color:var(--teal-lt);">(أنت)</span>':''}
+            <div style="font-size:.7rem;color:var(--muted);">الصف ${gradeLabels[s.grade]||''} — ${s.count} امتحان</div>
+          </div>
+          <div class="leader-score">${s.avg}%</div>
+        </div>`);
+    });
+  } catch(e) { console.error(e); el.innerHTML='<p style="color:var(--error);">خطأ في التحميل</p>'; }
+}
+window.loadLeaderboard = loadLeaderboard;
+
+// ── ANNOUNCEMENTS (Student) ──
+async function loadAnnouncements() {
+  try {
+    const snap = await getDocs(query(collection(db,'announcements'), where('active','==',true)));
+    const el = document.getElementById('announcementsList');
+    const prevEl = document.getElementById('homeAnnouncePrev');
+    if (snap.empty) {
+      const empty = `<div class="db-empty-state"><div class="db-empty-icon"><i class="fas fa-bell"></i></div><div class="db-empty-title">لا توجد إشعارات</div><div class="db-empty-sub">هتظهر هنا إعلانات مستر أحمد ذكي</div></div>`;
+      if(el) el.innerHTML = empty;
+      if(prevEl) prevEl.innerHTML = '<p style="color:var(--muted);font-size:.83rem;">لا توجد إشعارات بعد</p>';
+      return;
+    }
+    const docs = snap.docs.sort((a,b) => new Date(b.data().createdAt)-new Date(a.data().createdAt));
+    const renderCard = (d) => {
+      const a = d.data();
+      const date = new Date(a.createdAt).toLocaleDateString('ar-EG',{day:'numeric',month:'long',year:'numeric'});
+      const typeLabel = a.type==='urgent'?'عاجل':a.type==='info'?'معلومة':'إعلان';
+      return `<div class="announce-card ${a.type||'normal'}">
+        <div class="announce-tag ${a.type||'normal'}">${typeLabel}</div>
+        <div class="announce-title">${a.title}</div>
+        <div class="announce-body">${a.body}</div>
+        <div class="announce-date">📅 ${date}</div>
+      </div>`;
+    };
+    if(el) el.innerHTML = docs.map(renderCard).join('');
+    if(prevEl) prevEl.innerHTML = docs.slice(0,2).map(renderCard).join('');
+
+    // Show notification dot if there are new announcements
+    const lastRead = localStorage.getItem('lastAnnouncRead') || '0';
+    const hasNew = docs.some(d => d.data().createdAt > lastRead);
+    const dot = document.getElementById('notifDot');
+    if(dot) dot.classList.toggle('show', hasNew);
+  } catch(e) { console.error(e); }
+}
+window.loadAnnouncements = loadAnnouncements;
+
+function markAnnouncementsRead() {
+  localStorage.setItem('lastAnnouncRead', new Date().toISOString());
+  const dot = document.getElementById('notifDot');
+  if(dot) dot.classList.remove('show');
+}
+
+// ── SCHEDULE (Student) ──
+async function loadSchedule() {
+  try {
+    const snap = await getDocs(collection(db,'schedule'));
+    const el = document.getElementById('scheduleList');
+    if(!el) return;
+    if (snap.empty) { el.innerHTML='<div class="db-empty-state"><div class="db-empty-icon"><i class="fas fa-calendar-alt"></i></div><div class="db-empty-title">لا يوجد جدول بعد</div><div class="db-empty-sub">هيضيف مستر أحمد جدول المراجعات والامتحانات هنا</div></div>'; return; }
+    const docs = snap.docs.sort((a,b) => new Date(a.data().date)-new Date(b.data().date));
+    const typeLabels = {lecture:'محاضرة',revision:'مراجعة',exam:'امتحان'};
+    el.innerHTML = docs.map(d => {
+      const s = d.data();
+      const dateObj = new Date(s.date+'T00:00:00');
+      const day = dateObj.toLocaleDateString('ar-EG',{day:'numeric'});
+      const month = dateObj.toLocaleDateString('ar-EG',{month:'short'});
+      const weekday = dateObj.toLocaleDateString('ar-EG',{weekday:'long'});
+      const isPast = dateObj < new Date();
+      return `<div class="sched-item" style="${isPast?'opacity:.5':''}">
+        <div class="sched-date-box">
+          <div class="sched-day">${day}</div>
+          <div class="sched-month">${month}</div>
+        </div>
+        <div class="sched-info">
+          <div class="sched-title">${s.title}</div>
+          <div class="sched-meta">${weekday}${s.time?' — '+s.time:''}</div>
+          ${s.desc?`<div class="sched-meta">${s.desc}</div>`:''}
+          <span class="sched-badge ${s.type||'lecture'}">${typeLabels[s.type]||'محاضرة'}</span>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error(e); }
+}
+window.loadSchedule = loadSchedule;
+
+// ── ADMIN: ADD ANNOUNCEMENT ──
+window.selectAnnounceType = function(type, btn) {
+  document.getElementById('aType').value = type;
+  document.querySelectorAll('.type-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+};
+
+window.addAnnouncement = async function() {
+  const title = document.getElementById('aTitle').value.trim();
+  const body = document.getElementById('aBody').value.trim();
+  const type = document.getElementById('aType').value;
+  if (!title || !body) { showNotif('ادخل العنوان والتفاصيل','e'); return; }
+  await addDoc(collection(db,'announcements'), { title, body, type, active:true, createdAt: new Date().toISOString() });
+  showNotif('تم نشر الإشعار ✅','s');
+  document.getElementById('aTitle').value='';
+  document.getElementById('aBody').value='';
+  loadAnnouncementsAdmin();
+};
+
+async function loadAnnouncementsAdmin() {
+  const el = document.getElementById('announcementsAdmin');
+  if(!el) return;
+  el.innerHTML='';
+  const snap = await getDocs(collection(db,'announcements'));
+  if(snap.empty){el.innerHTML='<p style="color:var(--muted);font-size:.85rem;">لا توجد إشعارات</p>';return;}
+  const docs = snap.docs.sort((a,b)=>new Date(b.data().createdAt)-new Date(a.data().createdAt));
+  docs.forEach(d => {
+    const a = d.data();
+    const date = new Date(a.createdAt).toLocaleDateString('ar-EG',{day:'numeric',month:'long'});
+    el.insertAdjacentHTML('beforeend',`
+      <div class="mcq-item" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+          <div style="flex:1;">
+            <p style="font-weight:700;margin-bottom:4px;">${a.title}</p>
+            <p style="font-size:.78rem;color:var(--muted);">${a.body}</p>
+            <p style="font-size:.7rem;color:var(--muted);margin-top:4px;">${date}</p>
+          </div>
+          <button class="tbl-btn danger" onclick="window._deleteAnnounce('${d.id}')">حذف</button>
+        </div>
+      </div>`);
+  });
+}
+window._deleteAnnounce = async function(id) {
+  if(!confirm('حذف هذا الإشعار؟')) return;
+  await deleteDoc(doc(db,'announcements',id));
+  showNotif('تم الحذف','s');
+  loadAnnouncementsAdmin();
+};
+
+// ── ADMIN: ADD SCHEDULE ──
+window.addScheduleItem = async function() {
+  const title = document.getElementById('sTitle').value.trim();
+  const type = document.getElementById('sType').value;
+  const date = document.getElementById('sDate').value;
+  const time = document.getElementById('sTime').value;
+  const desc = document.getElementById('sDesc').value.trim();
+  if (!title || !date) { showNotif('ادخل العنوان والتاريخ','e'); return; }
+  await addDoc(collection(db,'schedule'), { title, type, date, time, desc, createdAt: new Date().toISOString() });
+  showNotif('تم إضافة الموعد ✅','s');
+  document.getElementById('sTitle').value='';
+  document.getElementById('sDate').value='';
+  document.getElementById('sTime').value='';
+  document.getElementById('sDesc').value='';
+  loadScheduleAdmin();
+};
+
+async function loadScheduleAdmin() {
+  const el = document.getElementById('scheduleAdmin');
+  if(!el) return;
+  el.innerHTML='';
+  const snap = await getDocs(collection(db,'schedule'));
+  if(snap.empty){el.innerHTML='<p style="color:var(--muted);font-size:.85rem;">لا يوجد جدول بعد</p>';return;}
+  const docs = snap.docs.sort((a,b)=>new Date(a.data().date)-new Date(b.data().date));
+  const typeLabels = {lecture:'محاضرة',revision:'مراجعة',exam:'امتحان'};
+  docs.forEach(d => {
+    const s = d.data();
+    el.insertAdjacentHTML('beforeend',`
+      <div class="mcq-item" style="margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+          <div style="flex:1;">
+            <p style="font-weight:700;margin-bottom:2px;">${s.title}</p>
+            <p style="font-size:.75rem;color:var(--muted);">${s.date}${s.time?' — '+s.time:''} — ${typeLabels[s.type]||s.type}</p>
+            ${s.desc?`<p style="font-size:.73rem;color:var(--muted);">${s.desc}</p>`:''}
+          </div>
+          <button class="tbl-btn danger" onclick="window._deleteSched('${d.id}')">حذف</button>
+        </div>
+      </div>`);
+  });
+}
+window._deleteSched = async function(id) {
+  if(!confirm('حذف هذا الموعد؟')) return;
+  await deleteDoc(doc(db,'schedule',id));
+  showNotif('تم الحذف','s');
+  loadScheduleAdmin();
+};
+
+// ── ADMIN: PERFORMANCE REPORT ──
+async function loadPerformanceReport() {
+  const perfEl = document.getElementById('performanceReport');
+  const noQuizEl = document.getElementById('noQuizStudents');
+  if(!perfEl) return;
+  perfEl.innerHTML='<p style="color:var(--muted);font-size:.83rem;">جاري التحميل...</p>';
+
+  const [usersSnap, resultsSnap] = await Promise.all([
+    getDocs(collection(db,'users')),
+    getDocs(collection(db,'quiz_results'))
+  ]);
+
+  // Build user map
+  const users = {};
+  usersSnap.docs.forEach(d => { if(d.data().role!=='admin') users[d.id]={...d.data(), uid:d.id, scores:[]}; });
+
+  // Aggregate scores
+  resultsSnap.docs.forEach(d => {
+    const r = d.data();
+    if(users[r.userId]) users[r.userId].scores.push(r.pct||Math.round(r.score/r.total*100));
+  });
+
+  const withScores = Object.values(users).filter(u=>u.scores.length>0).sort((a,b)=>{
+    const avgA = a.scores.reduce((x,y)=>x+y,0)/a.scores.length;
+    const avgB = b.scores.reduce((x,y)=>x+y,0)/b.scores.length;
+    return avgB - avgA;
+  });
+
+  const noScores = Object.values(users).filter(u=>u.scores.length===0 && u.status==='active');
+
+  if(withScores.length===0){perfEl.innerHTML='<p style="color:var(--muted);font-size:.85rem;">لا توجد نتائج امتحانات بعد</p>';}
+  else {
+    perfEl.innerHTML = withScores.map((u,i) => {
+      const avg = Math.round(u.scores.reduce((a,b)=>a+b,0)/u.scores.length);
+      const color = avg>=80?'var(--teal)':avg>=60?'var(--amber)':'var(--error)';
+      return `<div class="perf-row">
+        <div style="font-size:.85rem;color:var(--muted);width:20px;text-align:center;">${i+1}</div>
+        <div class="perf-name">${u.firstName} ${u.secondName}<div style="font-size:.7rem;color:var(--muted);">${u.scores.length} امتحان</div></div>
+        <div class="perf-bar-wrap"><div class="perf-bar" style="width:${avg}%;background:${color};"></div></div>
+        <div class="perf-pct" style="color:${color};">${avg}%</div>
+      </div>`;
+    }).join('');
+  }
+
+  if(noScores.length===0){noQuizEl.innerHTML='<p style="color:var(--muted);font-size:.85rem;">كل الطلاب حلوا امتحان على الأقل 🎉</p>';}
+  else {
+    noQuizEl.innerHTML = noScores.map(u=>`
+      <div style="padding:8px 12px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);margin-bottom:8px;font-size:.85rem;font-weight:700;">
+        ${u.firstName} ${u.secondName} <span style="color:var(--muted);font-size:.75rem;">— ${u.studentPhone}</span>
+      </div>`).join('');
+  }
+}
+
+// ── ADMIN STATS UPDATE ──
+async function updateAdminStats() {
+  try {
+    const [usersSnap, quizzesSnap] = await Promise.all([
+      getDocs(collection(db,'users')),
+      getDocs(collection(db,'quizzes'))
+    ]);
+    let total=0, active=0, pending=0;
+    usersSnap.docs.forEach(d => {
+      if(d.data().role==='admin') return;
+      total++;
+      if(d.data().status==='active') active++;
+      else if(d.data().status==='pending') pending++;
+    });
+    document.getElementById('aStatTotal').textContent = total;
+    document.getElementById('aStatActive').textContent = active;
+    document.getElementById('aStatPending').textContent = pending;
+    document.getElementById('aStatQuizzes').textContent = quizzesSnap.size;
+  } catch(e) {}
+}
+window.updateAdminStats = updateAdminStats;
 
 window.addChapter = async function() {
   const grade = document.getElementById('chGrade').value;
@@ -1620,20 +2174,56 @@ window.loadAdminData = loadAdminData;
 </script>
 
 <script>
-// ── PAGE NAV ──
+// ── PAGE NAV with History API ──
+const _pageHistory = [];
+
 function showPage(id) {
   const pg = document.getElementById(id);
-  if (!pg) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('pg-404').classList.add('active'); return; }
+  if (!pg) {
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('pg-404').classList.add('active');
+    return;
+  }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   pg.classList.add('active');
   window.scrollTo(0,0);
+
+  // Push to history stack for back-button support
+  history.pushState({page: id}, '', '');
+
   if (id === 'pg-dash' && window._currentUserData?.status === 'active') {
     if (window.loadChapters) window.loadChapters();
+    if (window.loadAnnouncements) window.loadAnnouncements();
+    if (window.loadSchedule) window.loadSchedule();
   }
   if (id === 'pg-admin') {
     if (window.loadAdminData) window.loadAdminData();
   }
 }
+
+// Handle Android/iOS back button
+window.addEventListener('popstate', function(e) {
+  // If there's a state, go to that page; else go home
+  if (e.state && e.state.page) {
+    const pg = document.getElementById(e.state.page);
+    if (pg) {
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      pg.classList.add('active');
+      window.scrollTo(0,0);
+    }
+  } else {
+    // Check if any modal is open first
+    const openModal = document.querySelector('.modal-overlay.open');
+    if (openModal) { openModal.classList.remove('open'); history.pushState({page:'pg-dash'},'',''); return; }
+    // Go home
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('pg-home').classList.add('active');
+    window.scrollTo(0,0);
+  }
+});
+
+// Push initial state
+history.replaceState({page:'pg-home'}, '', '');
 
 function requireLogin() {
   if (!window._currentUserData) { showPage('pg-auth'); return; }
@@ -1744,12 +2334,16 @@ window.showNotif = showNotif;
 
 // ── DASHBOARD TABS ──
 function dbTab(name) {
-  ['home','courses','quizzes'].forEach(t => {
-    document.getElementById('dbt-'+t).style.display = t===name?'block':'none';
+  ['home','courses','quizzes','leaderboard','announcements','schedule'].forEach(t => {
+    const el = document.getElementById('dbt-'+t);
+    if(el) el.style.display = t===name?'block':'none';
     const btn = document.getElementById('dbn-'+t);
     if(btn) btn.classList.toggle('active', t===name);
   });
   if (name==='quizzes') loadMyQuizResults();
+  if (name==='leaderboard') loadLeaderboard();
+  if (name==='announcements') { loadAnnouncements(); markAnnouncementsRead(); }
+  if (name==='schedule') loadSchedule();
 }
 window.dbTab = dbTab;
 
@@ -1763,11 +2357,15 @@ function toggleGradeSection(id) {
 }
 
 // ── ADMIN TABS ──
-function adminTab(name) {
+function adminTab(name, evt) {
   document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('at-'+name).classList.add('active');
-  event.target.classList.add('active');
+  const sec = document.getElementById('at-'+name);
+  if(sec) sec.classList.add('active');
+  if(evt && evt.target) evt.target.classList.add('active');
+  if(name==='performance') loadPerformanceReport();
+  if(name==='announcements') loadAnnouncementsAdmin();
+  if(name==='schedule') loadScheduleAdmin();
 }
 window.adminTab = adminTab;
 
