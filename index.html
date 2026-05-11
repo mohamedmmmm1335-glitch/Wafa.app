@@ -415,6 +415,53 @@ select.form-input option{background:var(--bg2);}
 /* ── BACK BTN (mobile) ── */
 .db-back-btn{background:var(--teal-dim);border:1px solid var(--border);border-radius:8px;color:var(--teal-lt);font-size:1rem;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
+/* ── STANDALONE QUIZ CARD ── */
+.sq-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;transition:border-color .2s;}
+.sq-card:hover{border-color:var(--teal);}
+.sq-card-inner{display:flex;align-items:center;gap:14px;}
+.sq-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#a5b4fc);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:#fff;}
+.sq-icon.done{background:linear-gradient(135deg,var(--teal),var(--teal-lt));}
+.sq-icon.locked{background:linear-gradient(135deg,#4b5563,#9ca3af);}
+.sq-icon.expired{background:linear-gradient(135deg,#ef4444,#fca5a5);}
+.sq-info{flex:1;}
+.sq-name{font-weight:700;font-size:.92rem;}
+.sq-meta{font-size:.73rem;color:var(--muted);margin-top:2px;}
+.sq-status{font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:50px;margin-top:5px;display:inline-block;}
+.sq-status.available{background:rgba(99,102,241,.15);color:#a5b4fc;}
+.sq-status.done{background:rgba(14,165,160,.15);color:var(--teal-lt);}
+.sq-status.locked{background:rgba(75,85,99,.15);color:#9ca3af;}
+.sq-status.expired{background:rgba(239,68,68,.15);color:#ef4444;}
+.sq-btn{padding:8px 16px;border-radius:10px;border:none;font-family:'Cairo';font-size:.8rem;font-weight:800;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
+.sq-btn.start{background:linear-gradient(135deg,#6366f1,#a5b4fc);color:#fff;}
+.sq-btn.start:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(99,102,241,.4);}
+.sq-btn.view{background:var(--teal-dim);border:1px solid var(--teal);color:var(--teal-lt);}
+.sq-btn.view:hover{background:var(--teal);color:#fff;}
+.sq-btn.disabled{background:var(--bg2);border:1px solid var(--border);color:var(--muted);cursor:not-allowed;}
+
+/* ── QUIZ TIMER BAR ── */
+.quiz-timer-wrap{position:sticky;top:0;z-index:10;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-radius:12px 12px 0 0;margin-bottom:14px;}
+.quiz-timer-display{font-family:'Tajawal';font-size:1.3rem;font-weight:900;color:var(--teal-lt);display:flex;align-items:center;gap:6px;}
+.quiz-timer-display.warning{color:var(--amber);}
+.quiz-timer-display.danger{color:var(--error);animation:timerPulse .5s ease infinite alternate;}
+@keyframes timerPulse{from{opacity:1;}to{opacity:.5;}}
+.quiz-timer-bar-track{flex:1;height:6px;background:var(--bg);border-radius:50px;overflow:hidden;margin:0 12px;}
+.quiz-timer-bar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--teal),var(--teal-lt));transition:width 1s linear;}
+
+/* ── ANTI-CHEAT OVERLAY ── */
+.anticheat-overlay{position:fixed;inset:0;background:rgba(5,13,13,.98);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px;}
+.anticheat-overlay.show{display:flex;}
+.anticheat-icon{font-size:4rem;margin-bottom:16px;}
+.anticheat-title{font-family:'Tajawal';font-size:1.6rem;font-weight:900;color:var(--error);margin-bottom:10px;}
+.anticheat-msg{color:var(--muted);font-size:.92rem;line-height:1.8;max-width:420px;margin-bottom:24px;}
+
+/* ── QUIZ RESULT DETAIL ── */
+.qr-detail-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
+.qr-detail-item p{font-size:.88rem;font-weight:700;margin-bottom:10px;line-height:1.6;}
+.qr-opt{padding:8px 12px;border-radius:8px;font-size:.83rem;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.qr-opt.correct-ans{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);}
+.qr-opt.wrong-ans{background:rgba(239,68,68,.1);color:var(--error);border:1px solid rgba(239,68,68,.3);}
+.qr-opt.neutral{background:var(--bg);border:1px solid var(--border);color:var(--muted);}
+
 /* ── ADMIN STATS ROW ── */
 .admin-stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px;}
 .admin-stat-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 14px;text-align:center;}
@@ -471,10 +518,33 @@ select.form-input option{background:var(--bg2);}
 <!-- Quiz Modal (Student) -->
 <div class="modal-overlay" id="quizModal">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('quizModal')"><i class="fas fa-times"></i></button>
+    <button class="modal-close" onclick="window._confirmCloseQuiz && window._confirmCloseQuiz()"><i class="fas fa-times"></i></button>
     <div class="modal-title" id="quizModalTitle">📝 الامتحان</div>
+    <!-- Timer (shown during active quiz) -->
+    <div id="quizTimerWrap" class="quiz-timer-wrap" style="display:none;">
+      <div class="quiz-timer-display" id="quizTimerDisplay"><i class="fas fa-clock"></i> <span id="quizTimerText">00:00</span></div>
+      <div class="quiz-timer-bar-track"><div class="quiz-timer-bar-fill" id="quizTimerBarFill" style="width:100%"></div></div>
+      <span style="font-size:.72rem;color:var(--muted);font-weight:700;" id="quizTimerLabel"></span>
+    </div>
     <div id="quizBody"></div>
     <button class="btn-submit" id="quizSubmitBtn" onclick="submitQuiz()" style="margin-top:16px;display:none;"><i class="fas fa-paper-plane"></i> تسليم الامتحان</button>
+  </div>
+</div>
+
+<!-- Anti-Cheat Overlay -->
+<div class="anticheat-overlay" id="anticheatOverlay">
+  <div class="anticheat-icon">🚫</div>
+  <div class="anticheat-title">انتهى وقت الامتحان!</div>
+  <div class="anticheat-msg" id="anticheatMsg">خرجت من صفحة الامتحان أو تطبيق تاني، وده بيعتبر انتهاء الامتحان تلقائياً لمنع الغش.<br><br>لو كان الجهاز بتاعك انطفى، تواصل مع المدرس عشان يعيد تفعيلك.</div>
+  <button class="db-empty-btn" onclick="window._closeAnticheat && window._closeAnticheat()">حسناً</button>
+</div>
+
+<!-- Quiz Result Detail Modal -->
+<div class="modal-overlay" id="quizResultModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('quizResultModal')"><i class="fas fa-times"></i></button>
+    <div class="modal-title" id="quizResultModalTitle">📊 نتيجة الامتحان</div>
+    <div id="quizResultBody"></div>
   </div>
 </div>
 
@@ -932,13 +1002,17 @@ select.form-input option{background:var(--bg2);}
 
   <!-- TAB: QUIZZES -->
   <div class="db-tab-content" id="dbt-quizzes" style="display:none;">
-    <div class="db-section-title">📝 امتحاناتي السابقة</div>
+    <div class="db-section-title">📝 امتحاناتي</div>
+    <!-- Available quizzes to take -->
+    <div id="availableQuizzesList" style="margin-bottom:20px;">
+      <p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">جاري التحميل...</p>
+    </div>
+    <div class="db-section-title" style="margin-top:6px;">✅ الامتحانات المكتملة</div>
     <div id="myQuizResults">
       <div class="db-empty-state">
         <div class="db-empty-icon"><i class="fas fa-clipboard-list"></i></div>
         <div class="db-empty-title">لا توجد امتحانات بعد</div>
-        <div class="db-empty-sub">حل امتحاناتك من الكورسات وهتظهر هنا</div>
-        <button class="db-empty-btn" onclick="dbTab('courses')">📚 ابدأ من الكورسات</button>
+        <div class="db-empty-sub">حل امتحاناتك وهتظهر هنا</div>
       </div>
     </div>
     <div style="height:90px;"></div>
@@ -1105,6 +1179,22 @@ select.form-input option{background:var(--bg2);}
               <label class="form-label">اسم الامتحان</label>
               <input class="form-input" type="text" id="qName" placeholder="مثل: امتحان الوحدة الأولى">
             </div>
+          </div>
+          <!-- فترة الامتحان (من تاريخ لتاريخ) -->
+          <div class="row2">
+            <div>
+              <label class="form-label">📅 تاريخ بداية الامتحان</label>
+              <input class="form-input" type="datetime-local" id="qStartDate">
+            </div>
+            <div>
+              <label class="form-label">📅 تاريخ انتهاء الامتحان</label>
+              <input class="form-input" type="datetime-local" id="qEndDate">
+            </div>
+          </div>
+          <!-- مدة الامتحان من الداخل -->
+          <div>
+            <label class="form-label">⏱ مدة الامتحان (بالدقائق) — اترك فارغ لو مش محدد</label>
+            <input class="form-input" type="number" id="qDuration" placeholder="مثل: 60 للساعة، 90 لساعة ونص" min="5" max="360">
           </div>
           <div id="questionsContainer">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -1521,9 +1611,8 @@ async function loadMyQuizResults() {
     if (snap.empty) {
       el.innerHTML = `<div class="db-empty-state">
         <div class="db-empty-icon"><i class="fas fa-clipboard-list"></i></div>
-        <div class="db-empty-title">لا توجد امتحانات بعد</div>
-        <div class="db-empty-sub">حل امتحاناتك من الكورسات وهتظهر هنا</div>
-        <button class="db-empty-btn" onclick="dbTab('courses')">📚 ابدأ من الكورسات</button>
+        <div class="db-empty-title">لا توجد امتحانات مكتملة بعد</div>
+        <div class="db-empty-sub">حل امتحاناتك وهتظهر هنا</div>
       </div>`;
       return;
     }
@@ -1535,13 +1624,15 @@ async function loadMyQuizResults() {
       scores.push(pct);
       if(pct > best) best = pct;
       total++;
+      const forced = r.forcedSubmit ? '<span style="font-size:.68rem;color:var(--error);margin-right:4px;">⚠ أُنهي تلقائياً</span>' : '';
       el.insertAdjacentHTML('beforeend',`
-        <div class="db-quiz-result-card">
+        <div class="db-quiz-result-card" style="cursor:pointer;" onclick="openQuizResult('${r.quizId}','${r.quizName||'امتحان'}')">
           <div class="db-qr-score" style="background:linear-gradient(135deg,${pct>=50?'var(--teal),var(--teal-lt)':'#ef4444,#fca5a5'});">${pct}%</div>
           <div class="db-qr-info">
-            <div class="db-qr-name">${r.quizName||'امتحان'}</div>
+            <div class="db-qr-name">${r.quizName||'امتحان'} ${forced}</div>
             <div class="db-qr-meta">${r.score} من ${r.total} سؤال</div>
           </div>
+          <div style="color:var(--teal-lt);font-size:.75rem;font-weight:700;"><i class="fas fa-eye"></i> النتيجة والحل</div>
         </div>`);
     });
     const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
@@ -1598,6 +1689,104 @@ window.openPDF = function(url, title) {
   openModal('pdfModal');
 };
 
+};
+
+// ── QUIZ TIMER STATE ──
+let _quizTimerInterval = null;
+let _quizTimerSeconds = 0;
+let _quizTimerTotal = 0;
+let _quizIsActive = false;
+let _quizBlurSubmitted = false;
+
+function _startQuizTimer(durationMinutes) {
+  _quizTimerTotal = durationMinutes * 60;
+  _quizTimerSeconds = _quizTimerTotal;
+  _quizIsActive = true;
+  _quizBlurSubmitted = false;
+  const wrap = document.getElementById('quizTimerWrap');
+  const display = document.getElementById('quizTimerDisplay');
+  const fill = document.getElementById('quizTimerBarFill');
+  const label = document.getElementById('quizTimerLabel');
+  if(wrap) wrap.style.display = 'flex';
+  if(label) label.textContent = durationMinutes >= 60 ? (durationMinutes/60)+'س' : durationMinutes+'د';
+  _quizTimerInterval = setInterval(() => {
+    _quizTimerSeconds--;
+    const m = Math.floor(_quizTimerSeconds/60);
+    const s = _quizTimerSeconds%60;
+    const txt = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    const timerText = document.getElementById('quizTimerText');
+    if(timerText) timerText.textContent = txt;
+    const pct = (_quizTimerSeconds/_quizTimerTotal)*100;
+    if(fill) fill.style.width = pct+'%';
+    // Color warning
+    if(display){
+      if(pct <= 10) { display.classList.add('danger'); display.classList.remove('warning'); }
+      else if(pct <= 25) { display.classList.add('warning'); display.classList.remove('danger'); }
+      else { display.classList.remove('warning','danger'); }
+    }
+    if(_quizTimerSeconds <= 0) {
+      clearInterval(_quizTimerInterval);
+      _quizTimerInterval = null;
+      _quizIsActive = false;
+      showNotif('⏰ انتهى الوقت! جاري التسليم...','e');
+      setTimeout(() => window.submitQuiz(), 1000);
+    }
+  }, 1000);
+}
+
+function _stopQuizTimer() {
+  if(_quizTimerInterval) { clearInterval(_quizTimerInterval); _quizTimerInterval = null; }
+  _quizIsActive = false;
+  const wrap = document.getElementById('quizTimerWrap');
+  if(wrap) wrap.style.display = 'none';
+}
+
+// Anti-cheat: detect blur/visibility change
+function _handleVisibilityChange() {
+  if(!_quizIsActive) return;
+  if(document.hidden) {
+    _quizBlurSubmitted = true;
+    _quizIsActive = false;
+    _stopQuizTimer();
+    closeModal('quizModal');
+    // Auto-submit with current answers
+    window.submitQuiz(true);
+    // Show overlay
+    const overlay = document.getElementById('anticheatOverlay');
+    if(overlay) overlay.classList.add('show');
+  }
+}
+
+function _handleWindowBlur() {
+  if(!_quizIsActive || _quizBlurSubmitted) return;
+  _quizBlurSubmitted = true;
+  _quizIsActive = false;
+  _stopQuizTimer();
+  closeModal('quizModal');
+  window.submitQuiz(true);
+  const overlay = document.getElementById('anticheatOverlay');
+  if(overlay) overlay.classList.add('show');
+}
+
+document.addEventListener('visibilitychange', _handleVisibilityChange);
+window.addEventListener('blur', _handleWindowBlur);
+
+window._closeAnticheat = function() {
+  const overlay = document.getElementById('anticheatOverlay');
+  if(overlay) overlay.classList.remove('show');
+};
+
+window._confirmCloseQuiz = function() {
+  if(_quizIsActive) {
+    if(!confirm('لو خرجت من الامتحان هيتسجل كإنهاء امتحان — هل أنت متأكد؟')) return;
+    _quizBlurSubmitted = true;
+    _quizIsActive = false;
+    _stopQuizTimer();
+    window.submitQuiz(true);
+  }
+  closeModal('quizModal');
+};
+
 // ── QUIZ SYSTEM (Student) ──
 window.openQuiz = async function(quizId, chapterName) {
   const snap = await getDoc(doc(db,'quizzes',quizId));
@@ -1605,12 +1794,22 @@ window.openQuiz = async function(quizId, chapterName) {
   _activeQuizData = { id: quizId, ...snap.data() };
   _userAnswers = {};
 
+  // Check date range
+  const now = new Date();
+  if(_activeQuizData.startDate && now < new Date(_activeQuizData.startDate)){
+    const fmtDate = new Date(_activeQuizData.startDate).toLocaleDateString('ar-EG',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    showNotif(`الامتحان لم يبدأ بعد — يبدأ ${fmtDate}`,'e'); return;
+  }
+  if(_activeQuizData.endDate && now > new Date(_activeQuizData.endDate)){
+    showNotif('انتهى وقت الامتحان ولم يعد متاحاً','e'); return;
+  }
+
   // Check if already submitted
   if (currentUser) {
     const resultSnap = await getDoc(doc(db,'quiz_results', currentUser.uid+'_'+quizId));
     if (resultSnap.exists()) {
       const r = resultSnap.data();
-      document.getElementById('quizModalTitle').textContent = '📝 ' + chapterName;
+      document.getElementById('quizModalTitle').textContent = '📝 ' + (chapterName || _activeQuizData.name);
       document.getElementById('quizBody').innerHTML = `
         <div class="quiz-result">
           <p style="color:var(--muted);margin-bottom:8px;">سبق وحللت الامتحان ده</p>
@@ -1623,7 +1822,7 @@ window.openQuiz = async function(quizId, chapterName) {
     }
   }
 
-  document.getElementById('quizModalTitle').textContent = '📝 ' + chapterName;
+  document.getElementById('quizModalTitle').textContent = '📝 ' + (chapterName || _activeQuizData.name);
   let html = '';
   _activeQuizData.questions.forEach((q, qi) => {
     html += `<div class="quiz-question">
@@ -1637,6 +1836,16 @@ window.openQuiz = async function(quizId, chapterName) {
   document.getElementById('quizBody').innerHTML = html;
   document.getElementById('quizSubmitBtn').style.display = 'flex';
   openModal('quizModal');
+
+  // Start timer if duration set
+  if(_activeQuizData.duration) {
+    _startQuizTimer(_activeQuizData.duration);
+  } else {
+    _quizIsActive = true;
+    _quizBlurSubmitted = false;
+    const wrap = document.getElementById('quizTimerWrap');
+    if(wrap) wrap.style.display = 'none';
+  }
 };
 
 window.selectAnswer = function(qi, oi, btn) {
@@ -1645,6 +1854,102 @@ window.selectAnswer = function(qi, oi, btn) {
   parent.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
 };
+
+// ── OPEN QUIZ RESULT (completed) ──
+window.openQuizResult = async function(quizId, quizName) {
+  if(!currentUser) return;
+  const [resultSnap, quizSnap] = await Promise.all([
+    getDoc(doc(db,'quiz_results', currentUser.uid+'_'+quizId)),
+    getDoc(doc(db,'quizzes', quizId))
+  ]);
+  if(!resultSnap.exists()) return;
+  const r = resultSnap.data();
+  const qData = quizSnap.exists() ? quizSnap.data() : null;
+  const pct = Math.round(r.score/r.total*100);
+
+  let html = `<div class="quiz-result" style="margin-bottom:16px;">
+    <p style="color:var(--muted);margin-bottom:8px;">${quizName}</p>
+    <div class="quiz-score">${r.score}/${r.total}</div>
+    <p style="margin-top:8px;color:${pct>=50?'#22c55e':'var(--error)'};">${pct}%</p>
+  </div>`;
+
+  if(qData && r.answers) {
+    html += `<div style="margin-top:16px;"><p class="db-section-title" style="margin-bottom:12px;">📋 تفاصيل الإجابات</p>`;
+    qData.questions.forEach((q,qi) => {
+      const myAns = r.answers[qi] !== undefined ? parseInt(r.answers[qi]) : -1;
+      const correct = q.correct;
+      html += `<div class="qr-detail-item">
+        <p>${qi+1}. ${q.question}</p>`;
+      q.options.forEach((opt, oi) => {
+        let cls = 'neutral';
+        let icon = '';
+        if(oi === correct) { cls = 'correct-ans'; icon = '✅ '; }
+        else if(oi === myAns && myAns !== correct) { cls = 'wrong-ans'; icon = '❌ '; }
+        html += `<div class="qr-opt ${cls}">${icon}${opt}</div>`;
+      });
+      html += `</div>`;
+    });
+    html += `</div>`;
+  }
+
+  document.getElementById('quizResultModalTitle').textContent = '📊 نتيجة: '+quizName;
+  document.getElementById('quizResultBody').innerHTML = html;
+  openModal('quizResultModal');
+};
+
+// ── LOAD AVAILABLE QUIZZES (Student — Standalone) ──
+async function loadAvailableQuizzes() {
+  if(!currentUserData) return;
+  const grade = currentUserData.grade;
+  const el = document.getElementById('availableQuizzesList');
+  if(!el) return;
+  try {
+    const [quizSnap, resultsSnap] = await Promise.all([
+      getDocs(query(collection(db,'quizzes'), where('grade','==',grade))),
+      getDocs(query(collection(db,'quiz_results'), where('userId','==',currentUser.uid)))
+    ]);
+    const doneIds = new Set(resultsSnap.docs.map(d => d.data().quizId));
+    const now = new Date();
+    if(quizSnap.empty){ el.innerHTML='<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:10px;">لا توجد امتحانات متاحة لصفك حالياً</p>'; return; }
+    el.innerHTML = '';
+    quizSnap.docs.forEach(d => {
+      const q = d.data();
+      const done = doneIds.has(d.id);
+      const notStarted = q.startDate && now < new Date(q.startDate);
+      const expired = q.endDate && now > new Date(q.endDate);
+      const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+      let statusClass='available', statusTxt='متاح', iconClass='', btnHtml='';
+      if(done){
+        statusClass='done'; statusTxt='اكتمل ✅'; iconClass='done';
+        btnHtml=`<button class="sq-btn view" onclick="openQuizResult('${d.id}','${q.name}')"><i class="fas fa-eye"></i> عرض النتيجة والحل</button>`;
+      } else if(expired){
+        statusClass='expired'; statusTxt='انتهى'; iconClass='expired';
+        btnHtml=`<button class="sq-btn disabled" disabled>انتهى الوقت</button>`;
+      } else if(notStarted){
+        statusClass='locked'; statusTxt='لم يبدأ بعد'; iconClass='locked';
+        btnHtml=`<button class="sq-btn disabled" disabled><i class="fas fa-lock"></i> ${fmtDate(q.startDate)}</button>`;
+      } else {
+        btnHtml=`<button class="sq-btn start" onclick="openQuiz('${d.id}','${q.name}')"><i class="fas fa-pencil-alt"></i> ابدأ الامتحان</button>`;
+      }
+      const dateLine = (q.startDate||q.endDate)?`<div class="sq-meta">📅 ${fmtDate(q.startDate)} — ${fmtDate(q.endDate)}</div>`:'';
+      const durLine = q.duration?`<div class="sq-meta">⏱ ${q.duration} دقيقة</div>`:'';
+      el.insertAdjacentHTML('beforeend',`
+        <div class="sq-card">
+          <div class="sq-card-inner">
+            <div class="sq-icon ${iconClass}"><i class="fas ${done?'fa-check-circle':expired?'fa-times-circle':notStarted?'fa-lock':'fa-clipboard-list'}"></i></div>
+            <div class="sq-info">
+              <div class="sq-name">${q.name}</div>
+              <div class="sq-meta">${q.questions.length} سؤال</div>
+              ${dateLine}${durLine}
+              <span class="sq-status ${statusClass}">${statusTxt}</span>
+            </div>
+          </div>
+          <div style="padding:10px 0 2px 0;">${btnHtml}</div>
+        </div>`);
+    });
+  } catch(e){ console.error(e); el.innerHTML='<p style="color:var(--error);font-size:.83rem;">خطأ في التحميل</p>'; }
+}
+window.loadAvailableQuizzes = loadAvailableQuizzes;
 
 // submitQuiz is defined later with WhatsApp share
 
@@ -1686,6 +1991,10 @@ window.saveQuiz = async function() {
   const name = document.getElementById('qName').value.trim();
   if (!name) { showNotif('ادخل اسم الامتحان','e'); return; }
 
+  const startDate = document.getElementById('qStartDate').value;
+  const endDate = document.getElementById('qEndDate').value;
+  const duration = parseInt(document.getElementById('qDuration').value) || null;
+
   const qItems = document.getElementById('questionsList').children;
   if (qItems.length === 0) { showNotif('أضف سؤال واحد على الأقل','e'); return; }
 
@@ -1702,9 +2011,18 @@ window.saveQuiz = async function() {
 
   if (!valid) { showNotif('تأكد من إدخال كل بيانات الأسئلة واختيار الإجابة الصح','e'); return; }
 
-  await addDoc(collection(db,'quizzes'), { name, grade, questions, createdAt: new Date().toISOString() });
+  await addDoc(collection(db,'quizzes'), {
+    name, grade, questions,
+    startDate: startDate || null,
+    endDate: endDate || null,
+    duration: duration,
+    createdAt: new Date().toISOString()
+  });
   showNotif('تم حفظ الامتحان ✅','s');
   document.getElementById('qName').value = '';
+  document.getElementById('qStartDate').value = '';
+  document.getElementById('qEndDate').value = '';
+  document.getElementById('qDuration').value = '';
   document.getElementById('questionsList').innerHTML = '';
   loadQuizzesAdmin();
   loadChapters();
@@ -1718,14 +2036,22 @@ async function loadQuizzesAdmin() {
   if (snap.empty) { el.innerHTML='<p style="color:var(--muted);font-size:.85rem;">لا توجد امتحانات حتى الآن</p>'; return; }
   snap.docs.forEach(d => {
     const q = d.data();
+    const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString('ar-EG',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+    const durTxt = q.duration ? `⏱ ${q.duration} دقيقة` : '';
+    const dateTxt = (q.startDate || q.endDate) ? `📅 من ${fmtDate(q.startDate)} → ${fmtDate(q.endDate)}` : '';
     el.insertAdjacentHTML('beforeend',`
-      <div class="mcq-item">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <p style="font-weight:700;">${q.name}</p>
+      <div class="mcq-item" style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <p style="font-weight:700;margin-bottom:4px;">${q.name}</p>
             <span style="font-size:.75rem;color:var(--muted);">${gradeLabels[q.grade]||q.grade} — ${q.questions.length} سؤال</span>
+            ${dateTxt?`<br><span style="font-size:.72rem;color:var(--amber);">${dateTxt}</span>`:''}
+            ${durTxt?`<br><span style="font-size:.72rem;color:var(--teal-lt);">${durTxt}</span>`:''}
           </div>
-          <button class="tbl-btn danger" onclick="window._deleteQuiz('${d.id}')">حذف</button>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:flex-start;">
+            <button class="tbl-btn" onclick="window._resetQuizForStudent('${d.id}','${q.name}')" style="border-color:var(--amber);color:var(--amber);" title="إعادة تفعيل طالب لهذا الامتحان">↩ إعادة تفعيل طالب</button>
+            <button class="tbl-btn danger" onclick="window._deleteQuiz('${d.id}')">حذف</button>
+          </div>
         </div>
       </div>`);
   });
@@ -1736,6 +2062,23 @@ window._deleteQuiz = async function(id) {
   await deleteDoc(doc(db,'quizzes',id));
   showNotif('تم حذف الامتحان','s');
   loadQuizzesAdmin();
+};
+
+// ── ADMIN: Reset a student's quiz result ──
+window._resetQuizForStudent = async function(quizId, quizName) {
+  // Load students list for this quiz
+  const resultsSnap = await getDocs(query(collection(db,'quiz_results'), where('quizId','==',quizId)));
+  if(resultsSnap.empty){ showNotif('لا يوجد طلاب حلوا هذا الامتحان بعد','e'); return; }
+  let list = resultsSnap.docs.map(d => ({docId: d.id, name: d.data().userName, userId: d.data().userId}));
+  const namesStr = list.map((l,i) => `${i+1}. ${l.name}`).join('\n');
+  const choice = prompt(`اختر رقم الطالب لإعادة تفعيله في امتحان "${quizName}":\n\n${namesStr}\n\nاكتب الرقم:`);
+  if(!choice) return;
+  const idx = parseInt(choice) - 1;
+  if(isNaN(idx) || idx < 0 || idx >= list.length){ showNotif('رقم غير صحيح','e'); return; }
+  const chosen = list[idx];
+  if(!confirm(`إعادة تفعيل الطالب "${chosen.name}" لامتحان "${quizName}"؟`)) return;
+  await deleteDoc(doc(db,'quiz_results', chosen.docId));
+  showNotif(`✅ تم إعادة تفعيل "${chosen.name}" في الامتحان`,'s');
 };
 
 // ── ADMIN LOAD ──
@@ -1797,53 +2140,67 @@ window._setStatus = async function(uid, status) {
   loadAdminData();
 };
 // ── QUIZ SUBMIT — with WhatsApp share ──
-window.submitQuiz = async function() {
+window.submitQuiz = async function(forced) {
   if (!_activeQuizData) return;
+  _stopQuizTimer();
+  _quizIsActive = false;
+
   const total = _activeQuizData.questions.length;
   const answered = Object.keys(_userAnswers).length;
-  if (answered < total) { showNotif('من فضلك أجب على كل الأسئلة','e'); return; }
+  if (!forced && answered < total) { showNotif('من فضلك أجب على كل الأسئلة','e'); return; }
 
   let score = 0;
   _activeQuizData.questions.forEach((q,qi) => {
     if (_userAnswers[qi] === q.correct) score++;
   });
 
-  _activeQuizData.questions.forEach((q,qi) => {
-    const opts = document.querySelectorAll(`.quiz-question:nth-child(${qi+1}) .quiz-opt`);
-    opts.forEach((btn,oi) => {
-      if (oi === q.correct) btn.classList.add('correct');
-      else if (oi === _userAnswers[qi]) btn.classList.add('wrong');
+  if(!forced) {
+    _activeQuizData.questions.forEach((q,qi) => {
+      const opts = document.querySelectorAll(`.quiz-question:nth-child(${qi+1}) .quiz-opt`);
+      opts.forEach((btn,oi) => {
+        if (oi === q.correct) btn.classList.add('correct');
+        else if (oi === _userAnswers[qi]) btn.classList.add('wrong');
+      });
     });
-  });
-  document.getElementById('quizSubmitBtn').style.display = 'none';
+    document.getElementById('quizSubmitBtn').style.display = 'none';
+  }
 
   const pct = Math.round(score/total*100);
   const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '✅' : '📚';
   const studentName = currentUserData ? (currentUserData.firstName+' '+currentUserData.secondName) : 'الطالب';
   const waText = encodeURIComponent(`${emoji} نتيجتي في امتحان "${_activeQuizData.name}"\n\n🎯 ${score} من ${total} سؤال (${pct}%)\n\n📚 منصة الوفاء — مستر أحمد ذكي`);
 
-  document.getElementById('quizBody').insertAdjacentHTML('beforeend',`
-    <div class="quiz-result">
-      <p style="color:var(--muted);margin-bottom:8px;">نتيجتك</p>
-      <div class="quiz-score">${score}/${total}</div>
-      <p style="margin-top:8px;color:${pct>=50?'#22c55e':'var(--error)'};">${pct}%</p>
-      <a class="wa-share-btn" href="https://wa.me/?text=${waText}" target="_blank">
-        <i class="fab fa-whatsapp"></i> شارك نتيجتك على واتساب
-      </a>
-    </div>`);
+  if(!forced) {
+    document.getElementById('quizBody').insertAdjacentHTML('beforeend',`
+      <div class="quiz-result">
+        <p style="color:var(--muted);margin-bottom:8px;">نتيجتك</p>
+        <div class="quiz-score">${score}/${total}</div>
+        <p style="margin-top:8px;color:${pct>=50?'#22c55e':'var(--error)'};">${pct}%</p>
+        <a class="wa-share-btn" href="https://wa.me/?text=${waText}" target="_blank">
+          <i class="fab fa-whatsapp"></i> شارك نتيجتك على واتساب
+        </a>
+      </div>`);
+  }
 
   if (currentUser) {
-    await setDoc(doc(db,'quiz_results', currentUser.uid+'_'+_activeQuizData.id), {
-      userId: currentUser.uid,
-      userName: studentName,
-      quizId: _activeQuizData.id,
-      quizName: _activeQuizData.name,
-      grade: currentUserData?.grade || '',
-      score, total, pct,
-      answers: _userAnswers,
-      submittedAt: new Date().toISOString()
-    });
+    try {
+      await setDoc(doc(db,'quiz_results', currentUser.uid+'_'+_activeQuizData.id), {
+        userId: currentUser.uid,
+        userName: studentName,
+        quizId: _activeQuizData.id,
+        quizName: _activeQuizData.name,
+        grade: currentUserData?.grade || '',
+        score, total, pct,
+        answers: _userAnswers,
+        forcedSubmit: forced ? true : false,
+        submittedAt: new Date().toISOString()
+      });
+    } catch(e) { console.error('Error saving quiz result:', e); }
   }
+
+  // Refresh quizzes list
+  if(window.loadAvailableQuizzes) loadAvailableQuizzes();
+  loadMyQuizResults();
 };
 
 // ── LEADERBOARD ──
@@ -2337,7 +2694,7 @@ function dbTab(name) {
     const btn = document.getElementById('dbn-'+t);
     if(btn) btn.classList.toggle('active', t===name);
   });
-  if (name==='quizzes') loadMyQuizResults();
+  if (name==='quizzes') { loadAvailableQuizzes(); loadMyQuizResults(); }
   if (name==='leaderboard') loadLeaderboard();
   if (name==='announcements') { loadAnnouncements(); markAnnouncementsRead(); }
   if (name==='schedule') loadSchedule();
