@@ -1606,6 +1606,8 @@ async function loadAvailableQuizzes() {
     return;
   }
 
+  console.log('🔍 loadAvailableQuizzes — user:', currentUser.uid, '| grade:', currentUserData.grade, '| status:', currentUserData.status);
+
   const grade = currentUserData.grade;
   const now = new Date();
 
@@ -1613,6 +1615,19 @@ async function loadAvailableQuizzes() {
     getDocs(query(collection(db,'quizzes'), where('grade','==',grade))),
     getDocs(query(collection(db,'quiz_results'), where('userId','==',currentUser.uid)))
   ]);
+
+  console.log('📦 quizzes found:', quizzesSnap.size, '| my results:', myResults.size);
+  quizzesSnap.docs.forEach(d => console.log('  quiz:', d.id, d.data()));
+
+  // DEBUG على الشاشة
+  el.innerHTML = `<div style="background:#1a3a2a;border:1px solid #22c55e;border-radius:12px;padding:14px;font-size:.78rem;line-height:1.8;direction:ltr;">
+    <b style="color:#22c55e;">DEBUG INFO</b><br>
+    User ID: ${currentUser.uid}<br>
+    Grade: ${currentUserData.grade}<br>
+    Status: ${currentUserData.status}<br>
+    Quizzes found: ${quizzesSnap.size}<br>
+    ${quizzesSnap.docs.map(d => `Quiz: ${d.data().name} | grade: ${d.data().grade}`).join('<br>')}
+  </div>`;
 
   const doneIds = {};
   myResults.docs.forEach(d => { doneIds[d.data().quizId] = d.data(); });
@@ -1717,6 +1732,7 @@ async function loadMyQuizResults() {
   } catch(e) { console.error(e); }
 }
 window.loadMyQuizResults = loadMyQuizResults;
+window.loadAvailableQuizzes = loadAvailableQuizzes;
 
 
 // ── WATCHED SYSTEM ──
@@ -2663,10 +2679,16 @@ function dbTab(name) {
     const btn = document.getElementById('dbn-'+t);
     if(btn) btn.classList.toggle('active', t===name);
   });
-  if (name==='quizzes') loadMyQuizResults();
-  if (name==='leaderboard') loadLeaderboard();
-  if (name==='announcements') { loadAnnouncements(); markAnnouncementsRead(); }
-  if (name==='schedule') loadSchedule();
+  if (name==='quizzes') {
+    if (window.loadMyQuizResults) window.loadMyQuizResults();
+    else setTimeout(() => window.loadMyQuizResults && window.loadMyQuizResults(), 1500);
+  }
+  if (name==='leaderboard') { if(window.loadLeaderboard) window.loadLeaderboard(); }
+  if (name==='announcements') {
+    if(window.loadAnnouncements) window.loadAnnouncements();
+    if(window.markAnnouncementsRead) window.markAnnouncementsRead();
+  }
+  if (name==='schedule') { if(window.loadSchedule) window.loadSchedule(); }
 }
 window.dbTab = dbTab;
 
