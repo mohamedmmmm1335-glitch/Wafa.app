@@ -1740,8 +1740,25 @@ window._deleteQuiz = async function(id) {
 
 // ── ADMIN LOAD ──
 async function loadAdminData() {
-  updateAdminStats();
-  const snap = await getDocs(collection(db,'users'));
+  const [snap, quizzesSnap] = await Promise.all([
+    getDocs(collection(db,'users')),
+    getDocs(collection(db,'quizzes'))
+  ]);
+
+  // ── Stats from same snapshot ──
+  let total=0, active=0, pending=0;
+  snap.docs.forEach(d => {
+    if(d.data().role==='admin') return;
+    total++;
+    if(d.data().status==='active') active++;
+    else if(d.data().status==='pending') pending++;
+  });
+  document.getElementById('aStatTotal').textContent = total;
+  document.getElementById('aStatActive').textContent = active;
+  document.getElementById('aStatPending').textContent = pending;
+  document.getElementById('aStatQuizzes').textContent = quizzesSnap.size;
+
+  // ── Students table ──
   const tbody = document.getElementById('usersTbody');
   tbody.innerHTML = '';
   if (snap.empty) { tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;">لا يوجد طلاب حتى الآن</td></tr>'; return; }
@@ -1757,11 +1774,11 @@ async function loadAdminData() {
       : '<span class="status-badge pending">قيد المراجعة</span>';
     tbody.insertAdjacentHTML('beforeend',`
       <tr>
-        <td>${u.fullName||u.firstName+' '+u.secondName}</td>
-        <td>${gradeMap[u.grade]||u.grade}</td>
-        <td>${u.studentPhone}</td>
+        <td>${u.fullName||((u.firstName||'')+' '+(u.secondName||''))}</td>
+        <td>${gradeMap[u.grade]||u.grade||'—'}</td>
+        <td>${u.studentPhone||'—'}</td>
         <td>${u.gender==='male'?'ذكر':'أنثى'}</td>
-        <td>${stageMap[u.stage]||u.stage}</td>
+        <td>${stageMap[u.stage]||u.stage||'—'}</td>
         <td>${statusBadge}</td>
         <td>
           ${u.status!=='active'?`<button class="tbl-btn ok" onclick="window._setStatus('${uid}','active')">تفعيل</button>`:''}
@@ -2100,27 +2117,7 @@ async function loadPerformanceReport() {
   }
 }
 
-// ── ADMIN STATS UPDATE ──
-async function updateAdminStats() {
-  try {
-    const [usersSnap, quizzesSnap] = await Promise.all([
-      getDocs(collection(db,'users')),
-      getDocs(collection(db,'quizzes'))
-    ]);
-    let total=0, active=0, pending=0;
-    usersSnap.docs.forEach(d => {
-      if(d.data().role==='admin') return;
-      total++;
-      if(d.data().status==='active') active++;
-      else if(d.data().status==='pending') pending++;
-    });
-    document.getElementById('aStatTotal').textContent = total;
-    document.getElementById('aStatActive').textContent = active;
-    document.getElementById('aStatPending').textContent = pending;
-    document.getElementById('aStatQuizzes').textContent = quizzesSnap.size;
-  } catch(e) {}
-}
-window.updateAdminStats = updateAdminStats;
+window.loadAdminData = loadAdminData;
 
 window.addChapter = async function() {
   const grade = document.getElementById('chGrade').value;
