@@ -398,7 +398,33 @@ select.form-input option{background:var(--bg2);}
 .sched-badge.revision{background:rgba(245,158,11,.12);color:var(--amber);}
 .sched-badge.lecture{background:var(--teal-dim);color:var(--teal-lt);}
 
-/* ── WHATSAPP SHARE BTN ── */
+/* ── QUIZ TIMER ── */
+.quiz-timer-bar{position:sticky;top:0;z-index:10;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-radius:0;}
+.quiz-timer-display{font-family:'Tajawal',sans-serif;font-size:1.3rem;font-weight:900;color:var(--teal-lt);}
+.quiz-timer-display.warning{color:var(--amber);}
+.quiz-timer-display.danger{color:var(--error);animation:pulse-p .8s infinite;}
+.quiz-available-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s,transform .15s;}
+.quiz-available-card:hover{border-color:var(--teal);transform:translateX(-2px);}
+.quiz-available-card.locked{opacity:.55;cursor:not-allowed;}
+.quiz-available-card.locked:hover{border-color:var(--border);transform:none;}
+.quiz-av-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.quiz-av-info{flex:1;}
+.quiz-av-title{font-weight:700;font-size:.9rem;margin-bottom:3px;}
+.quiz-av-meta{font-size:.73rem;color:var(--muted);}
+.quiz-av-badge{font-size:.68rem;font-weight:800;padding:2px 10px;border-radius:50px;display:inline-block;margin-top:5px;}
+.quiz-av-badge.open{background:rgba(34,197,94,.12);color:#22c55e;}
+.quiz-av-badge.done{background:var(--teal-dim);color:var(--teal-lt);cursor:pointer;}
+.quiz-av-badge.coming{background:rgba(245,158,11,.12);color:var(--amber);}
+.quiz-av-badge.expired{background:rgba(239,68,68,.1);color:var(--error);}
+
+/* ── QUIZ RESULT REVIEW MODAL ── */
+.review-question{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
+.review-question p{font-weight:700;font-size:.9rem;margin-bottom:10px;line-height:1.6;}
+.review-opt{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;font-size:.85rem;margin-bottom:6px;}
+.review-opt.correct{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#22c55e;}
+.review-opt.wrong{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:var(--error);}
+.review-opt.neutral{background:var(--bg);border:1px solid var(--border);color:var(--muted);}
+
 .wa-share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;background:#25d366;color:#fff;font-family:'Cairo';font-size:.8rem;font-weight:700;border:none;cursor:pointer;margin-top:10px;text-decoration:none;transition:transform .2s,box-shadow .2s;}
 .wa-share-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(37,211,102,.4);}
 
@@ -473,8 +499,22 @@ select.form-input option{background:var(--bg2);}
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('quizModal')"><i class="fas fa-times"></i></button>
     <div class="modal-title" id="quizModalTitle">📝 الامتحان</div>
+    <!-- Timer bar — hidden by default, shown when quiz has duration -->
+    <div class="quiz-timer-bar" id="quizTimerBar" style="display:none;">
+      <span style="font-size:.8rem;color:var(--muted);">⏱ الوقت المتبقي</span>
+      <span class="quiz-timer-display" id="quizTimerDisplay">00:00</span>
+    </div>
     <div id="quizBody"></div>
     <button class="btn-submit" id="quizSubmitBtn" onclick="submitQuiz()" style="margin-top:16px;display:none;"><i class="fas fa-paper-plane"></i> تسليم الامتحان</button>
+  </div>
+</div>
+
+<!-- Review Modal (Student — يراجع الحل والدرجة) -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('reviewModal')"><i class="fas fa-times"></i></button>
+    <div class="modal-title" id="reviewModalTitle">📋 مراجعة الإجابات</div>
+    <div id="reviewBody"></div>
   </div>
 </div>
 
@@ -932,12 +972,16 @@ select.form-input option{background:var(--bg2);}
 
   <!-- TAB: QUIZZES -->
   <div class="db-tab-content" id="dbt-quizzes" style="display:none;">
-    <div class="db-section-title">📝 امتحاناتي السابقة</div>
+    <div class="db-section-title">📝 الامتحانات المتاحة</div>
+    <div id="availableQuizzesList">
+      <p style="color:var(--muted);font-size:.83rem;text-align:center;padding:20px;">جاري التحميل...</p>
+    </div>
+    <div class="db-section-title" style="margin-top:20px;">📋 نتائجي السابقة</div>
     <div id="myQuizResults">
       <div class="db-empty-state">
         <div class="db-empty-icon"><i class="fas fa-clipboard-list"></i></div>
         <div class="db-empty-title">لا توجد امتحانات بعد</div>
-        <div class="db-empty-sub">حل امتحاناتك من الكورسات وهتظهر هنا</div>
+        <div class="db-empty-sub">حل امتحاناتك وهتظهر هنا</div>
         <button class="db-empty-btn" onclick="dbTab('courses')">📚 ابدأ من الكورسات</button>
       </div>
     </div>
@@ -1105,6 +1149,31 @@ select.form-input option{background:var(--bg2);}
               <label class="form-label">اسم الامتحان</label>
               <input class="form-input" type="text" id="qName" placeholder="مثل: امتحان الوحدة الأولى">
             </div>
+          </div>
+          <!-- تاريخ الامتحان -->
+          <div class="row2">
+            <div>
+              <label class="form-label">📅 تاريخ بداية الامتحان</label>
+              <input class="form-input" type="datetime-local" id="qStartDate">
+            </div>
+            <div>
+              <label class="form-label">📅 تاريخ نهاية الامتحان</label>
+              <input class="form-input" type="datetime-local" id="qEndDate">
+            </div>
+          </div>
+          <!-- مدة الامتحان من جوا -->
+          <div>
+            <label class="form-label">⏱ مدة الامتحان (بالدقائق)</label>
+            <select class="form-input" id="qDuration">
+              <option value="0">بلا وقت محدد</option>
+              <option value="30">30 دقيقة</option>
+              <option value="45">45 دقيقة</option>
+              <option value="60">ساعة كاملة</option>
+              <option value="90">ساعة ونص</option>
+              <option value="120">ساعتين</option>
+              <option value="150">ساعتين ونص</option>
+              <option value="180">3 ساعات</option>
+            </select>
           </div>
           <div id="questionsContainer">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -1512,17 +1581,86 @@ async function loadChapters() {
 }
 window.loadChapters = loadChapters;
 
+// ── AVAILABLE QUIZZES (للطالب) ──
+async function loadAvailableQuizzes() {
+  if (!currentUser || !currentUserData) return;
+  const el = document.getElementById('availableQuizzesList');
+  if (!el) return;
+  el.innerHTML = '<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:10px;">جاري التحميل...</p>';
+
+  const grade = currentUserData.grade;
+  const now = new Date();
+
+  const [quizzesSnap, myResults] = await Promise.all([
+    getDocs(query(collection(db,'quizzes'), where('grade','==',grade))),
+    getDocs(query(collection(db,'quiz_results'), where('userId','==',currentUser.uid)))
+  ]);
+
+  const doneIds = {};
+  myResults.docs.forEach(d => { doneIds[d.data().quizId] = d.data(); });
+
+  if (quizzesSnap.empty) {
+    el.innerHTML = '<div class="db-empty-state"><div class="db-empty-icon"><i class="fas fa-clipboard"></i></div><div class="db-empty-title">لا توجد امتحانات بعد</div><div class="db-empty-sub">لما المدرس يضيف امتحانات هتظهر هنا</div></div>';
+    return;
+  }
+
+  el.innerHTML = '';
+  quizzesSnap.docs.forEach(d => {
+    const q = d.data();
+    const qId = d.id;
+    const start = q.startDate ? new Date(q.startDate) : null;
+    const end = q.endDate ? new Date(q.endDate) : null;
+    const isDone = !!doneIds[qId];
+    const durTxt = q.duration > 0 ? `⏱ ${q.duration} دقيقة` : '';
+
+    let statusBadge = '';
+    let locked = false;
+    let metaTxt = durTxt;
+
+    if (isDone) {
+      const r = doneIds[qId];
+      const pct = Math.round(r.score/r.total*100);
+      statusBadge = `<span class="quiz-av-badge done" onclick="openQuizReview('${qId}')">✅ اكتمل — ${pct}% — اضغط للمراجعة</span>`;
+    } else if (start && now < start) {
+      locked = true;
+      statusBadge = `<span class="quiz-av-badge coming">⏳ لم يبدأ بعد — ${start.toLocaleString('ar-EG')}</span>`;
+    } else if (end && now > end) {
+      locked = true;
+      statusBadge = `<span class="quiz-av-badge expired">🔴 انتهى وقته</span>`;
+    } else {
+      statusBadge = `<span class="quiz-av-badge open">🟢 متاح الآن</span>`;
+      if (start && end) metaTxt += (metaTxt ? ' — ' : '') + `ينتهي: ${end.toLocaleString('ar-EG')}`;
+    }
+
+    const iconBg = isDone ? 'background:linear-gradient(135deg,#22c55e,#86efac)' : locked ? 'background:rgba(239,68,68,.2)' : 'background:linear-gradient(135deg,#6366f1,#a5b4fc)';
+    const iconEmoji = isDone ? '✅' : locked ? '🔒' : '📝';
+    const clickAttr = (!locked && !isDone) ? `onclick="openQuiz('${qId}','${q.name}')"` : isDone ? `onclick="openQuizReview('${qId}')"` : '';
+
+    el.insertAdjacentHTML('beforeend', `
+      <div class="quiz-available-card ${locked?'locked':''}" ${clickAttr}>
+        <div class="quiz-av-icon" style="${iconBg}">${iconEmoji}</div>
+        <div class="quiz-av-info">
+          <div class="quiz-av-title">${q.name}</div>
+          ${metaTxt ? `<div class="quiz-av-meta">${metaTxt}</div>` : ''}
+          ${statusBadge}
+        </div>
+        ${!locked && !isDone ? '<i class="fas fa-chevron-left" style="color:var(--muted);font-size:.8rem;"></i>' : ''}
+      </div>`);
+  });
+}
+
 // ── MY QUIZ RESULTS ──
 async function loadMyQuizResults() {
   if (!currentUser) return;
+  loadAvailableQuizzes();
   try {
     const snap = await getDocs(query(collection(db,'quiz_results'), where('userId','==',currentUser.uid)));
     const el = document.getElementById('myQuizResults');
     if (snap.empty) {
       el.innerHTML = `<div class="db-empty-state">
         <div class="db-empty-icon"><i class="fas fa-clipboard-list"></i></div>
-        <div class="db-empty-title">لا توجد امتحانات بعد</div>
-        <div class="db-empty-sub">حل امتحاناتك من الكورسات وهتظهر هنا</div>
+        <div class="db-empty-title">لا توجد نتائج بعد</div>
+        <div class="db-empty-sub">حل امتحاناتك وهتظهر هنا</div>
         <button class="db-empty-btn" onclick="dbTab('courses')">📚 ابدأ من الكورسات</button>
       </div>`;
       return;
@@ -1536,11 +1674,11 @@ async function loadMyQuizResults() {
       if(pct > best) best = pct;
       total++;
       el.insertAdjacentHTML('beforeend',`
-        <div class="db-quiz-result-card">
+        <div class="db-quiz-result-card" onclick="openQuizReview('${r.quizId}')" style="cursor:pointer;" title="اضغط لمراجعة الإجابات">
           <div class="db-qr-score" style="background:linear-gradient(135deg,${pct>=50?'var(--teal),var(--teal-lt)':'#ef4444,#fca5a5'});">${pct}%</div>
           <div class="db-qr-info">
             <div class="db-qr-name">${r.quizName||'امتحان'}</div>
-            <div class="db-qr-meta">${r.score} من ${r.total} سؤال</div>
+            <div class="db-qr-meta">${r.score} من ${r.total} سؤال — <span style="color:var(--teal-lt);">اضغط لمراجعة الإجابات 👁</span></div>
           </div>
         </div>`);
     });
@@ -1599,28 +1737,50 @@ window.openPDF = function(url, title) {
 };
 
 // ── QUIZ SYSTEM (Student) ──
+let _quizTimerInterval = null;
+let _quizAutoSubmitted = false;
+
+function clearQuizTimer() {
+  if (_quizTimerInterval) { clearInterval(_quizTimerInterval); _quizTimerInterval = null; }
+}
+window.clearQuizTimer = clearQuizTimer;
+
+// كشف لو الطالب خرج من الامتحان
+function _onVisibilityChange() {
+  if (document.hidden && _activeQuizData && !_quizAutoSubmitted) {
+    _quizAutoSubmitted = true;
+    document.removeEventListener('visibilitychange', _onVisibilityChange);
+    clearQuizTimer();
+    // Auto-submit
+    showNotif('⚠️ خرجت من الامتحان — تم التسليم تلقائياً','e');
+    setTimeout(() => window.submitQuiz(true), 600);
+  }
+}
+window._onVisibilityChange = _onVisibilityChange;
+
 window.openQuiz = async function(quizId, chapterName) {
   const snap = await getDoc(doc(db,'quizzes',quizId));
   if (!snap.exists()) return;
   _activeQuizData = { id: quizId, ...snap.data() };
   _userAnswers = {};
+  _quizAutoSubmitted = false;
 
   // Check if already submitted
   if (currentUser) {
     const resultSnap = await getDoc(doc(db,'quiz_results', currentUser.uid+'_'+quizId));
     if (resultSnap.exists()) {
-      const r = resultSnap.data();
-      document.getElementById('quizModalTitle').textContent = '📝 ' + chapterName;
-      document.getElementById('quizBody').innerHTML = `
-        <div class="quiz-result">
-          <p style="color:var(--muted);margin-bottom:8px;">سبق وحللت الامتحان ده</p>
-          <div class="quiz-score">${r.score}/${r.total}</div>
-          <p style="margin-top:8px;color:var(--muted);">${Math.round(r.score/r.total*100)}%</p>
-        </div>`;
-      document.getElementById('quizSubmitBtn').style.display = 'none';
-      openModal('quizModal');
+      openQuizReview(quizId);
       return;
     }
+  }
+
+  // Check date window
+  const now = new Date();
+  if (_activeQuizData.startDate && now < new Date(_activeQuizData.startDate)) {
+    showNotif('الامتحان لم يبدأ بعد','e'); return;
+  }
+  if (_activeQuizData.endDate && now > new Date(_activeQuizData.endDate)) {
+    showNotif('انتهى وقت الامتحان','e'); return;
   }
 
   document.getElementById('quizModalTitle').textContent = '📝 ' + chapterName;
@@ -1636,7 +1796,78 @@ window.openQuiz = async function(quizId, chapterName) {
   });
   document.getElementById('quizBody').innerHTML = html;
   document.getElementById('quizSubmitBtn').style.display = 'flex';
+
+  // ── Timer ──
+  const timerBar = document.getElementById('quizTimerBar');
+  const timerDisplay = document.getElementById('quizTimerDisplay');
+  clearQuizTimer();
+  if (_activeQuizData.duration > 0) {
+    timerBar.style.display = 'flex';
+    let remaining = _activeQuizData.duration * 60; // seconds
+    const updateTimer = () => {
+      const m = Math.floor(remaining / 60).toString().padStart(2,'0');
+      const s = (remaining % 60).toString().padStart(2,'0');
+      timerDisplay.textContent = `${m}:${s}`;
+      timerDisplay.className = 'quiz-timer-display';
+      if (remaining <= 300) timerDisplay.classList.add('warning');
+      if (remaining <= 60) { timerDisplay.classList.remove('warning'); timerDisplay.classList.add('danger'); }
+      if (remaining <= 0) {
+        clearQuizTimer();
+        showNotif('⏰ انتهى الوقت! تم التسليم تلقائياً','e');
+        window.submitQuiz(true);
+        return;
+      }
+      remaining--;
+    };
+    updateTimer();
+    _quizTimerInterval = setInterval(updateTimer, 1000);
+  } else {
+    timerBar.style.display = 'none';
+  }
+
+  // كشف الخروج
+  document.addEventListener('visibilitychange', _onVisibilityChange);
+
   openModal('quizModal');
+};
+
+// ── مراجعة الحل والدرجة ──
+window.openQuizReview = async function(quizId) {
+  if (!currentUser) return;
+  const [resultSnap, quizSnap] = await Promise.all([
+    getDoc(doc(db,'quiz_results', currentUser.uid+'_'+quizId)),
+    getDoc(doc(db,'quizzes', quizId))
+  ]);
+  if (!resultSnap.exists() || !quizSnap.exists()) { showNotif('لا توجد نتيجة','e'); return; }
+  const r = resultSnap.data();
+  const q = quizSnap.data();
+  const pct = Math.round(r.score/r.total*100);
+  const emoji = pct>=80?'🏆':pct>=60?'✅':'📚';
+
+  document.getElementById('reviewModalTitle').textContent = `📋 مراجعة: ${q.name}`;
+  let html = `<div class="quiz-result" style="margin-bottom:16px;">
+    <p style="color:var(--muted);margin-bottom:8px;">نتيجتك ${emoji}</p>
+    <div class="quiz-score">${r.score}/${r.total}</div>
+    <p style="margin-top:8px;color:${pct>=50?'#22c55e':'var(--error)'};">${pct}%</p>
+  </div>
+  <div class="db-section-title" style="margin-bottom:12px;">🔍 مراجعة الإجابات</div>`;
+
+  q.questions.forEach((ques, qi) => {
+    const myAns = r.answers ? r.answers[qi] : undefined;
+    const correct = ques.correct;
+    html += `<div class="review-question"><p>${qi+1}. ${ques.question}</p>`;
+    ques.options.forEach((opt, oi) => {
+      let cls = 'neutral';
+      let prefix = '';
+      if (oi === correct) { cls = 'correct'; prefix = '✅ '; }
+      else if (oi == myAns && myAns !== correct) { cls = 'wrong'; prefix = '❌ '; }
+      html += `<div class="review-opt ${cls}">${prefix}${opt}</div>`;
+    });
+    html += `</div>`;
+  });
+
+  document.getElementById('reviewBody').innerHTML = html;
+  openModal('reviewModal');
 };
 
 window.selectAnswer = function(qi, oi, btn) {
@@ -1684,6 +1915,9 @@ window.addQuestionField = function() {
 window.saveQuiz = async function() {
   const grade = document.getElementById('qGrade').value;
   const name = document.getElementById('qName').value.trim();
+  const startDate = document.getElementById('qStartDate').value;
+  const endDate = document.getElementById('qEndDate').value;
+  const duration = parseInt(document.getElementById('qDuration').value) || 0;
   if (!name) { showNotif('ادخل اسم الامتحان','e'); return; }
 
   const qItems = document.getElementById('questionsList').children;
@@ -1702,9 +1936,18 @@ window.saveQuiz = async function() {
 
   if (!valid) { showNotif('تأكد من إدخال كل بيانات الأسئلة واختيار الإجابة الصح','e'); return; }
 
-  await addDoc(collection(db,'quizzes'), { name, grade, questions, createdAt: new Date().toISOString() });
+  await addDoc(collection(db,'quizzes'), {
+    name, grade, questions,
+    startDate: startDate || null,
+    endDate: endDate || null,
+    duration,
+    createdAt: new Date().toISOString()
+  });
   showNotif('تم حفظ الامتحان ✅','s');
   document.getElementById('qName').value = '';
+  document.getElementById('qStartDate').value = '';
+  document.getElementById('qEndDate').value = '';
+  document.getElementById('qDuration').value = '0';
   document.getElementById('questionsList').innerHTML = '';
   loadQuizzesAdmin();
   loadChapters();
@@ -1718,14 +1961,28 @@ async function loadQuizzesAdmin() {
   if (snap.empty) { el.innerHTML='<p style="color:var(--muted);font-size:.85rem;">لا توجد امتحانات حتى الآن</p>'; return; }
   snap.docs.forEach(d => {
     const q = d.data();
+    const now = new Date();
+    const start = q.startDate ? new Date(q.startDate) : null;
+    const end = q.endDate ? new Date(q.endDate) : null;
+    let statusTxt = '🟢 مفتوح دائماً';
+    if (start && end) {
+      if (now < start) statusTxt = `⏳ يبدأ: ${start.toLocaleString('ar-EG')}`;
+      else if (now > end) statusTxt = `🔴 انتهى: ${end.toLocaleString('ar-EG')}`;
+      else statusTxt = `✅ جارٍ — ينتهي: ${end.toLocaleString('ar-EG')}`;
+    }
+    const durTxt = q.duration > 0 ? `⏱ ${q.duration} دقيقة` : '⏱ بلا وقت محدد';
     el.insertAdjacentHTML('beforeend',`
       <div class="mcq-item">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <p style="font-weight:700;">${q.name}</p>
-            <span style="font-size:.75rem;color:var(--muted);">${gradeLabels[q.grade]||q.grade} — ${q.questions.length} سؤال</span>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <p style="font-weight:700;margin-bottom:4px;">${q.name}</p>
+            <p style="font-size:.75rem;color:var(--muted);">${gradeLabels[q.grade]||q.grade} — ${q.questions.length} سؤال — ${durTxt}</p>
+            <p style="font-size:.73rem;color:var(--teal-lt);margin-top:3px;">${statusTxt}</p>
           </div>
-          <button class="tbl-btn danger" onclick="window._deleteQuiz('${d.id}')">حذف</button>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="tbl-btn" onclick="window._resetStudentQuiz('${d.id}')" style="border-color:var(--amber);color:var(--amber);" title="إعادة فتح الامتحان لطالب معين">🔓 فتح لطالب</button>
+            <button class="tbl-btn danger" onclick="window._deleteQuiz('${d.id}')">حذف</button>
+          </div>
         </div>
       </div>`);
   });
@@ -1736,6 +1993,22 @@ window._deleteQuiz = async function(id) {
   await deleteDoc(doc(db,'quizzes',id));
   showNotif('تم حذف الامتحان','s');
   loadQuizzesAdmin();
+};
+
+// ── فتح الامتحان تاني لطالب معين ──
+window._resetStudentQuiz = async function(quizId) {
+  const phone = prompt('ادخل رقم الطالب (واتساب) اللي عايز تفتحله الامتحان تاني:');
+  if (!phone) return;
+  const q = query(collection(db,'users'), where('studentPhone','==', phone.trim()));
+  const snap = await getDocs(q);
+  if (snap.empty) { showNotif('الرقم ده مش موجود','e'); return; }
+  const uid = snap.docs[0].id;
+  const studentName = snap.docs[0].data().fullName || snap.docs[0].data().firstName || 'الطالب';
+  if (!confirm(`هتفتح الامتحان تاني للطالب: ${studentName}؟`)) return;
+  try {
+    await deleteDoc(doc(db,'quiz_results', uid+'_'+quizId));
+    showNotif(`تم فتح الامتحان تاني للطالب ${studentName} ✅`,'s');
+  } catch(e) { showNotif('حصل خطأ أثناء إعادة الفتح','e'); }
 };
 
 // ── ADMIN LOAD ──
@@ -1797,11 +2070,15 @@ window._setStatus = async function(uid, status) {
   loadAdminData();
 };
 // ── QUIZ SUBMIT — with WhatsApp share ──
-window.submitQuiz = async function() {
+window.submitQuiz = async function(autoSubmit = false) {
   if (!_activeQuizData) return;
+  clearQuizTimer();
+  document.removeEventListener('visibilitychange', _onVisibilityChange);
+  _quizAutoSubmitted = true;
+
   const total = _activeQuizData.questions.length;
   const answered = Object.keys(_userAnswers).length;
-  if (answered < total) { showNotif('من فضلك أجب على كل الأسئلة','e'); return; }
+  if (!autoSubmit && answered < total) { showNotif('من فضلك أجب على كل الأسئلة','e'); return; }
 
   let score = 0;
   _activeQuizData.questions.forEach((q,qi) => {
@@ -1816,6 +2093,7 @@ window.submitQuiz = async function() {
     });
   });
   document.getElementById('quizSubmitBtn').style.display = 'none';
+  document.getElementById('quizTimerBar').style.display = 'none';
 
   const pct = Math.round(score/total*100);
   const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '✅' : '📚';
@@ -1824,7 +2102,7 @@ window.submitQuiz = async function() {
 
   document.getElementById('quizBody').insertAdjacentHTML('beforeend',`
     <div class="quiz-result">
-      <p style="color:var(--muted);margin-bottom:8px;">نتيجتك</p>
+      <p style="color:var(--muted);margin-bottom:8px;">${autoSubmit?'⚠️ تم التسليم تلقائياً':'نتيجتك'}</p>
       <div class="quiz-score">${score}/${total}</div>
       <p style="margin-top:8px;color:${pct>=50?'#22c55e':'var(--error)'};">${pct}%</p>
       <a class="wa-share-btn" href="https://wa.me/?text=${waText}" target="_blank">
@@ -1841,8 +2119,11 @@ window.submitQuiz = async function() {
       grade: currentUserData?.grade || '',
       score, total, pct,
       answers: _userAnswers,
+      autoSubmitted: autoSubmit,
       submittedAt: new Date().toISOString()
     });
+    // Refresh quizzes tab if open
+    loadMyQuizResults();
   }
 };
 
@@ -2222,6 +2503,10 @@ window.addEventListener('popstate', function(e) {
 // Push initial state
 history.replaceState({page:'pg-home'}, '', '');
 
+// Make timer helpers accessible from second script (defined in module)
+window._onVisibilityChange = window._onVisibilityChange || function(){};
+window.clearQuizTimer = window.clearQuizTimer || function(){};
+
 function requireLogin() {
   if (!window._currentUserData) { showPage('pg-auth'); return; }
   if (window._currentUserData.status === 'active') { showPage('pg-dash'); if(window.loadChapters) window.loadChapters(); }
@@ -2234,6 +2519,18 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('open');
   if (id === 'videoModal') document.getElementById('videoFrame').src = '';
   if (id === 'pdfModal') document.getElementById('pdfFrame').src = '';
+  // لو الطالب أغلق الامتحان يدوياً وفيه تايمر شغّال أو امتحان جارٍ
+  if (id === 'quizModal') {
+    if (window._activeQuizData && !window._quizAutoSubmitted) {
+      window._quizAutoSubmitted = true;
+      document.removeEventListener('visibilitychange', window._onVisibilityChange);
+      if (window.clearQuizTimer) window.clearQuizTimer();
+      // Auto-submit silently
+      window.submitQuiz && window.submitQuiz(true);
+    }
+    document.getElementById('quizTimerBar').style.display = 'none';
+    window._activeQuizData = null;
+  }
 }
 window.openModal = openModal;
 window.closeModal = closeModal;
