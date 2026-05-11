@@ -1409,7 +1409,6 @@ window.doLogin = async function() {
 
   try {
     let email = identifier;
-    // لو مش إيميل، ابحث بالرقم (الـ Rules دلوقتي بتسمح بالـ read للكل)
     if (!identifier.includes('@')) {
       const q = query(collection(db,'users'), where('studentPhone','==',identifier));
       const snap = await getDocs(q);
@@ -1417,6 +1416,10 @@ window.doLogin = async function() {
       email = snap.docs[0].data().email;
     }
     const cred = await signInWithEmailAndPassword(auth, email, pass);
+
+    // ── استنى الـ token يتحدث عشان Firestore Rules تشتغل صح ──
+    await cred.user.getIdToken(true);
+
     const userSnap = await getDoc(doc(db,'users', cred.user.uid));
     if (!userSnap.exists()) { showAuthMsg('error','حصل خطأ في بيانات حسابك'); setAuthLoading(false,'li'); return; }
     const data = userSnap.data();
@@ -1438,7 +1441,7 @@ window.doLogin = async function() {
       'auth/invalid-credential':'رقم الطالب أو كلمة المرور غلط',
       'auth/too-many-requests':'كتير أوي، استنى شوية'
     };
-    showAuthMsg('error', msgs[e.code] || 'حصل خطأ، حاول تاني');
+    showAuthMsg('error', msgs[e.code] || 'حصل خطأ: ' + e.message);
   }
 };
 
@@ -1475,6 +1478,9 @@ window.doRegister = async function() {
     const email = emailOpt || phone + '@wafa.platform';
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
 
+    // ── استنى الـ token عشان Firestore Rules تشتغل صح ──
+    await cred.user.getIdToken(true);
+
     let idImageUrl = '';
 
     await setDoc(doc(db,'users', cred.user.uid), {
@@ -1495,9 +1501,8 @@ window.doRegister = async function() {
     const msgs = {
       'auth/email-already-in-use':'رقم الطالب ده مسجل من قبل',
       'auth/weak-password':'كلمة المرور ضعيفة جداً',
-      'storage/unauthorized':'حصل خطأ في رفع الصورة، تأكد من إعدادات Storage'
     };
-    showAuthMsg('error', msgs[e.code] || 'حصل خطأ، حاول تاني');
+    showAuthMsg('error', msgs[e.code] || 'حصل خطأ: ' + e.message);
   }
 };
 
