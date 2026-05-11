@@ -1583,10 +1583,28 @@ window.loadChapters = loadChapters;
 
 // ── AVAILABLE QUIZZES (للطالب) ──
 async function loadAvailableQuizzes() {
-  if (!currentUser || !currentUserData) return;
   const el = document.getElementById('availableQuizzesList');
   if (!el) return;
   el.innerHTML = '<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:10px;">جاري التحميل...</p>';
+
+  // استنى لو currentUser أو currentUserData لسه مجاش (max 5 ثواني)
+  if (!currentUser || !currentUserData) {
+    let waited = 0;
+    await new Promise(resolve => {
+      const check = setInterval(() => {
+        waited += 200;
+        if ((currentUser && currentUserData) || waited >= 5000) {
+          clearInterval(check);
+          resolve();
+        }
+      }, 200);
+    });
+  }
+
+  if (!currentUser || !currentUserData) {
+    el.innerHTML = '<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:10px;">من فضلك سجل دخولك أولاً</p>';
+    return;
+  }
 
   const grade = currentUserData.grade;
   const now = new Date();
@@ -1651,6 +1669,16 @@ async function loadAvailableQuizzes() {
 
 // ── MY QUIZ RESULTS ──
 async function loadMyQuizResults() {
+  // استنى لو user لسه مجاش
+  if (!currentUser) {
+    let waited = 0;
+    await new Promise(resolve => {
+      const check = setInterval(() => {
+        waited += 200;
+        if (currentUser || waited >= 5000) { clearInterval(check); resolve(); }
+      }, 200);
+    });
+  }
   if (!currentUser) return;
   loadAvailableQuizzes();
   try {
@@ -1688,6 +1716,7 @@ async function loadMyQuizResults() {
     document.getElementById('statAvg').textContent = avg+'%';
   } catch(e) { console.error(e); }
 }
+window.loadMyQuizResults = loadMyQuizResults;
 
 
 // ── WATCHED SYSTEM ──
