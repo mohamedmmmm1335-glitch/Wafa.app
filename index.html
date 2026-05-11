@@ -701,7 +701,7 @@ select.form-input option{background:var(--bg2);}
             <button class="toggle-pass" onclick="togglePass('liPass',this)" type="button"><i class="fas fa-eye"></i></button>
           </div>
         </div>
-        <button class="btn-submit" id="loginBtn" onclick="doLogin()">
+        <button class="btn-submit" id="loginBtn" onclick="window.doLogin()">
           <div class="spinner" id="liSpinner"></div>
           <span id="liBtnTxt"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</span>
         </button>
@@ -812,7 +812,7 @@ select.form-input option{background:var(--bg2);}
           </div>
         </div>
 
-        <button class="btn-submit" id="regBtn" onclick="doRegister()">
+        <button class="btn-submit" id="regBtn" onclick="window.doRegister()">
           <div class="spinner" id="regSpinner"></div>
           <span id="regBtnTxt"><i class="fas fa-user-plus"></i> إنشاء الحساب</span>
         </button>
@@ -2559,6 +2559,7 @@ function showPage(id) {
     if (window.loadAdminData) window.loadAdminData();
   }
 }
+window.showPage = showPage;
 
 // Handle Android/iOS back button
 window.addEventListener('popstate', function(e) {
@@ -2668,10 +2669,13 @@ function showAuthMsg(type, txt) {
   document.getElementById(type==='error'?'authErrTxt':'authSucTxt').textContent = txt;
   el.classList.add('show');
 }
+window.showAuthMsg = showAuthMsg;
+
 function hideAuthMsg() {
   document.getElementById('authError').classList.remove('show');
   document.getElementById('authSuccess').classList.remove('show');
 }
+window.hideAuthMsg = hideAuthMsg;
 
 function setAuthLoading(on, prefix) {
   const btn = document.getElementById(prefix+'Btn');
@@ -2681,6 +2685,7 @@ function setAuthLoading(on, prefix) {
   if (sp) sp.style.display = on ? 'block' : 'none';
   if (tx) tx.style.display = on ? 'none' : 'block';
 }
+window.setAuthLoading = setAuthLoading;
 
 // ── NOTIF ──
 function showNotif(msg, type) {
