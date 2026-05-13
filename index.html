@@ -425,6 +425,31 @@ select.form-input option{background:var(--bg2);}
 .review-opt.wrong{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:var(--error);}
 .review-opt.neutral{background:var(--bg);border:1px solid var(--border);color:var(--muted);}
 
+
+/* ── MONTHS / FOLDERS ── */
+.month-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;transition:border-color .2s;}
+.month-card:hover{border-color:var(--teal);}
+.month-card-hdr{display:flex;align-items:center;gap:12px;cursor:pointer;}
+.month-card-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--teal-lt));display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff;flex-shrink:0;}
+.month-card-info{flex:1;}
+.month-card-name{font-weight:700;font-size:.95rem;}
+.month-card-meta{font-size:.73rem;color:var(--muted);margin-top:2px;}
+.month-card-badge{font-size:.68rem;font-weight:800;padding:2px 10px;border-radius:50px;display:inline-block;margin-top:4px;}
+.month-card-badge.open{background:rgba(34,197,94,.12);color:#22c55e;}
+.month-card-badge.locked{background:rgba(239,68,68,.1);color:var(--error);}
+.month-card-badge.coming{background:rgba(245,158,11,.12);color:var(--amber);}
+.month-card-body{display:none;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;}
+.month-card-body.open{display:block;}
+.access-modal-icon{font-size:3rem;text-align:center;margin-bottom:12px;}
+.access-input-wrap{display:flex;gap:8px;margin:16px 0;}
+.vid-controls{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg2);border-top:1px solid var(--border);gap:8px;flex-wrap:wrap;}
+.vid-ctrl-btn{background:var(--teal-dim);border:1px solid var(--border);border-radius:8px;color:var(--teal-lt);font-size:.85rem;padding:6px 14px;cursor:pointer;font-family:'Cairo';font-weight:700;display:flex;align-items:center;gap:5px;}
+.vid-ctrl-btn:hover{background:var(--teal);color:#fff;}
+.vid-speed-select{background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Cairo';font-size:.82rem;padding:6px 10px;cursor:pointer;}
+.profile-avatar-wrap{position:relative;width:80px;height:80px;margin:0 auto 16px;}
+.profile-avatar-img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--teal);}
+.profile-avatar-edit{position:absolute;bottom:0;left:0;width:26px;height:26px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem;color:#fff;border:2px solid var(--bg);}
+
 .wa-share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;background:#25d366;color:#fff;font-family:'Cairo';font-size:.8rem;font-weight:700;border:none;cursor:pointer;margin-top:10px;text-decoration:none;transition:transform .2s,box-shadow .2s;}
 .wa-share-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(37,211,102,.4);}
 
@@ -477,11 +502,70 @@ select.form-input option{background:var(--bg2);}
   <div class="modal-box" style="max-width:800px;">
     <button class="modal-close" onclick="closeModal('videoModal')"><i class="fas fa-times"></i></button>
     <div class="modal-title" id="videoModalTitle">🎬 الفيديو</div>
-    <div class="video-container">
+    <div class="video-container" style="position:relative;">
       <iframe id="videoFrame" src="" allowfullscreen allow="autoplay; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="origin"></iframe>
       <div class="video-watermark"><span id="videoWatermark">اسم الطالب</span></div>
     </div>
-    <button class="btn-submit" style="margin-top:16px;" onclick="markWatched()"><i class="fas fa-check-circle"></i> تم المشاهدة</button>
+    <!-- Video Controls -->
+    <div class="vid-controls" id="vidControls">
+      <div style="display:flex;gap:6px;">
+        <button class="vid-ctrl-btn" onclick="vidSeek(-10)"><i class="fas fa-backward"></i> 10s</button>
+        <button class="vid-ctrl-btn" onclick="vidSeek(10)">10s <i class="fas fa-forward"></i></button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:.78rem;color:var(--muted);">السرعة:</span>
+        <select class="vid-speed-select" onchange="vidSpeed(this.value)" id="vidSpeedSelect">
+          <option value="0.5">0.5x</option>
+          <option value="0.75">0.75x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.25">1.25x</option>
+          <option value="1.5">1.5x</option>
+          <option value="2">2x</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-submit" style="margin-top:12px;" onclick="markWatched()"><i class="fas fa-check-circle"></i> تم المشاهدة</button>
+  </div>
+</div>
+
+<!-- Access Modal (كود الاشتراك أو الدفع) -->
+<div class="modal-overlay" id="accessModal">
+  <div class="modal-box" style="max-width:420px;">
+    <button class="modal-close" onclick="closeModal('accessModal')"><i class="fas fa-times"></i></button>
+    <div class="access-modal-icon">🔒</div>
+    <div class="modal-title" id="accessModalTitle">الوصول للفولدر</div>
+    <p style="color:var(--muted);font-size:.83rem;text-align:center;margin-bottom:16px;" id="accessModalDesc">هذا الفولدر يتطلب اشتراك</p>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;text-align:center;">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:4px;">السعر</div>
+      <div style="font-family:'Tajawal';font-size:1.8rem;font-weight:900;color:var(--teal-lt);" id="accessModalPrice">150 جنيه</div>
+    </div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:8px;text-align:center;">عندك كود اشتراك؟ ادخله هنا:</p>
+    <div class="access-input-wrap">
+      <input class="form-input" type="text" id="accessCodeInput" placeholder="ادخل الكود" style="flex:1;text-align:center;font-size:1.1rem;letter-spacing:3px;">
+      <button class="vid-ctrl-btn" onclick="submitAccessCode()" style="flex-shrink:0;">تحقق</button>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;text-align:center;">
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:8px;">أو ادفع على:</p>
+      <p style="font-weight:700;font-size:.9rem;" id="accessModalPayInfo">Vodafone Cash: 01XXXXXXXXX</p>
+      <p style="font-size:.75rem;color:var(--muted);margin-top:6px;">بعد الدفع تواصل مع المدرس لتفعيل اشتراكك</p>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal-box" style="max-width:380px;">
+    <button class="modal-close" onclick="closeModal('profileModal')"><i class="fas fa-times"></i></button>
+    <div class="modal-title">👤 بياناتي</div>
+    <div class="profile-avatar-wrap">
+      <img id="profileAvatarImg" src="" alt="صورة البروفايل" class="profile-avatar-img" onerror="this.style.display='none';document.getElementById('profileAvatarFallback').style.display='flex'">
+      <div id="profileAvatarFallback" class="profile-avatar-img" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--teal),var(--teal-lt));font-size:1.8rem;font-weight:900;color:#fff;"></div>
+      <label class="profile-avatar-edit" title="تغيير الصورة">
+        <i class="fas fa-camera"></i>
+        <input type="file" accept="image/*" style="display:none;" onchange="uploadProfilePic(this)">
+      </label>
+    </div>
+    <div id="profileInfoBody"></div>
   </div>
 </div>
 
@@ -830,7 +914,7 @@ select.form-input option{background:var(--bg2);}
           <span class="notif-dot" id="notifDot"></span>
         </button>
         <button class="db-icon-btn" id="adminDashBtn" onclick="showPage('pg-admin')" style="display:none;" title="لوحة الإدارة">🛡</button>
-        <div class="db-avatar" id="dbAvatarLetter">أ</div>
+        <div class="db-avatar" id="dbAvatarLetter" onclick="openProfileModal()" style="cursor:pointer;" title="بياناتي">أ</div>
       </div>
     </div>
   </div>
@@ -1091,29 +1175,82 @@ select.form-input option{background:var(--bg2);}
 
     <!-- CHAPTERS -->
     <div id="at-chapters" class="admin-section">
+
+      <!-- إنشاء شهر/فولدر جديد -->
       <div class="admin-card">
-        <h3>إضافة شابتر جديد</h3>
+        <h3>📁 إنشاء شهر / فولدر جديد</h3>
         <div class="add-form">
           <div class="row2">
             <div>
               <label class="form-label">الصف</label>
-              <select class="form-input" id="chGrade">
+              <select class="form-input" id="mGrade">
                 <option value="g1">الصف الأول</option>
                 <option value="g2">الصف الثاني</option>
                 <option value="g3">الصف الثالث</option>
               </select>
             </div>
             <div>
-              <label class="form-label">اسم الشابتر</label>
-              <input class="form-input" type="text" id="chName" placeholder="مثل: الخلية وأجزاؤها">
+              <label class="form-label">اسم الفولدر</label>
+              <input class="form-input" type="text" id="mName" placeholder="مثل: الشهر الأول — أكتوبر">
+            </div>
+          </div>
+          <div class="row2">
+            <div>
+              <label class="form-label">📅 تاريخ البداية</label>
+              <input class="form-input" type="date" id="mStart">
+            </div>
+            <div>
+              <label class="form-label">📅 تاريخ النهاية</label>
+              <input class="form-input" type="date" id="mEnd">
+            </div>
+          </div>
+          <div class="row2">
+            <div>
+              <label class="form-label">💰 السعر (جنيه)</label>
+              <input class="form-input" type="number" id="mPrice" placeholder="مثل: 150">
+            </div>
+            <div>
+              <label class="form-label">🎁 مجاني؟</label>
+              <select class="form-input" id="mFree">
+                <option value="0">لأ — مدفوع</option>
+                <option value="1">آه — مجاني</option>
+              </select>
+            </div>
+          </div>
+          <button class="add-btn" onclick="addMonth()"><i class="fas fa-folder-plus"></i> إنشاء الفولدر</button>
+        </div>
+      </div>
+
+      <!-- إضافة محاضرة/شابتر لفولدر -->
+      <div class="admin-card">
+        <h3>📖 إضافة محاضرة لفولدر</h3>
+        <div class="add-form">
+          <div class="row2">
+            <div>
+              <label class="form-label">الصف</label>
+              <select class="form-input" id="chGrade" onchange="loadMonthsForSelect()">
+                <option value="g1">الصف الأول</option>
+                <option value="g2">الصف الثاني</option>
+                <option value="g3">الصف الثالث</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">الفولدر / الشهر</label>
+              <select class="form-input" id="chMonth">
+                <option value="">اختر الفولدر</option>
+              </select>
             </div>
           </div>
           <div>
-            <label class="form-label">وصف مختصر (اختياري)</label>
-            <input class="form-input" type="text" id="chDesc" placeholder="وصف مختصر للشابتر">
+            <label class="form-label">اسم المحاضرة</label>
+            <input class="form-input" type="text" id="chName" placeholder="مثل: المحاضرة الأولى — الروابط الكيميائية">
           </div>
           <div>
-            <label class="form-label">🐰 Bunny Video ID (اختياري — للحماية)</label>
+            <label class="form-label">وصف مختصر (اختياري)</label>
+            <input class="form-input" type="text" id="chDesc" placeholder="وصف مختصر">
+          </div>
+          <div>
+            <label class="form-label">🐰 Bunny Video ID (اختياري)</label>
             <input class="form-input" type="text" id="chBunny" placeholder="مثال: a04d7001-78cd-4edc-aa82-5beebdbae966">
           </div>
           <div>
@@ -1121,15 +1258,15 @@ select.form-input option{background:var(--bg2);}
             <input class="form-input" type="url" id="chVideo" placeholder="https://youtube.com/...">
           </div>
           <div>
-            <label class="form-label">رابط الملف (PDF أو Google Drive)</label>
+            <label class="form-label">رابط الملف PDF (اختياري)</label>
             <input class="form-input" type="url" id="chFile" placeholder="https://drive.google.com/...">
           </div>
-          <button class="add-btn" onclick="addChapter()"><i class="fas fa-plus"></i> إضافة الشابتر</button>
+          <button class="add-btn" onclick="addChapter()"><i class="fas fa-plus"></i> إضافة المحاضرة</button>
         </div>
       </div>
 
       <div class="admin-card">
-        <h3>الشابترات الحالية</h3>
+        <h3>الفولدرات والمحاضرات الحالية</h3>
         <div id="chaptersAdmin">
           <p style="color:var(--muted);font-size:.85rem;">لا توجد شابترات حتى الآن</p>
         </div>
@@ -1517,7 +1654,7 @@ window.resetPass = async function() {
 // ── CHAPTERS (Student View — own grade only) ──
 async function loadChapters() {
   if (!currentUserData) return;
-  const grade = currentUserData.grade; // e.g. 'g1', 'g2', 'g3'
+  const grade = currentUserData.grade;
   if (!grade) return;
 
   const gradeNums = {g1:'١',g2:'٢',g3:'٣'};
@@ -1525,7 +1662,6 @@ async function loadChapters() {
   const gradeSubs = {g1:'علوم متكاملة',g2:'علوم متكاملة',g3:'كيمياء — ثانوية عامة'};
   const gradeColors = {g1:'linear-gradient(135deg,#0ea5a0,#2dd4bf)',g2:'linear-gradient(135deg,#f59e0b,#fcd34d)',g3:'linear-gradient(135deg,#6366f1,#a5b4fc)'};
 
-  // Set grade card UI
   document.getElementById('myGradeBadge').textContent = gradeNums[grade]||'١';
   document.getElementById('myGradeBadge').style.background = gradeColors[grade];
   document.getElementById('myGradeName').textContent = gradeNames[grade]||'الصف';
@@ -1535,60 +1671,125 @@ async function loadChapters() {
   document.getElementById('statWatched').textContent = watched.length;
 
   const el = document.getElementById('chapters-myGrade');
-  const snap = await getDocs(collection(db,'chapters_'+grade));
+  el.innerHTML = '<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">جاري التحميل...</p>';
 
-  if (snap.empty) {
-    el.innerHTML='<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p>';
+  const [monthsSnap, chapSnap] = await Promise.all([
+    getDocs(collection(db,'months_'+grade)),
+    getDocs(collection(db,'chapters_'+grade))
+  ]);
+
+  const now = new Date();
+  const totalChapters = chapSnap.docs.length;
+  const watchedCount = chapSnap.docs.filter(d => watched.includes(grade+'_'+d.id)).length;
+
+  if (totalChapters > 0) {
+    const progressEl = document.getElementById('myGradeProgress');
+    progressEl.style.display='block';
+    const pct = Math.round(watchedCount/totalChapters*100);
+    document.getElementById('myProgressFill').style.width = pct+'%';
+    document.getElementById('myProgressLabel').textContent = `${watchedCount} من ${totalChapters} درس شاهدتهم (${pct}%)`;
+  } else {
     document.getElementById('myGradeProgress').style.display='none';
+  }
+
+  el.innerHTML = '';
+
+  const renderChapter = (d, hasAccess) => {
+    const ch = d.data();
+    const isWatched = watched.includes(grade+'_'+d.id);
+    if (!hasAccess) {
+      return `<div class="db-chapter-row" style="opacity:.5;">
+        <div class="db-ch-dot"></div>
+        <div class="db-ch-body">
+          <div class="db-ch-name">🔒 ${ch.name}</div>
+          ${ch.desc?`<div class="db-ch-desc">${ch.desc}</div>`:''}
+        </div>
+      </div>`;
+    }
+    return `<div class="db-chapter-row">
+      <div class="db-ch-dot ${isWatched?'watched':''}"></div>
+      <div class="db-ch-body">
+        <div class="db-ch-name">
+          ${isWatched?'<span style="color:#22c55e;font-size:.8rem;">✅</span>':''}
+          ${ch.name}
+        </div>
+        ${ch.desc?`<div class="db-ch-desc">${ch.desc}</div>`:''}
+        <div class="db-ch-btns">
+          ${(ch.bunnyId||ch.video)?`<button class="db-ch-btn vid ${isWatched?'watched':''}" onclick="openVideo('${ch.bunnyId||''}','${ch.video||''}','${ch.name}','${grade}','${d.id}')">
+            <i class="fas fa-play"></i> ${isWatched?'إعادة':'فيديو'}
+          </button>`:''}
+          ${ch.file?`<button class="db-ch-btn" onclick="openPDF('${ch.file}','${ch.name}')">
+            <i class="fas fa-file-pdf"></i> ملف
+          </button>`:''}
+        </div>
+      </div>
+    </div>`;
+  };
+
+  if (monthsSnap.empty && chapSnap.empty) {
+    el.innerHTML='<p style="color:var(--muted);font-size:.83rem;text-align:center;padding:16px;">لا توجد دروس بعد</p>';
+    loadMyQuizResults();
     return;
   }
 
-  const totalChapters = snap.docs.length;
-  const watchedCount = snap.docs.filter(d => watched.includes(grade+'_'+d.id)).length;
+  // عرض الفولدرات
+  for (const md of monthsSnap.docs) {
+    const m = md.data();
+    const mChaps = chapSnap.docs.filter(cd => cd.data().monthId === md.id);
+    const hasAccess = m.isFree || !!currentUserData[`access_${grade}_${md.id}`];
+    const start = m.start ? new Date(m.start) : null;
+    const end = m.end ? new Date(m.end+'T23:59:59') : null;
+    const isActive = (!start || now >= start) && (!end || now <= end);
 
-  // Show progress bar
-  const progressEl = document.getElementById('myGradeProgress');
-  progressEl.style.display='block';
-  const pct = totalChapters > 0 ? Math.round(watchedCount/totalChapters*100) : 0;
-  document.getElementById('myProgressFill').style.width = pct+'%';
-  document.getElementById('myProgressLabel').textContent = `${watchedCount} من ${totalChapters} درس شاهدتهم (${pct}%)`;
+    let badge = '';
+    let badgeClass = '';
+    if (!isActive && start && now < start) { badge = `يبدأ ${m.start}`; badgeClass = 'coming'; }
+    else if (!isActive && end && now > end) { badge = 'انتهت المدة'; badgeClass = 'locked'; }
+    else if (hasAccess) { badge = '✅ مشترك'; badgeClass = 'open'; }
+    else { badge = m.isFree ? 'مجاني' : `${m.price} جنيه`; badgeClass = m.isFree ? 'open' : 'locked'; }
 
-  el.innerHTML = '';
-  for (const d of snap.docs) {
-    const ch = d.data();
-    const isWatched = watched.includes(grade+'_'+d.id);
-    // Get quizzes for this specific chapter
-    const quizSnap = await getDocs(query(collection(db,'quizzes'), where('grade','==',grade)));
-    const chapterQuizzes = quizSnap.docs.filter(qd => !qd.data().chapterId || qd.data().chapterId === d.id);
-    const hasQuiz = chapterQuizzes.length > 0;
-    const quizId = hasQuiz ? chapterQuizzes[0].id : null;
-
+    const bodyId = 'month-body-'+md.id;
     el.insertAdjacentHTML('beforeend', `
-      <div class="db-chapter-row">
-        <div class="db-ch-dot ${isWatched?'watched':''}"></div>
-        <div class="db-ch-body">
-          <div class="db-ch-name">
-            ${isWatched?'<span style="color:#22c55e;font-size:.8rem;">✅</span>':''}
-            ${ch.name}
+      <div class="month-card">
+        <div class="month-card-hdr" onclick="toggleMonthBody('${bodyId}','${grade}','${md.id}','${m.name}',${m.price},${m.isFree?1:0},${hasAccess?1:0})">
+          <div class="month-card-icon">📁</div>
+          <div class="month-card-info">
+            <div class="month-card-name">${m.name}</div>
+            ${m.start||m.end?`<div class="month-card-meta">${m.start||''}${m.end?' — '+m.end:''}</div>`:''}
+            <span class="month-card-badge ${badgeClass}">${badge}</span>
           </div>
-          ${ch.desc?`<div class="db-ch-desc">${ch.desc}</div>`:''}
-          <div class="db-ch-btns">
-            ${(ch.bunnyId||ch.video)?`<button class="db-ch-btn vid ${isWatched?'watched':''}" onclick="openVideo('${ch.bunnyId||''}','${ch.video||''}','${ch.name}','${grade}','${d.id}')">
-              <i class="fas fa-play"></i> ${isWatched?'إعادة':'فيديو'}
-            </button>`:''}
-            ${ch.file?`<button class="db-ch-btn" onclick="openPDF('${ch.file}','${ch.name}')">
-              <i class="fas fa-file-pdf"></i> ملف
-            </button>`:''}
-            ${hasQuiz?`<button class="db-ch-btn quiz" onclick="openQuiz('${quizId}','${ch.name}')">
-              <i class="fas fa-pencil-alt"></i> امتحان
-            </button>`:''}
-          </div>
+          <i class="fas fa-chevron-down" style="color:var(--muted);font-size:.8rem;transition:transform .3s;" id="chev-${bodyId}"></i>
+        </div>
+        <div class="month-card-body" id="${bodyId}">
+          ${mChaps.length===0
+            ? '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:8px;">لا توجد محاضرات بعد</p>'
+            : mChaps.map(d => renderChapter(d, hasAccess && isActive)).join('')}
         </div>
       </div>`);
   }
 
+  // شابترات بدون فولدر
+  const orphans = chapSnap.docs.filter(cd => !cd.data().monthId);
+  if (orphans.length > 0) {
+    el.insertAdjacentHTML('beforeend','<div class="db-section-title" style="margin-top:16px;">📂 محاضرات أخرى</div>');
+    orphans.forEach(d => el.insertAdjacentHTML('beforeend', renderChapter(d, true)));
+  }
+
   loadMyQuizResults();
 }
+
+window.toggleMonthBody = function(bodyId, grade, monthId, monthName, price, isFree, hasAccess) {
+  const body = document.getElementById(bodyId);
+  const chev = document.getElementById('chev-'+bodyId);
+  const isOpen = body.classList.contains('open');
+  if (!isOpen && !hasAccess && !isFree) {
+    openAccessModal(grade, monthId, monthName, price);
+    return;
+  }
+  body.classList.toggle('open', !isOpen);
+  if(chev) chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+};
+
 window.loadChapters = loadChapters;
 
 // ── AVAILABLE QUIZZES (للطالب) ──
@@ -2527,18 +2728,53 @@ async function loadPerformanceReport() {
 
 window.loadAdminData = loadAdminData;
 
+// ── ADD MONTH/FOLDER ──
+window.addMonth = async function() {
+  const grade = document.getElementById('mGrade').value;
+  const name = document.getElementById('mName').value.trim();
+  const start = document.getElementById('mStart').value;
+  const end = document.getElementById('mEnd').value;
+  const price = parseFloat(document.getElementById('mPrice').value) || 0;
+  const isFree = document.getElementById('mFree').value === '1';
+  if (!name) { showNotif('ادخل اسم الفولدر','e'); return; }
+  await addDoc(collection(db,'months_'+grade), {
+    name, start: start||null, end: end||null, price, isFree,
+    createdAt: new Date().toISOString()
+  });
+  showNotif('تم إنشاء الفولدر ✅','s');
+  document.getElementById('mName').value='';
+  document.getElementById('mStart').value='';
+  document.getElementById('mEnd').value='';
+  document.getElementById('mPrice').value='';
+  loadMonthsForSelect();
+  loadChaptersAdmin();
+};
+
+// ── LOAD MONTHS IN SELECT ──
+window.loadMonthsForSelect = async function() {
+  const grade = document.getElementById('chGrade').value;
+  const sel = document.getElementById('chMonth');
+  sel.innerHTML = '<option value="">اختر الفولدر</option>';
+  const snap = await getDocs(collection(db,'months_'+grade));
+  snap.docs.forEach(d => {
+    sel.insertAdjacentHTML('beforeend', `<option value="${d.id}">${d.data().name}</option>`);
+  });
+};
+
 window.addChapter = async function() {
   const grade = document.getElementById('chGrade').value;
+  const monthId = document.getElementById('chMonth').value;
   const name = document.getElementById('chName').value.trim();
   const desc = document.getElementById('chDesc').value.trim();
   const bunnyId = document.getElementById('chBunny').value.trim();
   const video = document.getElementById('chVideo').value.trim();
   const file = document.getElementById('chFile').value.trim();
-  if (!name) { showNotif('ادخل اسم الشابتر','e'); return; }
-  if (!bunnyId && !video) { showNotif('ادخل Bunny Video ID أو رابط يوتيوب على الأقل','e'); return; }
+  if (!monthId) { showNotif('اختر الفولدر أولاً','e'); return; }
+  if (!name) { showNotif('ادخل اسم المحاضرة','e'); return; }
+  if (!bunnyId && !video) { showNotif('ادخل Bunny Video ID أو رابط يوتيوب','e'); return; }
   const ref = doc(collection(db,'chapters_'+grade));
-  await setDoc(ref, {name,desc,bunnyId,video,file,createdAt:new Date().toISOString()});
-  showNotif('تم إضافة الشابتر ✅','s');
+  await setDoc(ref, {name,desc,bunnyId,video,file,monthId,createdAt:new Date().toISOString()});
+  showNotif('تم إضافة المحاضرة ✅','s');
   document.getElementById('chName').value='';
   document.getElementById('chDesc').value='';
   document.getElementById('chBunny').value='';
@@ -2553,16 +2789,51 @@ async function loadChaptersAdmin() {
   el.innerHTML = '';
   const gradeLabels = {g1:'الصف الأول',g2:'الصف الثاني',g3:'الصف الثالث'};
   for (const gid of ['g1','g2','g3']) {
-    const snap = await getDocs(collection(db,'chapters_'+gid));
-    if (snap.empty) continue;
+    const [monthsSnap, chapSnap] = await Promise.all([
+      getDocs(collection(db,'months_'+gid)),
+      getDocs(collection(db,'chapters_'+gid))
+    ]);
+    if (monthsSnap.empty && chapSnap.empty) continue;
     el.insertAdjacentHTML('beforeend',`<h4 style="color:var(--teal-lt);font-family:'Tajawal';font-weight:900;margin:16px 0 10px;">${gradeLabels[gid]}</h4>`);
-    snap.docs.forEach(d => {
-      const ch = d.data();
+
+    // عرض الفولدرات
+    monthsSnap.docs.forEach(md => {
+      const m = md.data();
+      const mChaps = chapSnap.docs.filter(cd => cd.data().monthId === md.id);
+      const genCode = () => Math.random().toString(36).substring(2,8).toUpperCase();
       el.insertAdjacentHTML('beforeend',`
-        <div class="chapter-item" style="margin-bottom:10px;">
-          <div class="ch-info"><h4>${ch.name}</h4><p>${ch.desc||''}</p></div>
-          <div class="ch-actions">
-            <button class="ch-btn" onclick="window._deleteChapter('${gid}','${d.id}')" style="border-color:var(--error);color:var(--error);">حذف</button>
+        <div style="background:var(--bg2);border:1px solid var(--teal);border-radius:12px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <div>
+              <p style="font-weight:900;font-size:.95rem;">📁 ${m.name}</p>
+              <p style="font-size:.73rem;color:var(--muted);">${m.isFree?'مجاني':m.price+' جنيه'} ${m.start?'— من '+m.start:''}${m.end?' لـ '+m.end:''}</p>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="tbl-btn" onclick="window._genAccessCode('${gid}','${md.id}')" style="border-color:var(--teal);color:var(--teal-lt);">🔑 كود اشتراك</button>
+              <button class="tbl-btn danger" onclick="window._deleteMonth('${gid}','${md.id}')">حذف الفولدر</button>
+            </div>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+            ${mChaps.length===0?'<p style="color:var(--muted);font-size:.8rem;">لا توجد محاضرات بعد</p>':mChaps.map(cd=>`
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="font-size:.85rem;">📖 ${cd.data().name}</span>
+                <button class="tbl-btn danger" onclick="window._deleteChapter('${gid}','${cd.id}')" style="font-size:.7rem;padding:3px 8px;">حذف</button>
+              </div>`).join('')}
+          </div>
+        </div>`);
+    });
+
+    // شابترات بدون فولدر
+    const orphans = chapSnap.docs.filter(cd => !cd.data().monthId);
+    if (orphans.length > 0) {
+      el.insertAdjacentHTML('beforeend','<p style="font-size:.75rem;color:var(--muted);margin:8px 0 4px;">📂 بدون فولدر:</p>');
+      orphans.forEach(d => {
+        const ch = d.data();
+        el.insertAdjacentHTML('beforeend',`
+          <div class="chapter-item" style="margin-bottom:8px;">
+            <div class="ch-info"><h4>${ch.name}</h4><p>${ch.desc||''}</p></div>
+            <div class="ch-actions">
+              <button class="ch-btn" onclick="window._deleteChapter('${gid}','${d.id}')" style="border-color:var(--error);color:var(--error);">حذف</button>
           </div>
         </div>`);
     });
@@ -2576,6 +2847,152 @@ window._deleteChapter = async function(gid, id) {
   showNotif('تم حذف الشابتر','s');
   loadChaptersAdmin();
   loadChapters();
+};
+
+window._deleteMonth = async function(gid, id) {
+  if (!confirm('حذف هذا الفولدر وكل محاضراته؟')) return;
+  // حذف الفولدر
+  await deleteDoc(doc(db,'months_'+gid, id));
+  // حذف المحاضرات المرتبطة
+  const snap = await getDocs(query(collection(db,'chapters_'+gid), where('monthId','==',id)));
+  for (const d of snap.docs) await deleteDoc(doc(db,'chapters_'+gid, d.id));
+  showNotif('تم حذف الفولدر','s');
+  loadChaptersAdmin();
+  loadChapters();
+};
+
+// ── توليد كود اشتراك ──
+window._genAccessCode = async function(grade, monthId) {
+  const code = Math.random().toString(36).substring(2,8).toUpperCase();
+  const monthSnap = await getDoc(doc(db,'months_'+grade, monthId));
+  const monthName = monthSnap.data()?.name || 'الفولدر';
+  await addDoc(collection(db,'access_codes'), {
+    code, grade, monthId, used: false,
+    createdAt: new Date().toISOString()
+  });
+  // Copy to clipboard
+  try { await navigator.clipboard.writeText(code); } catch(e) {}
+  showNotif(`كود الاشتراك: ${code} (تم نسخه) ✅`,'s');
+  alert(`كود اشتراك جديد للـ "${monthName}":
+
+${code}
+
+شارك الكود مع الطالب بعد الدفع`);
+};
+
+// ── التحقق من كود الاشتراك ──
+let _pendingAccessMonthId = null;
+let _pendingAccessGrade = null;
+
+window.openAccessModal = function(grade, monthId, monthName, price) {
+  _pendingAccessMonthId = monthId;
+  _pendingAccessGrade = grade;
+  document.getElementById('accessModalTitle').textContent = '🔒 ' + monthName;
+  document.getElementById('accessModalDesc').textContent = 'هذا الفولدر يتطلب اشتراك للدخول';
+  document.getElementById('accessModalPrice').textContent = price > 0 ? price + ' جنيه' : 'مجاني';
+  document.getElementById('accessCodeInput').value = '';
+  openModal('accessModal');
+};
+
+window.submitAccessCode = async function() {
+  const code = document.getElementById('accessCodeInput').value.trim().toUpperCase();
+  if (!code) { showNotif('ادخل الكود','e'); return; }
+  // بحث عن الكود
+  const q = query(collection(db,'access_codes'),
+    where('code','==',code),
+    where('monthId','==',_pendingAccessMonthId),
+    where('used','==',false)
+  );
+  const snap = await getDocs(q);
+  if (snap.empty) { showNotif('الكود غلط أو مستخدم من قبل','e'); return; }
+  // تفعيل الوصول
+  const codeDoc = snap.docs[0];
+  await updateDoc(doc(db,'access_codes',codeDoc.id), { used: true, usedBy: currentUser.uid, usedAt: new Date().toISOString() });
+  // حفظ الوصول للطالب
+  await updateDoc(doc(db,'users',currentUser.uid), {
+    [`access_${_pendingAccessGrade}_${_pendingAccessMonthId}`]: true
+  });
+  // تحديث currentUserData محلياً
+  if (currentUserData) currentUserData[`access_${_pendingAccessGrade}_${_pendingAccessMonthId}`] = true;
+  showNotif('تم تفعيل الاشتراك ✅ يمكنك الدخول الآن','s');
+  closeModal('accessModal');
+  loadChapters();
+};
+
+// ── فيديو كونترولز (للـ iframe — Bunny يدعمها) ──
+window.vidSeek = function(sec) {
+  const iframe = document.getElementById('videoFrame');
+  // Bunny iframe postMessage API
+  iframe.contentWindow?.postMessage(JSON.stringify({eventName:'seek', offset: sec}), '*');
+  showNotif(sec > 0 ? `تقديم ${sec} ثانية ▶` : `رجوع ${Math.abs(sec)} ثانية ◀`,'s');
+};
+
+window.vidSpeed = function(speed) {
+  const iframe = document.getElementById('videoFrame');
+  iframe.contentWindow?.postMessage(JSON.stringify({eventName:'setPlaybackSpeed', value: parseFloat(speed)}), '*');
+};
+
+// ── صورة البروفايل ──
+window.openProfileModal = async function() {
+  if (!currentUser || !currentUserData) return;
+  const u = currentUserData;
+  const gradeLabels = {g1:'الصف الأول الثانوي',g2:'الصف الثاني الثانوي',g3:'الصف الثالث الثانوي'};
+  const avatar = document.getElementById('dbAvatarLetter');
+
+  const imgEl = document.getElementById('profileAvatarImg');
+  const fallback = document.getElementById('profileAvatarFallback');
+  if (u.photoURL) {
+    imgEl.src = u.photoURL;
+    imgEl.style.display = 'block';
+    fallback.style.display = 'none';
+  } else {
+    imgEl.style.display = 'none';
+    fallback.style.display = 'flex';
+    fallback.textContent = u.firstName?u.firstName[0]:'ط';
+  }
+
+  document.getElementById('profileInfoBody').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-family:'Tajawal';font-size:1.1rem;font-weight:900;">${u.fullName||u.firstName+' '+u.secondName}</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-top:4px;">${gradeLabels[u.grade]||''}</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.83rem;line-height:2;">
+      <div>📱 رقم الطالب: <b>${u.studentPhone||'—'}</b></div>
+      <div>👨‍👩‍👦 ولي الأمر: <b>${u.parentPhone||'—'}</b></div>
+      <div>🎓 المرحلة: <b>${u.stage==='thanawi'?'ثانوي عام':'أزهري'}</b></div>
+    </div>`;
+
+  openModal('profileModal');
+};
+
+window.uploadProfilePic = async function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showNotif('الصورة كبيرة جداً — max 2MB','e'); return; }
+
+  // Convert to base64 and save as dataURL in Firestore (بدون Storage)
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    await updateDoc(doc(db,'users',currentUser.uid), { photoURL: dataUrl });
+    currentUserData.photoURL = dataUrl;
+
+    // تحديث الـ avatar
+    const imgEl = document.getElementById('profileAvatarImg');
+    imgEl.src = dataUrl;
+    imgEl.style.display = 'block';
+    document.getElementById('profileAvatarFallback').style.display = 'none';
+
+    // تحديث الـ avatar في التوب بار
+    const av = document.getElementById('dbAvatarLetter');
+    if (av) {
+      av.style.backgroundImage = `url(${dataUrl})`;
+      av.style.backgroundSize = 'cover';
+      av.textContent = '';
+    }
+    showNotif('تم تحديث الصورة ✅','s');
+  };
+  reader.readAsDataURL(file);
 };
 
 window.loadAdminData = loadAdminData;
