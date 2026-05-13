@@ -478,7 +478,7 @@ select.form-input option{background:var(--bg2);}
     <button class="modal-close" onclick="closeModal('videoModal')"><i class="fas fa-times"></i></button>
     <div class="modal-title" id="videoModalTitle">🎬 الفيديو</div>
     <div class="video-container">
-      <iframe id="videoFrame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      <iframe id="videoFrame" src="" allowfullscreen allow="autoplay; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="origin"></iframe>
       <div class="video-watermark"><span id="videoWatermark">اسم الطالب</span></div>
     </div>
     <button class="btn-submit" style="margin-top:16px;" onclick="markWatched()"><i class="fas fa-check-circle"></i> تم المشاهدة</button>
@@ -825,7 +825,7 @@ select.form-input option{background:var(--bg2);}
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <button class="db-icon-btn notif-bell" id="bellBtn" onclick="dbTab('announcements')" title="الإشعارات" style="position:relative;">
+        <button class="db-icon-btn notif-bell" id="bellBtn" onclick="dbTab('announcements');if(window.markAnnouncementsRead)window.markAnnouncementsRead();" title="الإشعارات" style="position:relative;">
           <i class="fas fa-bell"></i>
           <span class="notif-dot" id="notifDot"></span>
         </button>
@@ -1074,14 +1074,15 @@ select.form-input option{background:var(--bg2);}
                 <th>الاسم</th>
                 <th>الصف</th>
                 <th>رقم الطالب</th>
-                <th>النوع</th>
-                <th>المرحلة</th>
+                <th>ولي الأمر</th>
+                <th>الدرجات</th>
+                <th>الحضور</th>
                 <th>الحالة</th>
                 <th>إجراءات</th>
               </tr>
             </thead>
             <tbody id="usersTbody">
-              <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;">لا يوجد طلاب حتى الآن</td></tr>
+              <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;">لا يوجد طلاب حتى الآن</td></tr>
             </tbody>
           </table>
         </div>
@@ -1112,7 +1113,11 @@ select.form-input option{background:var(--bg2);}
             <input class="form-input" type="text" id="chDesc" placeholder="وصف مختصر للشابتر">
           </div>
           <div>
-            <label class="form-label">رابط الفيديو (يوتيوب)</label>
+            <label class="form-label">🐰 Bunny Video ID (اختياري — للحماية)</label>
+            <input class="form-input" type="text" id="chBunny" placeholder="مثال: a04d7001-78cd-4edc-aa82-5beebdbae966">
+          </div>
+          <div>
+            <label class="form-label">▶️ رابط يوتيوب (اختياري)</label>
             <input class="form-input" type="url" id="chVideo" placeholder="https://youtube.com/...">
           </div>
           <div>
@@ -1568,7 +1573,7 @@ async function loadChapters() {
           </div>
           ${ch.desc?`<div class="db-ch-desc">${ch.desc}</div>`:''}
           <div class="db-ch-btns">
-            ${ch.video?`<button class="db-ch-btn vid ${isWatched?'watched':''}" onclick="openVideo('${ch.video}','${ch.name}','${grade}','${d.id}')">
+            ${(ch.bunnyId||ch.video)?`<button class="db-ch-btn vid ${isWatched?'watched':''}" onclick="openVideo('${ch.bunnyId||''}','${ch.video||''}','${ch.name}','${grade}','${d.id}')">
               <i class="fas fa-play"></i> ${isWatched?'إعادة':'فيديو'}
             </button>`:''}
             ${ch.file?`<button class="db-ch-btn" onclick="openPDF('${ch.file}','${ch.name}')">
@@ -1730,13 +1735,18 @@ window.markWatched = async function() {
 };
 
 // ── VIDEO OPEN ──
-window.openVideo = function(url, title, grade, chapId) {
+const BUNNY_LIBRARY_ID = '658516';
+window.openVideo = function(bunnyId, youtubeUrl, title, grade, chapId) {
   _activeGrade = grade;
   _activeChapterId = chapId;
-  // Convert YouTube URL to embed
-  let embedUrl = url;
-  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
-  if (ytMatch) embedUrl = 'https://www.youtube.com/embed/'+ytMatch[1]+'?autoplay=1';
+  let embedUrl = '';
+  if (bunnyId) {
+    embedUrl = `https://iframe.mediadelivery.net/embed/${BUNNY_LIBRARY_ID}/${bunnyId}?autoplay=true&loop=false&muted=false&preload=true`;
+  } else if (youtubeUrl) {
+    const ytMatch = youtubeUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    if (ytMatch) embedUrl = 'https://www.youtube.com/embed/'+ytMatch[1]+'?autoplay=1';
+    else embedUrl = youtubeUrl;
+  }
   document.getElementById('videoFrame').src = embedUrl;
   document.getElementById('videoModalTitle').textContent = '🎬 ' + title;
   openModal('videoModal');
@@ -1744,8 +1754,15 @@ window.openVideo = function(url, title, grade, chapId) {
 
 // ── PDF OPEN (inline viewer) ──
 window.openPDF = function(url, title) {
-  // Use Google Docs viewer for PDFs
-  const viewerUrl = 'https://docs.google.com/gviewer?embedded=true&url=' + encodeURIComponent(url);
+  // لو Google Drive — حوّله لـ preview مباشر
+  let viewerUrl = url;
+  const driveMatch = url.match(/\/d\/([^\/]+)/);
+  if (driveMatch) {
+    viewerUrl = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+  } else if (url.toLowerCase().endsWith('.pdf')) {
+    // PDF مباشر — Google Docs Viewer
+    viewerUrl = 'https://docs.google.com/gviewer?embedded=true&url=' + encodeURIComponent(url);
+  }
   document.getElementById('pdfFrame').src = viewerUrl;
   document.getElementById('pdfModalTitle').textContent = '📄 ' + title;
   openModal('pdfModal');
@@ -1760,15 +1777,20 @@ function clearQuizTimer() {
 }
 window.clearQuizTimer = clearQuizTimer;
 
-// كشف لو الطالب خرج من الامتحان
+// كشف لو الطالب خرج من الامتحان (مسموح 2 مرات)
+let _quizLeaveCount = 0;
 function _onVisibilityChange() {
   if (document.hidden && _activeQuizData && !_quizAutoSubmitted) {
-    _quizAutoSubmitted = true;
-    document.removeEventListener('visibilitychange', _onVisibilityChange);
-    clearQuizTimer();
-    // Auto-submit
-    showNotif('⚠️ خرجت من الامتحان — تم التسليم تلقائياً','e');
-    setTimeout(() => window.submitQuiz(true), 600);
+    _quizLeaveCount++;
+    if (_quizLeaveCount >= 2) {
+      _quizAutoSubmitted = true;
+      document.removeEventListener('visibilitychange', _onVisibilityChange);
+      clearQuizTimer();
+      showNotif('⚠️ خرجت من الامتحان مرتين — تم التسليم تلقائياً','e');
+      setTimeout(() => window.submitQuiz(true), 600);
+    } else {
+      showNotif(`⚠️ تحذير! خرجت من الامتحان (${_quizLeaveCount}/2) — المرة الجاية هيتسلم تلقائياً`,'e');
+    }
   }
 }
 window._onVisibilityChange = _onVisibilityChange;
@@ -1779,6 +1801,7 @@ window.openQuiz = async function(quizId, chapterName) {
   _activeQuizData = { id: quizId, ...snap.data() };
   _userAnswers = {};
   _quizAutoSubmitted = false;
+  _quizLeaveCount = 0;
 
   // Check if already submitted
   if (currentUser) {
@@ -1803,6 +1826,7 @@ window.openQuiz = async function(quizId, chapterName) {
   _activeQuizData.questions.forEach((q, qi) => {
     html += `<div class="quiz-question">
       <p>${qi+1}. ${q.question}</p>
+      ${q.imageUrl ? `<img src="${q.imageUrl}" alt="صورة السؤال" style="max-width:100%;border-radius:10px;margin:8px 0;border:1px solid var(--border);" onerror="this.style.display='none'">` : ''}
       <div class="quiz-options">`;
     q.options.forEach((opt, oi) => {
       html += `<button class="quiz-opt" onclick="selectAnswer(${qi},${oi},this)">${opt}</button>`;
@@ -1870,7 +1894,8 @@ window.openQuizReview = async function(quizId) {
   q.questions.forEach((ques, qi) => {
     const myAns = r.answers ? r.answers[qi] : undefined;
     const correct = ques.correct;
-    html += `<div class="review-question"><p>${qi+1}. ${ques.question}</p>`;
+    html += `<div class="review-question"><p>${qi+1}. ${ques.question}</p>
+      ${ques.imageUrl ? `<img src="${ques.imageUrl}" alt="صورة السؤال" style="max-width:100%;border-radius:8px;margin:6px 0;border:1px solid var(--border);" onerror="this.style.display='none'">` : ''}`;
     ques.options.forEach((opt, oi) => {
       let cls = 'neutral';
       let prefix = '';
@@ -1904,7 +1929,8 @@ window.addQuestionField = function() {
         <span style="font-size:.8rem;color:var(--teal-lt);font-weight:700;">سؤال ${idx+1}</span>
         <button class="tbl-btn danger" onclick="this.closest('.mcq-item').remove()">حذف</button>
       </div>
-      <input class="form-input" type="text" placeholder="نص السؤال" id="qq-${idx}" style="margin-bottom:10px;">
+      <input class="form-input" type="text" placeholder="نص السؤال" id="qq-${idx}" style="margin-bottom:8px;">
+      <input class="form-input" type="url" placeholder="رابط صورة للسؤال (اختياري)" id="qi-${idx}" style="margin-bottom:10px;">
       <div style="display:grid;gap:6px;">
         <div style="display:flex;gap:6px;align-items:center;">
           <input type="radio" name="correct-${idx}" value="0" id="rc-${idx}-0">
@@ -1946,7 +1972,8 @@ window.saveQuiz = async function() {
     const options = [0,1,2,3].map(j => document.getElementById('qo-'+qi+'-'+j)?.value.trim());
     const correctRadio = document.querySelector(`input[name="correct-${qi}"]:checked`);
     if (!question || options.some(o=>!o) || !correctRadio) { valid = false; break; }
-    questions.push({ question, options, correct: parseInt(correctRadio.value) });
+    const imageUrl = document.getElementById('qi-'+qi)?.value.trim() || '';
+    questions.push({ question, options, correct: parseInt(correctRadio.value), imageUrl });
   }
 
   if (!valid) { showNotif('تأكد من إدخال كل بيانات الأسئلة واختيار الإجابة الصح','e'); return; }
@@ -2010,6 +2037,84 @@ window._deleteQuiz = async function(id) {
   loadQuizzesAdmin();
 };
 
+// ── تعديل درجات وحضور الطالب ──
+window._editStudent = async function(uid) {
+  const snap = await getDoc(doc(db,'users',uid));
+  if (!snap.exists()) return;
+  const u = snap.data();
+  const name = u.fullName || u.firstName;
+
+  // Modal HTML
+  const modalId = 'editStudentModal';
+  let modal = document.getElementById(modalId);
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = modalId;
+    modal.innerHTML = `<div class="modal-box" style="max-width:460px;">
+      <button class="modal-close" onclick="closeModal('${modalId}')"><i class="fas fa-times"></i></button>
+      <div class="modal-title">✏️ تعديل بيانات الطالب</div>
+      <div id="editStudentBody"></div>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if(e.target===modal) closeModal(modalId); });
+  }
+
+  const grades = u.grades || {};
+  const attendance = u.attendance !== undefined ? u.attendance : '';
+  document.getElementById('editStudentBody').innerHTML = `
+    <p style="color:var(--muted);font-size:.82rem;margin-bottom:16px;">الطالب: <b style="color:var(--text);">${name}</b></p>
+    <label class="form-label">📊 الدرجات (مثال: الوحدة 1: 85، الوحدة 2: 90)</label>
+    <div id="gradesFields" style="margin-bottom:12px;"></div>
+    <button class="tbl-btn" onclick="window._addGradeField()" style="border-color:var(--teal);color:var(--teal-lt);margin-bottom:16px;"><i class="fas fa-plus"></i> إضافة درجة</button>
+    <label class="form-label">📅 نسبة الحضور (%)</label>
+    <input class="form-input" type="number" id="attendanceInput" min="0" max="100" value="${attendance}" placeholder="مثال: 85" style="margin-bottom:16px;">
+    <button class="add-btn" onclick="window._saveStudentEdit('${uid}')"><i class="fas fa-save"></i> حفظ</button>
+  `;
+
+  // Fill existing grades
+  const gf = document.getElementById('gradesFields');
+  gf.innerHTML = '';
+  Object.entries(grades).forEach(([k,v]) => {
+    const idx = gf.children.length;
+    gf.insertAdjacentHTML('beforeend', `<div style="display:flex;gap:8px;margin-bottom:8px;" id="gf-${idx}">
+      <input class="form-input" type="text" placeholder="اسم الامتحان" value="${k}" style="flex:2;" id="gk-${idx}">
+      <input class="form-input" type="number" placeholder="الدرجة" value="${v}" style="flex:1;" id="gv-${idx}">
+      <button class="tbl-btn danger" onclick="this.closest('[id^=gf]').remove()" style="flex-shrink:0;">✕</button>
+    </div>`);
+  });
+  if (!Object.keys(grades).length) window._addGradeField();
+
+  openModal(modalId);
+};
+
+window._addGradeField = function() {
+  const gf = document.getElementById('gradesFields');
+  if (!gf) return;
+  const idx = gf.children.length;
+  gf.insertAdjacentHTML('beforeend', `<div style="display:flex;gap:8px;margin-bottom:8px;" id="gf-${idx}">
+    <input class="form-input" type="text" placeholder="اسم الامتحان/الوحدة" style="flex:2;" id="gk-${idx}">
+    <input class="form-input" type="number" placeholder="الدرجة" style="flex:1;" id="gv-${idx}">
+    <button class="tbl-btn danger" onclick="this.closest('div').remove()" style="flex-shrink:0;">✕</button>
+  </div>`);
+};
+
+window._saveStudentEdit = async function(uid) {
+  const gradesFields = document.getElementById('gradesFields');
+  const grades = {};
+  gradesFields.querySelectorAll('[id^=gk-]').forEach(kEl => {
+    const i = kEl.id.split('-')[1];
+    const k = kEl.value.trim();
+    const v = document.getElementById('gv-'+i)?.value.trim();
+    if (k && v) grades[k] = parseFloat(v) || 0;
+  });
+  const attendance = parseFloat(document.getElementById('attendanceInput').value) || 0;
+  await updateDoc(doc(db,'users',uid), { grades, attendance });
+  showNotif('تم حفظ البيانات ✅','s');
+  closeModal('editStudentModal');
+  loadAdminData();
+};
+
 // ── فتح الامتحان تاني لطالب معين ──
 window._resetStudentQuiz = async function(quizId) {
   const phone = prompt('ادخل رقم الطالب (واتساب) اللي عايز تفتحله الامتحان تاني:');
@@ -2049,7 +2154,7 @@ async function loadAdminData() {
   // ── Students table ──
   const tbody = document.getElementById('usersTbody');
   tbody.innerHTML = '';
-  if (snap.empty) { tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px;">لا يوجد طلاب حتى الآن</td></tr>'; return; }
+  if (snap.empty) { tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;">لا يوجد طلاب حتى الآن</td></tr>'; return; }
   const gradeMap = {g1:'الأول',g2:'الثاني',g3:'الثالث'};
   const stageMap = {thanawi:'ثانوي عام',azhar:'أزهري'};
   snap.docs.forEach(d => {
@@ -2060,15 +2165,22 @@ async function loadAdminData() {
       : u.status === 'blocked'
       ? '<span class="status-badge blocked">محظور</span>'
       : '<span class="status-badge pending">قيد المراجعة</span>';
+    const grades = u.grades || {};
+    const gradesTxt = Object.keys(grades).length
+      ? Object.entries(grades).map(([k,v])=>`${k}:${v}`).join(', ')
+      : '<span style="color:var(--muted)">—</span>';
+    const attendance = u.attendance !== undefined ? `${u.attendance}%` : '<span style="color:var(--muted)">—</span>';
     tbody.insertAdjacentHTML('beforeend',`
       <tr>
-        <td>${u.fullName||((u.firstName||'')+' '+(u.secondName||''))}</td>
+        <td style="font-weight:700;">${u.fullName||((u.firstName||'')+' '+(u.secondName||''))}</td>
         <td>${gradeMap[u.grade]||u.grade||'—'}</td>
         <td>${u.studentPhone||'—'}</td>
-        <td>${u.gender==='male'?'ذكر':'أنثى'}</td>
-        <td>${stageMap[u.stage]||u.stage||'—'}</td>
+        <td>${u.parentPhone||'—'}</td>
+        <td style="font-size:.75rem;">${gradesTxt}</td>
+        <td>${attendance}</td>
         <td>${statusBadge}</td>
         <td>
+          <button class="tbl-btn" onclick="window._editStudent('${uid}')" style="border-color:var(--teal);color:var(--teal-lt);" title="تعديل الدرجات والحضور">✏️</button>
           ${u.status!=='active'?`<button class="tbl-btn ok" onclick="window._setStatus('${uid}','active')">تفعيل</button>`:''}
           ${u.status==='active'?`<button class="tbl-btn danger" onclick="window._setStatus('${uid}','blocked')">حظر</button>`:''}
           <button class="tbl-btn danger" onclick="window._deleteUser('${uid}')">حذف</button>
@@ -2419,14 +2531,17 @@ window.addChapter = async function() {
   const grade = document.getElementById('chGrade').value;
   const name = document.getElementById('chName').value.trim();
   const desc = document.getElementById('chDesc').value.trim();
+  const bunnyId = document.getElementById('chBunny').value.trim();
   const video = document.getElementById('chVideo').value.trim();
   const file = document.getElementById('chFile').value.trim();
   if (!name) { showNotif('ادخل اسم الشابتر','e'); return; }
+  if (!bunnyId && !video) { showNotif('ادخل Bunny Video ID أو رابط يوتيوب على الأقل','e'); return; }
   const ref = doc(collection(db,'chapters_'+grade));
-  await setDoc(ref, {name,desc,video,file,createdAt:new Date().toISOString()});
+  await setDoc(ref, {name,desc,bunnyId,video,file,createdAt:new Date().toISOString()});
   showNotif('تم إضافة الشابتر ✅','s');
   document.getElementById('chName').value='';
   document.getElementById('chDesc').value='';
+  document.getElementById('chBunny').value='';
   document.getElementById('chVideo').value='';
   document.getElementById('chFile').value='';
   loadChaptersAdmin();
@@ -2515,8 +2630,18 @@ window.addEventListener('popstate', function(e) {
   }
 });
 
-// Push initial state
-history.replaceState({page:'pg-home'}, '', '');
+// Push initial state — restore last page on refresh
+(function() {
+  const saved = sessionStorage.getItem('lastPage') || 'pg-home';
+  history.replaceState({page: saved}, '', '');
+})();
+
+// Save current page on every navigation
+const _origShowPage = window.showPage;
+window.showPage = function(id) {
+  sessionStorage.setItem('lastPage', id);
+  _origShowPage(id);
+};
 
 // Make timer helpers accessible from second script (defined in module)
 window._onVisibilityChange = window._onVisibilityChange || function(){};
