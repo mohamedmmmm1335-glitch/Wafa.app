@@ -1551,9 +1551,9 @@ window.doLogin = async function() {
     showAuthMsg('success','تم تسجيل الدخول! 🎉');
     setTimeout(() => {
       updateHeaderUI(true, data);
-      if (data.role === 'admin') { showPage('pg-admin'); loadAdminData(); }
-      else if (data.status === 'active') { showPage('pg-dash'); loadChapters(); }
-      else { showPage('pg-pending'); }
+      if (data.role === 'admin') { window.showPage('pg-admin'); loadAdminData(); }
+      else if (data.status === 'active') { window.showPage('pg-dash'); loadChapters(); }
+      else { window.showPage('pg-pending'); }
       setAuthLoading(false,'li');
     }, 800);
   } catch(e) {
@@ -1615,7 +1615,7 @@ window.doRegister = async function() {
 
     showAuthMsg('success','تم التسجيل بنجاح! 🎉 حسابك تحت المراجعة وهيتفعل قريباً');
     setAuthLoading(false,'reg');
-    setTimeout(() => showPage('pg-pending'), 1200);
+    setTimeout(() => window.showPage('pg-pending'), 1200);
   } catch(e) {
     setAuthLoading(false,'reg');
     const msgs = {
@@ -1630,7 +1630,7 @@ window.doRegister = async function() {
 // ── LOGOUT ──
 window.doLogout = async function() {
   await signOut(auth);
-  showPage('pg-home');
+  window.showPage('pg-home');
   showNotif('تم تسجيل الخروج','s');
 };
 
