@@ -1528,10 +1528,10 @@ function updateHeaderUI(loggedIn, data) {
 window.doLogin = async function() {
   const identifier = document.getElementById('liEmail').value.trim();
   const pass = document.getElementById('liPass').value;
-  if (!identifier || !pass) { showAuthMsg('error','من فضلك ادخل رقم الطالب أو الإيميل وكلمة المرور'); return; }
+  if (!identifier || !pass) { window.showAuthMsg('error','من فضلك ادخل رقم الطالب أو الإيميل وكلمة المرور'); return; }
 
-  setAuthLoading(true,'li');
-  hideAuthMsg();
+  window.setAuthLoading(true,'li');
+  window.hideAuthMsg();
 
   try {
     let email = identifier;
@@ -1539,32 +1539,32 @@ window.doLogin = async function() {
     if (!identifier.includes('@')) {
       const q = query(collection(db,'users'), where('studentPhone','==',identifier));
       const snap = await getDocs(q);
-      if (snap.empty) { showAuthMsg('error','رقم الطالب ده مش موجود'); setAuthLoading(false,'li'); return; }
+      if (snap.empty) { window.showAuthMsg('error','رقم الطالب ده مش موجود'); window.setAuthLoading(false,'li'); return; }
       email = snap.docs[0].data().email;
     }
     const cred = await signInWithEmailAndPassword(auth, email, pass);
     const userSnap = await getDoc(doc(db,'users', cred.user.uid));
-    if (!userSnap.exists()) { showAuthMsg('error','حصل خطأ في بيانات حسابك'); setAuthLoading(false,'li'); return; }
+    if (!userSnap.exists()) { window.showAuthMsg('error','حصل خطأ في بيانات حسابك'); window.setAuthLoading(false,'li'); return; }
     const data = userSnap.data();
     currentUserData = data;
     window._currentUserData = data;
-    showAuthMsg('success','تم تسجيل الدخول! 🎉');
+    window.showAuthMsg('success','تم تسجيل الدخول! 🎉');
     setTimeout(() => {
       updateHeaderUI(true, data);
       if (data.role === 'admin') { window.showPage('pg-admin'); loadAdminData(); }
       else if (data.status === 'active') { window.showPage('pg-dash'); loadChapters(); }
       else { window.showPage('pg-pending'); }
-      setAuthLoading(false,'li');
+      window.setAuthLoading(false,'li');
     }, 800);
   } catch(e) {
-    setAuthLoading(false,'li');
+    window.setAuthLoading(false,'li');
     const msgs = {
       'auth/user-not-found':'الإيميل مش موجود',
       'auth/wrong-password':'كلمة المرور غلط',
       'auth/invalid-credential':'رقم الطالب أو كلمة المرور غلط',
       'auth/too-many-requests':'كتير أوي، استنى شوية'
     };
-    showAuthMsg('error', msgs[e.code] || 'حصل خطأ، حاول تاني');
+    window.showAuthMsg('error', msgs[e.code] || 'حصل خطأ، حاول تاني');
   }
 };
 
@@ -1585,17 +1585,17 @@ window.doRegister = async function() {
   const pass2 = document.getElementById('rPass2').value;
   const idFile = null; // Storage not enabled
 
-  if (!fn1||!fn2||!fn3||!fn4) { showAuthMsg('error','من فضلك ادخل الأسماء الأربعة كاملة'); return; }
-  if (!phone||!parent) { showAuthMsg('error','من فضلك ادخل رقم الطالب ورقم ولي الأمر'); return; }
-  if (phone === parent) { showAuthMsg('error','رقم الطالب ورقم ولي الأمر لا يمكن أن يتطابقا'); return; }
-  if (!stage||!grade) { showAuthMsg('error','من فضلك اختر المرحلة والصف'); return; }
-  if (!gender) { showAuthMsg('error','من فضلك اختر النوع'); return; }
-  if (!nid || nid.length !== 14) { showAuthMsg('error','الرقم القومي لازم يكون 14 رقم'); return; }
-  if (!pass || pass.length < 8) { showAuthMsg('error','كلمة المرور لازم تكون 8 أحرف على الأقل'); return; }
-  if (pass !== pass2) { showAuthMsg('error','كلمتا المرور غير متطابقتين'); return; }
+  if (!fn1||!fn2||!fn3||!fn4) { window.showAuthMsg('error','من فضلك ادخل الأسماء الأربعة كاملة'); return; }
+  if (!phone||!parent) { window.showAuthMsg('error','من فضلك ادخل رقم الطالب ورقم ولي الأمر'); return; }
+  if (phone === parent) { window.showAuthMsg('error','رقم الطالب ورقم ولي الأمر لا يمكن أن يتطابقا'); return; }
+  if (!stage||!grade) { window.showAuthMsg('error','من فضلك اختر المرحلة والصف'); return; }
+  if (!gender) { window.showAuthMsg('error','من فضلك اختر النوع'); return; }
+  if (!nid || nid.length !== 14) { window.showAuthMsg('error','الرقم القومي لازم يكون 14 رقم'); return; }
+  if (!pass || pass.length < 8) { window.showAuthMsg('error','كلمة المرور لازم تكون 8 أحرف على الأقل'); return; }
+  if (pass !== pass2) { window.showAuthMsg('error','كلمتا المرور غير متطابقتين'); return; }
 
-  setAuthLoading(true,'reg');
-  hideAuthMsg();
+  window.setAuthLoading(true,'reg');
+  window.hideAuthMsg();
 
   try {
     const email = emailOpt || phone + '@wafa.platform';
@@ -1613,17 +1613,17 @@ window.doRegister = async function() {
       createdAt: new Date().toISOString()
     });
 
-    showAuthMsg('success','تم التسجيل بنجاح! 🎉 حسابك تحت المراجعة وهيتفعل قريباً');
-    setAuthLoading(false,'reg');
+    window.showAuthMsg('success','تم التسجيل بنجاح! 🎉 حسابك تحت المراجعة وهيتفعل قريباً');
+    window.setAuthLoading(false,'reg');
     setTimeout(() => window.showPage('pg-pending'), 1200);
   } catch(e) {
-    setAuthLoading(false,'reg');
+    window.setAuthLoading(false,'reg');
     const msgs = {
       'auth/email-already-in-use':'رقم الطالب ده مسجل من قبل',
       'auth/weak-password':'كلمة المرور ضعيفة جداً',
       'storage/unauthorized':'حصل خطأ في رفع الصورة، تأكد من إعدادات Storage'
     };
-    showAuthMsg('error', msgs[e.code] || 'حصل خطأ، حاول تاني');
+    window.showAuthMsg('error', msgs[e.code] || 'حصل خطأ، حاول تاني');
   }
 };
 
@@ -1631,24 +1631,24 @@ window.doRegister = async function() {
 window.doLogout = async function() {
   await signOut(auth);
   window.showPage('pg-home');
-  showNotif('تم تسجيل الخروج','s');
+  window.showNotif('تم تسجيل الخروج','s');
 };
 
 // ── RESET PASS ──
 window.resetPass = async function() {
   const v = document.getElementById('liEmail').value.trim();
-  if (!v) { showAuthMsg('error','اكتب إيميلك أو رقم طالبك أولاً'); return; }
+  if (!v) { window.showAuthMsg('error','اكتب إيميلك أو رقم طالبك أولاً'); return; }
   let email = v;
   if (!v.includes('@')) {
     const q = query(collection(db,'users'), where('studentPhone','==',v));
     const snap = await getDocs(q);
-    if (snap.empty) { showAuthMsg('error','الرقم ده مش موجود'); return; }
+    if (snap.empty) { window.showAuthMsg('error','الرقم ده مش موجود'); return; }
     email = snap.docs[0].data().email;
   }
   try {
     await sendPasswordResetEmail(auth, email);
-    showAuthMsg('success','تم إرسال رابط إعادة التعيين على إيميلك ✅');
-  } catch(e) { showAuthMsg('error','حصل خطأ في إرسال الرابط'); }
+    window.showAuthMsg('success','تم إرسال رابط إعادة التعيين على إيميلك ✅');
+  } catch(e) { window.showAuthMsg('error','حصل خطأ في إرسال الرابط'); }
 };
 
 // ── CHAPTERS (Student View — own grade only) ──
@@ -1880,7 +1880,7 @@ async function loadMyQuizResults() {
         <div class="db-empty-icon"><i class="fas fa-clipboard-list"></i></div>
         <div class="db-empty-title">لا توجد نتائج بعد</div>
         <div class="db-empty-sub">حل امتحاناتك وهتظهر هنا</div>
-        <button class="db-empty-btn" onclick="dbTab('courses')">📚 ابدأ من الكورسات</button>
+        <button class="db-empty-btn" onclick="window.dbTab('courses')">📚 ابدأ من الكورسات</button>
       </div>`;
       return;
     }
@@ -1927,11 +1927,11 @@ window.markWatched = async function() {
   if (!watched.includes(key)) {
     watched.push(key);
     await updateDoc(doc(db,'users', currentUser.uid), { watched });
-    showNotif('تم تسجيل المشاهدة ✅','s');
-    closeModal('videoModal');
+    window.showNotif('تم تسجيل المشاهدة ✅','s');
+    window.closeModal('videoModal');
     loadChapters();
   } else {
-    showNotif('لقد شاهدت هذا الفيديو من قبل ✅','s');
+    window.showNotif('لقد شاهدت هذا الفيديو من قبل ✅','s');
   }
 };
 
@@ -1950,7 +1950,7 @@ window.openVideo = function(bunnyId, youtubeUrl, title, grade, chapId) {
   }
   document.getElementById('videoFrame').src = embedUrl;
   document.getElementById('videoModalTitle').textContent = '🎬 ' + title;
-  openModal('videoModal');
+  window.openModal('videoModal');
 };
 
 // ── PDF OPEN (inline viewer) ──
@@ -1966,7 +1966,7 @@ window.openPDF = function(url, title) {
   }
   document.getElementById('pdfFrame').src = viewerUrl;
   document.getElementById('pdfModalTitle').textContent = '📄 ' + title;
-  openModal('pdfModal');
+  window.openModal('pdfModal');
 };
 
 // ── QUIZ SYSTEM (Student) ──
@@ -1987,10 +1987,10 @@ function _onVisibilityChange() {
       _quizAutoSubmitted = true;
       document.removeEventListener('visibilitychange', _onVisibilityChange);
       clearQuizTimer();
-      showNotif('⚠️ خرجت من الامتحان مرتين — تم التسليم تلقائياً','e');
+      window.showNotif('⚠️ خرجت من الامتحان مرتين — تم التسليم تلقائياً','e');
       setTimeout(() => window.submitQuiz(true), 600);
     } else {
-      showNotif(`⚠️ تحذير! خرجت من الامتحان (${_quizLeaveCount}/2) — المرة الجاية هيتسلم تلقائياً`,'e');
+      window.showNotif(`⚠️ تحذير! خرجت من الامتحان (${_quizLeaveCount}/2) — المرة الجاية هيتسلم تلقائياً`,'e');
     }
   }
 }
@@ -2016,10 +2016,10 @@ window.openQuiz = async function(quizId, chapterName) {
   // Check date window
   const now = new Date();
   if (_activeQuizData.startDate && now < new Date(_activeQuizData.startDate)) {
-    showNotif('الامتحان لم يبدأ بعد','e'); return;
+    window.showNotif('الامتحان لم يبدأ بعد','e'); return;
   }
   if (_activeQuizData.endDate && now > new Date(_activeQuizData.endDate)) {
-    showNotif('انتهى وقت الامتحان','e'); return;
+    window.showNotif('انتهى وقت الامتحان','e'); return;
   }
 
   document.getElementById('quizModalTitle').textContent = '📝 ' + chapterName;
@@ -2053,7 +2053,7 @@ window.openQuiz = async function(quizId, chapterName) {
       if (remaining <= 60) { timerDisplay.classList.remove('warning'); timerDisplay.classList.add('danger'); }
       if (remaining <= 0) {
         clearQuizTimer();
-        showNotif('⏰ انتهى الوقت! تم التسليم تلقائياً','e');
+        window.showNotif('⏰ انتهى الوقت! تم التسليم تلقائياً','e');
         window.submitQuiz(true);
         return;
       }
@@ -2068,7 +2068,7 @@ window.openQuiz = async function(quizId, chapterName) {
   // كشف الخروج
   document.addEventListener('visibilitychange', _onVisibilityChange);
 
-  openModal('quizModal');
+  window.openModal('quizModal');
 };
 
 // ── مراجعة الحل والدرجة ──
@@ -2078,7 +2078,7 @@ window.openQuizReview = async function(quizId) {
     getDoc(doc(db,'quiz_results', currentUser.uid+'_'+quizId)),
     getDoc(doc(db,'quizzes', quizId))
   ]);
-  if (!resultSnap.exists() || !quizSnap.exists()) { showNotif('لا توجد نتيجة','e'); return; }
+  if (!resultSnap.exists() || !quizSnap.exists()) { window.showNotif('لا توجد نتيجة','e'); return; }
   const r = resultSnap.data();
   const q = quizSnap.data();
   const pct = Math.round(r.score/r.total*100);
@@ -2108,7 +2108,7 @@ window.openQuizReview = async function(quizId) {
   });
 
   document.getElementById('reviewBody').innerHTML = html;
-  openModal('reviewModal');
+  window.openModal('reviewModal');
 };
 
 window.selectAnswer = function(qi, oi, btn) {
@@ -2160,10 +2160,10 @@ window.saveQuiz = async function() {
   const startDate = document.getElementById('qStartDate').value;
   const endDate = document.getElementById('qEndDate').value;
   const duration = parseInt(document.getElementById('qDuration').value) || 0;
-  if (!name) { showNotif('ادخل اسم الامتحان','e'); return; }
+  if (!name) { window.showNotif('ادخل اسم الامتحان','e'); return; }
 
   const qItems = document.getElementById('questionsList').children;
-  if (qItems.length === 0) { showNotif('أضف سؤال واحد على الأقل','e'); return; }
+  if (qItems.length === 0) { window.showNotif('أضف سؤال واحد على الأقل','e'); return; }
 
   const questions = [];
   let valid = true;
@@ -2177,7 +2177,7 @@ window.saveQuiz = async function() {
     questions.push({ question, options, correct: parseInt(correctRadio.value), imageUrl });
   }
 
-  if (!valid) { showNotif('تأكد من إدخال كل بيانات الأسئلة واختيار الإجابة الصح','e'); return; }
+  if (!valid) { window.showNotif('تأكد من إدخال كل بيانات الأسئلة واختيار الإجابة الصح','e'); return; }
 
   await addDoc(collection(db,'quizzes'), {
     name, grade, questions,
@@ -2186,7 +2186,7 @@ window.saveQuiz = async function() {
     duration,
     createdAt: new Date().toISOString()
   });
-  showNotif('تم حفظ الامتحان ✅','s');
+  window.showNotif('تم حفظ الامتحان ✅','s');
   document.getElementById('qName').value = '';
   document.getElementById('qStartDate').value = '';
   document.getElementById('qEndDate').value = '';
@@ -2234,7 +2234,7 @@ async function loadQuizzesAdmin() {
 window._deleteQuiz = async function(id) {
   if (!confirm('حذف هذا الامتحان؟')) return;
   await deleteDoc(doc(db,'quizzes',id));
-  showNotif('تم حذف الامتحان','s');
+  window.showNotif('تم حذف الامتحان','s');
   loadQuizzesAdmin();
 };
 
@@ -2253,12 +2253,12 @@ window._editStudent = async function(uid) {
     modal.className = 'modal-overlay';
     modal.id = modalId;
     modal.innerHTML = `<div class="modal-box" style="max-width:460px;">
-      <button class="modal-close" onclick="closeModal('${modalId}')"><i class="fas fa-times"></i></button>
+      <button class="modal-close" onclick="window.closeModal('${modalId}')"><i class="fas fa-times"></i></button>
       <div class="modal-title">✏️ تعديل بيانات الطالب</div>
       <div id="editStudentBody"></div>
     </div>`;
     document.body.appendChild(modal);
-    modal.addEventListener('click', e => { if(e.target===modal) closeModal(modalId); });
+    modal.addEventListener('click', e => { if(e.target===modal) window.closeModal(modalId); });
   }
 
   const grades = u.grades || {};
@@ -2286,7 +2286,7 @@ window._editStudent = async function(uid) {
   });
   if (!Object.keys(grades).length) window._addGradeField();
 
-  openModal(modalId);
+  window.openModal(modalId);
 };
 
 window._addGradeField = function() {
@@ -2311,8 +2311,8 @@ window._saveStudentEdit = async function(uid) {
   });
   const attendance = parseFloat(document.getElementById('attendanceInput').value) || 0;
   await updateDoc(doc(db,'users',uid), { grades, attendance });
-  showNotif('تم حفظ البيانات ✅','s');
-  closeModal('editStudentModal');
+  window.showNotif('تم حفظ البيانات ✅','s');
+  window.closeModal('editStudentModal');
   loadAdminData();
 };
 
@@ -2322,14 +2322,14 @@ window._resetStudentQuiz = async function(quizId) {
   if (!phone) return;
   const q = query(collection(db,'users'), where('studentPhone','==', phone.trim()));
   const snap = await getDocs(q);
-  if (snap.empty) { showNotif('الرقم ده مش موجود','e'); return; }
+  if (snap.empty) { window.showNotif('الرقم ده مش موجود','e'); return; }
   const uid = snap.docs[0].id;
   const studentName = snap.docs[0].data().fullName || snap.docs[0].data().firstName || 'الطالب';
   if (!confirm(`هتفتح الامتحان تاني للطالب: ${studentName}؟`)) return;
   try {
     await deleteDoc(doc(db,'quiz_results', uid+'_'+quizId));
-    showNotif(`تم فتح الامتحان تاني للطالب ${studentName} ✅`,'s');
-  } catch(e) { showNotif('حصل خطأ أثناء إعادة الفتح','e'); }
+    window.showNotif(`تم فتح الامتحان تاني للطالب ${studentName} ✅`,'s');
+  } catch(e) { window.showNotif('حصل خطأ أثناء إعادة الفتح','e'); }
 };
 
 // ── ADMIN LOAD ──
@@ -2394,7 +2394,7 @@ async function loadAdminData() {
 
 window._setStatus = async function(uid, status) {
   await updateDoc(doc(db,'users',uid), {status});
-  showNotif(status==='active'?'تم تفعيل الطالب ✅':'تم حظر الطالب','s');
+  window.showNotif(status==='active'?'تم تفعيل الطالب ✅':'تم حظر الطالب','s');
   loadAdminData();
 };
 // ── QUIZ SUBMIT — with WhatsApp share ──
@@ -2406,7 +2406,7 @@ window.submitQuiz = async function(autoSubmit = false) {
 
   const total = _activeQuizData.questions.length;
   const answered = Object.keys(_userAnswers).length;
-  if (!autoSubmit && answered < total) { showNotif('من فضلك أجب على كل الأسئلة','e'); return; }
+  if (!autoSubmit && answered < total) { window.showNotif('من فضلك أجب على كل الأسئلة','e'); return; }
 
   let score = 0;
   _activeQuizData.questions.forEach((q,qi) => {
@@ -2588,9 +2588,9 @@ window.addAnnouncement = async function() {
   const title = document.getElementById('aTitle').value.trim();
   const body = document.getElementById('aBody').value.trim();
   const type = document.getElementById('aType').value;
-  if (!title || !body) { showNotif('ادخل العنوان والتفاصيل','e'); return; }
+  if (!title || !body) { window.showNotif('ادخل العنوان والتفاصيل','e'); return; }
   await addDoc(collection(db,'announcements'), { title, body, type, active:true, createdAt: new Date().toISOString() });
-  showNotif('تم نشر الإشعار ✅','s');
+  window.showNotif('تم نشر الإشعار ✅','s');
   document.getElementById('aTitle').value='';
   document.getElementById('aBody').value='';
   loadAnnouncementsAdmin();
@@ -2622,7 +2622,7 @@ async function loadAnnouncementsAdmin() {
 window._deleteAnnounce = async function(id) {
   if(!confirm('حذف هذا الإشعار؟')) return;
   await deleteDoc(doc(db,'announcements',id));
-  showNotif('تم الحذف','s');
+  window.showNotif('تم الحذف','s');
   loadAnnouncementsAdmin();
 };
 
@@ -2633,9 +2633,9 @@ window.addScheduleItem = async function() {
   const date = document.getElementById('sDate').value;
   const time = document.getElementById('sTime').value;
   const desc = document.getElementById('sDesc').value.trim();
-  if (!title || !date) { showNotif('ادخل العنوان والتاريخ','e'); return; }
+  if (!title || !date) { window.showNotif('ادخل العنوان والتاريخ','e'); return; }
   await addDoc(collection(db,'schedule'), { title, type, date, time, desc, createdAt: new Date().toISOString() });
-  showNotif('تم إضافة الموعد ✅','s');
+  window.showNotif('تم إضافة الموعد ✅','s');
   document.getElementById('sTitle').value='';
   document.getElementById('sDate').value='';
   document.getElementById('sTime').value='';
@@ -2669,7 +2669,7 @@ async function loadScheduleAdmin() {
 window._deleteSched = async function(id) {
   if(!confirm('حذف هذا الموعد؟')) return;
   await deleteDoc(doc(db,'schedule',id));
-  showNotif('تم الحذف','s');
+  window.showNotif('تم الحذف','s');
   loadScheduleAdmin();
 };
 
@@ -2736,12 +2736,12 @@ window.addMonth = async function() {
   const end = document.getElementById('mEnd').value;
   const price = parseFloat(document.getElementById('mPrice').value) || 0;
   const isFree = document.getElementById('mFree').value === '1';
-  if (!name) { showNotif('ادخل اسم الفولدر','e'); return; }
+  if (!name) { window.showNotif('ادخل اسم الفولدر','e'); return; }
   await addDoc(collection(db,'months_'+grade), {
     name, start: start||null, end: end||null, price, isFree,
     createdAt: new Date().toISOString()
   });
-  showNotif('تم إنشاء الفولدر ✅','s');
+  window.showNotif('تم إنشاء الفولدر ✅','s');
   document.getElementById('mName').value='';
   document.getElementById('mStart').value='';
   document.getElementById('mEnd').value='';
@@ -2769,12 +2769,12 @@ window.addChapter = async function() {
   const bunnyId = document.getElementById('chBunny').value.trim();
   const video = document.getElementById('chVideo').value.trim();
   const file = document.getElementById('chFile').value.trim();
-  if (!monthId) { showNotif('اختر الفولدر أولاً','e'); return; }
-  if (!name) { showNotif('ادخل اسم المحاضرة','e'); return; }
-  if (!bunnyId && !video) { showNotif('ادخل Bunny Video ID أو رابط يوتيوب','e'); return; }
+  if (!monthId) { window.showNotif('اختر الفولدر أولاً','e'); return; }
+  if (!name) { window.showNotif('ادخل اسم المحاضرة','e'); return; }
+  if (!bunnyId && !video) { window.showNotif('ادخل Bunny Video ID أو رابط يوتيوب','e'); return; }
   const ref = doc(collection(db,'chapters_'+grade));
   await setDoc(ref, {name,desc,bunnyId,video,file,monthId,createdAt:new Date().toISOString()});
-  showNotif('تم إضافة المحاضرة ✅','s');
+  window.showNotif('تم إضافة المحاضرة ✅','s');
   document.getElementById('chName').value='';
   document.getElementById('chDesc').value='';
   document.getElementById('chBunny').value='';
@@ -2844,7 +2844,7 @@ async function loadChaptersAdmin() {
 window._deleteChapter = async function(gid, id) {
   if (!confirm('حذف هذا الشابتر؟')) return;
   await deleteDoc(doc(db,'chapters_'+gid, id));
-  showNotif('تم حذف الشابتر','s');
+  window.showNotif('تم حذف الشابتر','s');
   loadChaptersAdmin();
   loadChapters();
 };
@@ -2856,7 +2856,7 @@ window._deleteMonth = async function(gid, id) {
   // حذف المحاضرات المرتبطة
   const snap = await getDocs(query(collection(db,'chapters_'+gid), where('monthId','==',id)));
   for (const d of snap.docs) await deleteDoc(doc(db,'chapters_'+gid, d.id));
-  showNotif('تم حذف الفولدر','s');
+  window.showNotif('تم حذف الفولدر','s');
   loadChaptersAdmin();
   loadChapters();
 };
@@ -2872,7 +2872,7 @@ window._genAccessCode = async function(grade, monthId) {
   });
   // Copy to clipboard
   try { await navigator.clipboard.writeText(code); } catch(e) {}
-  showNotif(`كود الاشتراك: ${code} (تم نسخه) ✅`,'s');
+  window.showNotif(`كود الاشتراك: ${code} (تم نسخه) ✅`,'s');
   alert(`كود اشتراك جديد للـ "${monthName}":
 
 ${code}
@@ -2891,12 +2891,12 @@ window.openAccessModal = function(grade, monthId, monthName, price) {
   document.getElementById('accessModalDesc').textContent = 'هذا الفولدر يتطلب اشتراك للدخول';
   document.getElementById('accessModalPrice').textContent = price > 0 ? price + ' جنيه' : 'مجاني';
   document.getElementById('accessCodeInput').value = '';
-  openModal('accessModal');
+  window.openModal('accessModal');
 };
 
 window.submitAccessCode = async function() {
   const code = document.getElementById('accessCodeInput').value.trim().toUpperCase();
-  if (!code) { showNotif('ادخل الكود','e'); return; }
+  if (!code) { window.showNotif('ادخل الكود','e'); return; }
   // بحث عن الكود
   const q = query(collection(db,'access_codes'),
     where('code','==',code),
@@ -2904,7 +2904,7 @@ window.submitAccessCode = async function() {
     where('used','==',false)
   );
   const snap = await getDocs(q);
-  if (snap.empty) { showNotif('الكود غلط أو مستخدم من قبل','e'); return; }
+  if (snap.empty) { window.showNotif('الكود غلط أو مستخدم من قبل','e'); return; }
   // تفعيل الوصول
   const codeDoc = snap.docs[0];
   await updateDoc(doc(db,'access_codes',codeDoc.id), { used: true, usedBy: currentUser.uid, usedAt: new Date().toISOString() });
@@ -2914,8 +2914,8 @@ window.submitAccessCode = async function() {
   });
   // تحديث currentUserData محلياً
   if (currentUserData) currentUserData[`access_${_pendingAccessGrade}_${_pendingAccessMonthId}`] = true;
-  showNotif('تم تفعيل الاشتراك ✅ يمكنك الدخول الآن','s');
-  closeModal('accessModal');
+  window.showNotif('تم تفعيل الاشتراك ✅ يمكنك الدخول الآن','s');
+  window.closeModal('accessModal');
   loadChapters();
 };
 
@@ -2924,7 +2924,7 @@ window.vidSeek = function(sec) {
   const iframe = document.getElementById('videoFrame');
   // Bunny iframe postMessage API
   iframe.contentWindow?.postMessage(JSON.stringify({eventName:'seek', offset: sec}), '*');
-  showNotif(sec > 0 ? `تقديم ${sec} ثانية ▶` : `رجوع ${Math.abs(sec)} ثانية ◀`,'s');
+  window.showNotif(sec > 0 ? `تقديم ${sec} ثانية ▶` : `رجوع ${Math.abs(sec)} ثانية ◀`,'s');
 };
 
 window.vidSpeed = function(speed) {
@@ -2962,13 +2962,13 @@ window.openProfileModal = async function() {
       <div>🎓 المرحلة: <b>${u.stage==='thanawi'?'ثانوي عام':'أزهري'}</b></div>
     </div>`;
 
-  openModal('profileModal');
+  window.openModal('profileModal');
 };
 
 window.uploadProfilePic = async function(input) {
   const file = input.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { showNotif('الصورة كبيرة جداً — max 2MB','e'); return; }
+  if (file.size > 2 * 1024 * 1024) { window.showNotif('الصورة كبيرة جداً — max 2MB','e'); return; }
 
   // Convert to base64 and save as dataURL in Firestore (بدون Storage)
   const reader = new FileReader();
@@ -2990,7 +2990,7 @@ window.uploadProfilePic = async function(input) {
       av.style.backgroundSize = 'cover';
       av.textContent = '';
     }
-    showNotif('تم تحديث الصورة ✅','s');
+    window.showNotif('تم تحديث الصورة ✅','s');
   };
   reader.readAsDataURL(file);
 };
