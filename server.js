@@ -689,6 +689,46 @@ subsRouter.get('/', requireAuth, async (req, res) => {
 app.use('/api/subscriptions', subsRouter);
 
 // ════════════════════════════════════════
+// ── EXPORT: STUDENTS CSV
+// ════════════════════════════════════════
+app.get('/api/export/students', requireAuth, async (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'ممنوع' });
+  try {
+    const result = await pool.query(`
+      SELECT
+        full_name        AS "الاسم الكامل",
+        grade            AS "الصف",
+        stage            AS "المرحلة",
+        gender           AS "النوع",
+        student_phone    AS "رقم الطالب",
+        parent_phone     AS "رقم ولي الأمر",
+        email            AS "الإيميل",
+        national_id      AS "الرقم القومي",
+        status           AS "الحالة",
+        TO_CHAR(created_at, 'YYYY-MM-DD') AS "تاريخ التسجيل"
+      FROM users
+      WHERE role = 'student'
+      ORDER BY created_at DESC
+    `);
+
+    const rows = result.rows;
+    if (!rows.length) return res.status(404).json({ error: 'لا يوجد طلاب' });
+
+    const headers = Object.keys(rows[0]);
+    const csv = [
+      '\uFEFF' + headers.join(','),
+      ...rows.map(r => headers.map(h => `"${(r[h] || '').toString().replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="students.csv"');
+    res.send(csv);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ════════════════════════════════════════
 // ── HEALTH + ERRORS
 // ════════════════════════════════════════
 app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));

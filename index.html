@@ -1067,7 +1067,11 @@ select.form-input option{background:var(--bg2);}
     <div id="at-students" class="admin-section active">
       <div class="admin-card">
         <h3>قائمة الطلاب المسجلين</h3>
-        <div style="overflow-x:auto;">
+        <div style="margin-bottom:12px;">
+          <button class="tbl-btn" onclick="exportStudents()" style="border-color:var(--teal);color:var(--teal-lt);padding:8px 16px;">
+            <i class="fas fa-file-excel"></i> تصدير Excel
+          </button>
+        </div>
           <table class="users-table" id="usersTable">
             <thead>
               <tr>
@@ -2383,6 +2387,24 @@ window._deleteChapter = async function(id) {
     loadChaptersAdmin();
     loadChapters();
   } catch(e) { showNotif(e.message,'e'); }
+};
+
+window.exportStudents = async function() {
+  try {
+    const token = await auth.currentUser?.getIdToken();
+    const res = await fetch(API + '/api/export/students', {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    if (!res.ok) { showNotif('حصل خطأ في التصدير','e'); return; }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'students.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showNotif('تم تصدير الملف ✅','s');
+  } catch(e) { showNotif('حصل خطأ','e'); }
 };
 
 window.loadAdminData = loadAdminData;
