@@ -1472,7 +1472,7 @@ window.doRegister = async function() {
   hideAuthMsg();
 
   try {
-    const email = emailOpt || phone + '@wafa.platform';
+    const email = emailOpt || phone + '@wafa-platform.com';
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
 
     await api('/api/users/register', {
