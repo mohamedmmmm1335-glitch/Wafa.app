@@ -1067,28 +1067,13 @@ select.form-input option{background:var(--bg2);}
     <div id="at-students" class="admin-section active">
       <div class="admin-card">
         <h3>قائمة الطلاب المسجلين</h3>
-        <div style="margin-bottom:12px;">
+        <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <button class="tbl-btn" onclick="exportStudents()" style="border-color:var(--teal);color:var(--teal-lt);padding:8px 16px;">
             <i class="fas fa-file-excel"></i> تصدير Excel
           </button>
         </div>
-          <table class="users-table" id="usersTable">
-            <thead>
-              <tr>
-                <th>الاسم</th>
-                <th>الصف</th>
-                <th>رقم الطالب</th>
-                <th>ولي الأمر</th>
-                <th>الدرجات</th>
-                <th>الحضور</th>
-                <th>الحالة</th>
-                <th>إجراءات</th>
-              </tr>
-            </thead>
-            <tbody id="usersTbody">
-              <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;">لا يوجد طلاب حتى الآن</td></tr>
-            </tbody>
-          </table>
+        <div id="usersTbody">
+          <p style="color:var(--muted);text-align:center;padding:20px;">لا يوجد طلاب حتى الآن</p>
         </div>
       </div>
     </div>
@@ -2286,24 +2271,34 @@ async function loadAdminData() {
 
     const tbody = document.getElementById('usersTbody');
     tbody.innerHTML = '';
-    if (!users.length) { tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;">لا يوجد طلاب حتى الآن</td></tr>'; }
+    if (!users.length) { tbody.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px;">لا يوجد طلاب حتى الآن</p>'; }
     const gradeMap = {g1:'الأول',g2:'الثاني',g3:'الثالث'};
     users.forEach(u => {
-      const statusBadge = u.status==='active' ? '<span class="status-badge active">مفعّل</span>' : u.status==='blocked' ? '<span class="status-badge blocked">محظور</span>' : '<span class="status-badge pending">قيد المراجعة</span>';
+      const statusColor = u.status==='active' ? '#22c55e' : u.status==='blocked' ? '#ef4444' : '#f59e0b';
+      const statusTxt = u.status==='active' ? 'مفعّل' : u.status==='blocked' ? 'محظور' : 'قيد المراجعة';
       tbody.insertAdjacentHTML('beforeend',`
-        <tr>
-          <td style="font-weight:700;">${u.full_name||'—'}</td>
-          <td>${gradeMap[u.grade]||u.grade||'—'}</td>
-          <td>${u.student_phone||'—'}</td>
-          <td>${u.parent_phone||'—'}</td>
-          <td>—</td><td>—</td>
-          <td>${statusBadge}</td>
-          <td>
-            ${u.status!=='active'?`<button class="tbl-btn ok" onclick="window._setStatus(${u.id},'active')">تفعيل</button>`:''}
-            ${u.status==='active'?`<button class="tbl-btn danger" onclick="window._setStatus(${u.id},'blocked')">حظر</button>`:''}
-            <button class="tbl-btn danger" onclick="window._deleteUser(${u.id})">حذف</button>
-          </td>
-        </tr>`);
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+            <div>
+              <div style="font-weight:900;font-family:'Tajawal';font-size:1rem;">${u.full_name||'—'}</div>
+              <div style="font-size:.78rem;color:var(--muted);margin-top:2px;">الصف ${gradeMap[u.grade]||u.grade||'—'}</div>
+            </div>
+            <span style="background:${statusColor}22;color:${statusColor};border:1px solid ${statusColor};border-radius:20px;padding:3px 10px;font-size:.75rem;font-weight:700;">${statusTxt}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.8rem;margin-bottom:12px;">
+            <div><span style="color:var(--muted);">📱 الطالب:</span> ${u.student_phone||'—'}</div>
+            <div><span style="color:var(--muted);">📞 ولي الأمر:</span> ${u.parent_phone||'—'}</div>
+            <div><span style="color:var(--muted);">📅 تسجيل:</span> ${new Date(u.created_at).toLocaleDateString('ar-EG')}</div>
+            <div><span style="color:var(--muted);">🎓 المرحلة:</span> ${u.stage||'—'}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            ${u.status!=='active'?`<button class="tbl-btn ok" onclick="window._setStatus(${u.id},'active')" style="flex:1;">✅ تفعيل</button>`:''}
+            ${u.status==='active'?`<button class="tbl-btn danger" onclick="window._setStatus(${u.id},'blocked')" style="flex:1;">🚫 حظر</button>`:''}
+            ${u.status==='blocked'?`<button class="tbl-btn ok" onclick="window._setStatus(${u.id},'active')" style="flex:1;">✅ رفع الحظر</button>`:''}
+            <button class="tbl-btn danger" onclick="window._deleteUser(${u.id})" style="flex:1;">🗑 حذف</button>
+          </div>
+        </div>`);
+    });
     });
 
     // Load quizzes count
@@ -2396,15 +2391,117 @@ window.exportStudents = async function() {
       headers: { Authorization: 'Bearer ' + token }
     });
     if (!res.ok) { showNotif('حصل خطأ في التصدير','e'); return; }
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'students.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-    showNotif('تم تصدير الملف ✅','s');
-  } catch(e) { showNotif('حصل خطأ','e'); }
+    const data = await res.json();
+
+    // Load SheetJS
+    if (!window.XLSX) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+        s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    const gradeMap = {g1:'الصف الأول',g2:'الصف الثاني',g3:'الصف الثالث'};
+    const stageMap = {thanawi:'ثانوي عام',azhar:'أزهري'};
+    const genderMap = {male:'ذكر',female:'أنثى'};
+
+    const wb = XLSX.utils.book_new();
+    const ws = {};
+
+    // ── Headers Row 1 ──
+    // A1 فاضي، B1 المرحلة، C1 الصف، D1 رقم ولي الأمر، E1 رقم الطالب، F1 النوع، G1 الرقم القومي، H1 تاريخ التسجيل
+    const headers = ['', 'المرحلة', 'الصف', 'رقم ولي الأمر', 'رقم الطالب', 'النوع', 'الرقم القومي', 'تاريخ التسجيل'];
+    const cols = ['A','B','C','D','E','F','G','H'];
+
+    // Header colors per group
+    const headerColors = {
+      A: 'FFFFFF', // فاضي
+      B: '1E3A5F', // المرحلة
+      C: '1E3A5F', // الصف
+      D: '0D6E6E', // رقم ولي الأمر
+      E: '0D6E6E', // رقم الطالب
+      F: '4A235A', // النوع
+      G: '7B3F00', // الرقم القومي
+      H: '1A5276', // تاريخ التسجيل
+    };
+
+    cols.forEach((col, i) => {
+      const cell = col + '1';
+      ws[cell] = {
+        v: headers[i],
+        t: 's',
+        s: {
+          fill: { fgColor: { rgb: headerColors[col] } },
+          font: { bold: true, color: { rgb: 'FFFFFF' }, sz: 12, name: 'Cairo' },
+          alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+          border: {
+            top: { style: 'thin', color: { rgb: 'CCCCCC' } },
+            bottom: { style: 'thin', color: { rgb: 'CCCCCC' } },
+            left: { style: 'thin', color: { rgb: 'CCCCCC' } },
+            right: { style: 'thin', color: { rgb: 'CCCCCC' } }
+          }
+        }
+      };
+    });
+
+    // ── Data Rows ──
+    const rowColors = ['EBF5FB', 'FDFEFE']; // تناوب لونين
+    data.forEach((u, idx) => {
+      const row = idx + 2;
+      const rowColor = rowColors[idx % 2];
+      const values = [
+        u['الاسم الكامل'] || '',
+        stageMap[u['المرحلة']] || u['المرحلة'] || '',
+        gradeMap[u['الصف']] || u['الصف'] || '',
+        u['رقم ولي الأمر'] || '',
+        u['رقم الطالب'] || '',
+        genderMap[u['النوع']] || u['النوع'] || '',
+        u['الرقم القومي'] || '',
+        u['تاريخ التسجيل'] || '',
+      ];
+      cols.forEach((col, i) => {
+        ws[col + row] = {
+          v: values[i],
+          t: 's',
+          s: {
+            fill: { fgColor: { rgb: rowColor } },
+            font: { sz: 11, name: 'Cairo' },
+            alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+            border: {
+              top: { style: 'thin', color: { rgb: 'CCCCCC' } },
+              bottom: { style: 'thin', color: { rgb: 'CCCCCC' } },
+              left: { style: 'thin', color: { rgb: 'CCCCCC' } },
+              right: { style: 'thin', color: { rgb: 'CCCCCC' } }
+            }
+          }
+        };
+      });
+    });
+
+    // ── Column Widths ──
+    ws['!cols'] = [
+      { wch: 28 }, // A الاسم
+      { wch: 14 }, // B المرحلة
+      { wch: 14 }, // C الصف
+      { wch: 16 }, // D رقم ولي الأمر
+      { wch: 16 }, // E رقم الطالب
+      { wch: 10 }, // F النوع
+      { wch: 18 }, // G الرقم القومي
+      { wch: 14 }, // H تاريخ التسجيل
+    ];
+
+    // ── Row Heights ──
+    ws['!rows'] = [{ hpt: 30 }];
+    for (let i = 0; i < data.length; i++) ws['!rows'].push({ hpt: 25 });
+
+    ws['!ref'] = `A1:H${data.length + 1}`;
+
+    XLSX.utils.book_append_sheet(wb, ws, 'الطلاب');
+    XLSX.writeFile(wb, 'طلاب_منصة_الوفاء.xlsx');
+    showNotif('تم تصدير Excel ✅','s');
+  } catch(e) { console.error(e); showNotif('حصل خطأ في التصدير','e'); }
 };
 
 window.loadAdminData = loadAdminData;
